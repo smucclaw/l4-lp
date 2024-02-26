@@ -1,0 +1,13 @@
+;; shadow-cljs configuration
+{:deps true
+ :dev-http {8000 "public"}
+ :builds
+ {:app
+  {:target :esm
+  :output-dir "public/js"
+   :modules {:main {:js-options {:js-provider :import}
+                    :compiler-options {:output-feature-set :es2018}
+                    :optimizations :advanced
+
+                    :exports
+                    {eval_and_trace swipl-wasm-engine.core/eval-and-trace}}}}}}
