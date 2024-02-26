@@ -1,6 +1,8 @@
 (ns swipl-wasm-engine.core
   (:require [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
+            [meander.epsilon :as m]
+            [meander.strategy.epsilon :as r]
             [promesa.core :as prom]
             [shadow.esm :refer [dynamic-import]]))
 
@@ -12,6 +14,30 @@
 
 ;; https://swi-prolog.discourse.group/t/clojure-clojurescript-with-swi-prolog/5399/4
 ;; https://github.com/SWI-Prolog/roadmap/issues/43
+
+(def ^:private swipl-data->clj
+  (r/top-down
+   (r/rewrite
+    #js {:$t (m/some "s") :v (m/some ?str)} ?str
+    #js {:$t (m/some "v") :v (m/some ?var-id)} ~(symbol "var" ?var-id)
+
+    (m/and
+     #js {:$t (m/some "t") :functor (m/some ?functor)}
+     (m/app #(jsi/get % ?functor) #js [!args ...]))
+    (~(symbol ?functor) & [!args ...])
+
+    ?x ?x)))
+
+(def ^:private stack-frame->clj
+  (r/match
+   #js {:parent_goal (m/some ?parent-goal)
+        :current_goal (m/some ?current-goal)
+        :port (m/some ?port)
+        :recursion_depth (m/some ?recursion-depth)}
+    {:parent-goal (swipl-data->clj ?parent-goal)
+     :current-goal (swipl-data->clj ?current-goal)
+     :port (swipl-data->clj ?port)
+     :recursion-depth ?recursion-depth}))
 
 (defn- fn->functional-interface [func]
   (new #(this-as this (jsi/assoc! this :apply func))))
@@ -43,7 +69,7 @@
     ;; treats them both as plain objects and tries to recursively convert it to
     ;; a Prolog dictionary, which fails.
     log-stack-frame-callback
-    (-> (partial conj! stack-trace) fn->functional-interface)
+    (-> #(->> % stack-frame->clj (conj! stack-trace)) fn->functional-interface)
 
     assert-callback-fn-query
     (jsi/call-in swipl [:prolog :query]
@@ -65,5 +91,5 @@
 
     ;; (jsi/call js/console :log "Loaded Swipl Mod: " swipl-mod)
     ;; (jsi/call js/console :log "SWIPL: " swipl)
-    
-    (-> stack-trace persistent! bean/->js)))
+
+    (-> stack-trace persistent!)))
