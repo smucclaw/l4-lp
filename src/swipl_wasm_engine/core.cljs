@@ -50,7 +50,8 @@
         close-brace (symbol ")")
         open-sq-brace (symbol "[")
         close-sq-brace (symbol "]")
-        infix-ops #{'+ '- '* '/ '< '<= '= '> '>=}]
+        infix-ops #{'+ '- '* '/ '< '<= '= '> '>=}
+        math-list-ops #{'MIN 'MAX 'PRODUCT 'SUM}]
     ;; Transpiler from L4 to SWI Prolog is formalised as a denotational
     ;; semantics.
     ;; We axiomatise this via a (first-order) equational theory whose primary
@@ -102,11 +103,11 @@
       ;; ⟦<=⟧ = =<
       <= =<
 
-      ;;  ?op ∈ {SUM, PRODUCT, MIN, MAX}   ?lhsᵢ ∉ {SUM, PRODUCT, MIN, MAX}
-      ;; --------------------------------------------------------------------
+      ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
+      ;; ---------------------------------------------------
       ;; ⟦(?lhs₀ ... lhsₘ IS THE ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
       ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
-      (. !lhs ..1 IS THE (m/and (m/or SUM PRODUCT MIN MAX) ?op) OF . !rhs ..1)
+      (. !lhs ..1 IS THE (m/pred math-list-ops ?op) OF . !rhs ..1)
       ((?op (!rhs ...) (!lhs ...)))
 
       (?xs IS THE LIST OF ALL ?x SUCH THAT & ?phi-x)
@@ -116,7 +117,7 @@
       ;; -------------------------------------------------
       ;; ⟦(?lhs₀ ... lhsₘ ?op ?rhs₀ ... ?rhsₙ)⟧ =
       ;;   ⟦(?op (?lhs₀ ... ?lhsₘ) (?rhs₀ ... ?rhsₙ))⟧
-      (m/and (!lhs ..1 (m/pred #(contains? infix-ops %) ?op) . !rhs ..1))
+      (m/and (!lhs ..1 (m/pred infix-ops ?op) . !rhs ..1))
       ((?op (!lhs ...) (!rhs ...)))
 
       ;; ?pred ∈ symbol
