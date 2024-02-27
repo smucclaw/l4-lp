@@ -10,4 +10,4 @@
                     :optimizations :advanced
 
                     :exports
-                    {eval_and_trace swipl-wasm-engine.core/eval-and-trace}}}}}}
+                    {eval_and_trace l4-swipl-wasm.core/eval-and-trace}}}}}}

@@ -1,4 +1,4 @@
-(ns swipl-wasm-engine.core
+(ns l4-swipl-wasm.core
   (:require [applied-science.js-interop :as jsi]
             [clojure.string :as str]
             [meander.epsilon :as m]
