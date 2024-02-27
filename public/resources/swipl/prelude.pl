@@ -34,6 +34,27 @@ eval_and_trace(Goal) :-
   trace,
   ((call(Goal), !, notrace, nodebug) ; notrace, nodebug).
 
+product_list([], 0) :- !.
+product_list([X], X) :- !.
+product_list([X | Xs], A) :- !,
+  product_list(Xs, B),
+  A is X * B.
+
+sum_list_([], 0) :- !.
+sum_list_([X | Xs], A) :- !,
+  sum_list_(Xs, B),
+  A is X + B.
+
+min_list_([], inf) :- !.
+min_list_([X | Xs], A) :- !,
+  min_list_(Xs, B),
+  A is min(X, B).
+
+max_list_([], -inf) :- !.
+max_list_([X | Xs], A) :- !,
+  max_list_(Xs, B),
+  A is max(X, B).
+
   % trace,
   % (
   %     call(Goal),
