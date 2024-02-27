@@ -58,14 +58,12 @@
     ;; term algebra to that of SWI Prolog.
     (r/top-down
      (r/rewrite
-      ;; m, n ≥ 0
       ;; ------------------------------------------------
       ;; ⟦DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ⟧ =
       ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
       (DECIDE . !head ..1 IF . !body ..1)
       ((~turnstile (!head ...) (!body ...)))
 
-      ;; n ≥ 0
       ;; -------------------------------------------------
       ;; ⟦DECIDE ?head₀ ... ?headₙ⟧ = ⟦(?head₀ ... ?headₙ)⟧
       (DECIDE . !head ..1) ((!head ...))
@@ -105,7 +103,6 @@
       <= =<
 
       ;;  ?op ∈ {SUM, PRODUCT, MIN, MAX}   ?lhsᵢ ∉ {SUM, PRODUCT, MIN, MAX}
-      ;; m, n ≥ 0
       ;; --------------------------------------------------------------------
       ;; ⟦(?lhs₀ ... lhsₘ IS THE ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
       ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
@@ -116,20 +113,18 @@
       (findall ~open-brace ?x ~comma ?phi-x ~comma ?xs ~close-brace)
 
       ;;  ?op ∈ infix-ops              ?lhsᵢ ∉ infix-ops
-      ;; m, n ≥ 0
       ;; -------------------------------------------------
       ;; ⟦(?lhs₀ ... lhsₘ ?op ?rhs₀ ... ?rhsₙ)⟧ =
       ;;   ⟦(?op (?lhs₀ ... ?lhsₘ) (?rhs₀ ... ?rhsₙ))⟧
       (m/and (!lhs ..1 (m/pred #(contains? infix-ops %) ?op) . !rhs ..1))
       ((?op (!lhs ...) (!rhs ...)))
 
-      ;; ?pred ∈ symbol    n ≥ 0
+      ;; ?pred ∈ symbol
       ;; ----------------------------------------------------------
       ;;  ⟦(?pred ?arg₀ ... ?argₙ)⟧ = ⟦?pred⟧(⟦?arg₀⟧ , ... , ⟦?argₙ⟧)
       ((m/and (m/symbol _) ?pred) . !args ... ?arg)
-      (?pred ~open-brace & [!args ~comma ... ?arg] ~close-brace)
+      (?pred ~open-brace & (!args ~comma ... ?arg) ~close-brace)
 
-      ;; n ≥ 0
       ;; ---------------------------------------
       ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
       [!xs ... !x] (~open-sq-brace & [!xs ~comma ... !x] ~close-sq-brace)

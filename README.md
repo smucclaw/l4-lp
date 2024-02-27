@@ -1,10 +1,16 @@
 # l4-swipl-wasm
 
 Experiments with:
-- Transpiling a textual version of L4 constitutive rules and predicates into
-  Prolog.
+- Using term rewriting via [Meander](https://github.com/noprompt/meander) to
+  transpile a textual version of L4 constitutive rules and predicates into Prolog.
 - Using [SWI-Prolog running on WASM](https://github.com/SWI-Prolog/npm-swipl-wasm) 
-  and its interop with Javascript to generate stack traces from the interpreter.
+  and its interop with Javascript to evaluate the transpiled Prolog and
+  generate execution traces.
+
+For context, this evolved from an older pipeline involving
+[logical-english-client](https://github.com/smucclaw/logical-english-client)
+which utilised [Logical English](https://github.com/smucclaw/LogicalEnglish)
+to transpile L4 to Prolog and generate execution traces.
 
 ## Dependencies
 
@@ -35,7 +41,7 @@ as JS objects and transforming them back into Clojure forms.
     pnpm start
   ```
 
-- Go to <http://localhost:8000> in your browser and look in your console.
+- Go to <http://localhost:8000> in your browser and check your console.
   You should see the output of the L4 &rarr; transpiler, and the stack trace
   obtained from SWI-Prolog. 
 
