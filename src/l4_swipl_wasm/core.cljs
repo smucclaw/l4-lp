@@ -49,7 +49,7 @@
         close-brace (symbol ")")
         open-sq-brace (symbol "[")
         close-sq-brace (symbol "]")
-        infix-ops #{'+ '- '* '/ '< '<= '= '> '>=}
+        infix-ops #{'+ '- '* '/ '< '<= '= '> '>= 'IS}
         math-list-ops #{'MIN 'MAX 'PRODUCT 'SUM}]
     ;; Here we formalise a denotational semantics for the transpiler from L4 to
     ;; SWI Prolog, and implement it.
@@ -70,40 +70,6 @@
       ;; -------------------------------------------------
       ;; ⟦DECIDE ?head₀ ... ?headₙ⟧ = ⟦(?head₀ ... ?headₙ)⟧
       (DECIDE . !head ..1) ((!head ...))
-
-      ;; TODO: (& [!conjuncts ... ?conjunct] AND ...) nil
-
-      ;; ---------
-      ;; ⟦AND⟧ = ,
-      AND ~comma
-
-      ;; ---------
-      ;; ⟦OR⟧ = ;
-      OR ~semicolon
-
-      ;; -----------
-      ;; ⟦NOT⟧ = not
-      NOT not
-
-      ;; ------------------
-      ;; ⟦SUM⟧ = sum_list_
-      SUM sum_list_
-
-      ;; ------------------------
-      ;; ⟦PRODUCT⟧ = product_list
-      PRODUCT product_list
-
-      ;; ------------------
-      ;; ⟦MIN⟧ = min_list_
-      MIN min_list_
-
-      ;; -----------------
-      ;; ⟦MAX⟧ = max_list_
-      MAX max_list_
-
-      ;; ---------
-      ;; ⟦<=⟧ = =<
-      <= =<
 
       ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
       ;; ---------------------------------------------------
@@ -141,6 +107,44 @@
       ;; -----------------------------------------------------
       ;;   ⟦?var-name⟧ = (symbol (str/capitalize ?var-name'))
       (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
+
+      ;; TODO: (& [!conjuncts ... ?conjunct] AND ...) nil
+
+      ;; ---------
+      ;; ⟦AND⟧ = ,
+      AND ~comma
+
+      ;; ---------
+      ;; ⟦OR⟧ = ;
+      OR ~semicolon
+
+      ;; -----------
+      ;; ⟦NOT⟧ = not
+      NOT not
+
+      ;; ------------------
+      ;; ⟦SUM⟧ = sum_list_
+      SUM sum_list_
+
+      ;; ------------------------
+      ;; ⟦PRODUCT⟧ = product_list
+      PRODUCT product_list
+
+      ;; ------------------
+      ;; ⟦MIN⟧ = min_list_
+      MIN min_list_
+
+      ;; -----------------
+      ;; ⟦MAX⟧ = max_list_
+      MAX max_list_
+
+      ;; ---------
+      ;; ⟦<=⟧ = =<
+      <= =<
+
+      ;; ---------
+      ;; ⟦IS⟧ = '=
+      IS =
 
       ;; ?x ∈ atom ∪ ℝ ∪ string
       ;; -----------------------
