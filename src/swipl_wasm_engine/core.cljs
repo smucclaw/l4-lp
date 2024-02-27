@@ -110,8 +110,12 @@
       (. !lhs ..1 IS THE (m/pred math-list-ops ?op) OF . !rhs ..1)
       ((?op (!rhs ...) (!lhs ...)))
 
+      ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
+      ;; -----------------------------------------------------
+      ;; ⟦(?xs IS THE LIST OF ALL ?x SUCH THAT ?φ₀ ... ?φₙ)⟧ =
+      ;;   ⟦(findall ?x (?φ₀ ... ?φₙ) ?xs)⟧
       (?xs IS THE LIST OF ALL ?x SUCH THAT & ?phi-x)
-      (findall ~open-brace ?x ~comma ?phi-x ~comma ?xs ~close-brace)
+      ((findall ?x ?phi-x ?xs))
 
       ;;  ?op ∈ infix-ops              ?lhsᵢ ∉ infix-ops
       ;; -------------------------------------------------
@@ -130,6 +134,9 @@
       ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
       [!xs ... !x] (~open-sq-brace & (!xs ~comma ... !x) ~close-sq-brace)
 
+      ;; ?var-name = (symbol "var" ?var-name')
+      ;; -----------------------------------------------------
+      ;;   ⟦?var-name⟧ = (symbol (str/capitalize ?var-name'))
       (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
 
       ;; ?x ∈ atom ∪ ℝ ∪ string 
