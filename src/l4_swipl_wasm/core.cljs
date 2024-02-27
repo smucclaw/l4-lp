@@ -29,9 +29,8 @@
          ":" (m/some #js [_ (m/cata ?term)])}
     ?term
 
-    (m/and
-     #js {:$t (m/some "t") :functor (m/some ?functor)}
-     (m/app #(jsi/get % ?functor) #js [!args ...]))
+    (m/and #js {:$t (m/some "t") :functor (m/some ?functor)}
+           (m/app #(jsi/get % ?functor) #js [!args ...]))
     (~(symbol ?functor) & [!args ...])
 
     =< <=
@@ -52,14 +51,17 @@
         close-sq-brace (symbol "]")
         infix-ops #{'+ '- '* '/ '< '<= '= '> '>=}
         math-list-ops #{'MIN 'MAX 'PRODUCT 'SUM}]
-    ;; Transpiler from L4 to SWI Prolog is formalised as a denotational
-    ;; semantics.
-    ;; We axiomatise this via a (first-order) equational theory whose primary
-    ;; construct is the transpilation function ⟦.⟧ which maps from the Natural4
-    ;; term algebra to that of SWI Prolog.
+    ;; Here we formalise a denotational semantics for the transpiler from L4 to
+    ;; SWI Prolog, and implement it.
+    ;; We axiomatise our semantics via a (first-order) equational theory whose
+    ;; primary construct is the interpretation function ⟦.⟧ which maps the
+    ;; Natural4 term algebra to that of SWI Prolog.
+    ;; This is implemented via a top-down traversal of the Natural4
+    ;; concrete syntax tree, transforming each node via Meander term rewriting
+    ;; rules that orient the equational theory from left to right.
     (r/top-down
      (r/rewrite
-      ;; ------------------------------------------------
+      ;; --------------------------------------------------
       ;; ⟦DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ⟧ =
       ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
       (DECIDE . !head ..1 IF . !body ..1)
@@ -91,11 +93,11 @@
       ;; ⟦PRODUCT⟧ = product_list
       PRODUCT product_list
 
-      ;; ------------------------
+      ;; ------------------
       ;; ⟦MIN⟧ = min_list_
       MIN min_list_
 
-      ;; ------------------------
+      ;; -----------------
       ;; ⟦MAX⟧ = max_list_
       MAX max_list_
 
@@ -125,7 +127,7 @@
       ((?op (!lhs ...) (!rhs ...)))
 
       ;; ?pred ∈ symbol
-      ;; ----------------------------------------------------------
+      ;; -----------------------------------------------------------
       ;;  ⟦(?pred ?arg₀ ... ?argₙ)⟧ = ⟦?pred⟧(⟦?arg₀⟧ , ... , ⟦?argₙ⟧)
       ((m/and (m/symbol _) ?pred) . !args ... ?arg)
       (?pred ~open-brace & (!args ~comma ... ?arg) ~close-brace)
@@ -140,8 +142,8 @@
       (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
 
       ;; ?x ∈ atom ∪ ℝ ∪ string 
-      ;; --------------------
-      ;; ⟦?x⟧ = ?x
+      ;; -----------------------
+      ;;       ⟦?x⟧ = ?x
       ?x ?x))))
 
 (def ^:private stack-frame->clj
