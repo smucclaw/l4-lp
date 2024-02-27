@@ -127,7 +127,7 @@
 
       ;; ---------------------------------------
       ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
-      [!xs ... !x] (~open-sq-brace & [!xs ~comma ... !x] ~close-sq-brace)
+      [!xs ... !x] (~open-sq-brace & (!xs ~comma ... !x) ~close-sq-brace)
 
       (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
 
