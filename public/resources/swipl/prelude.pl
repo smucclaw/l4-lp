@@ -35,24 +35,24 @@ eval_and_trace(Goal) :-
 
 product_list([], 0) :- !.
 product_list([X], X) :- !.
-product_list([X | Xs], A) :- !,
-  product_list(Xs, B),
-  A is X * B.
+product_list([X | Xs], Result) :- !,
+  product_list(Xs, Result0),
+  Result is X * Result0.
 
 sum_list_([], 0) :- !.
-sum_list_([X | Xs], A) :- !,
-  sum_list_(Xs, B),
-  A is X + B.
+sum_list_([X | Xs], Result) :- !,
+  sum_list_(Xs, Result0),
+  Result is X + Result0.
 
 min_list_([], inf) :- !.
-min_list_([X | Xs], A) :- !,
-  min_list_(Xs, B),
-  A is min(X, B).
+min_list_([X | Xs], Result) :- !,
+  min_list_(Xs, Result0),
+  Result is min(X, Result0).
 
 max_list_([], -inf) :- !.
-max_list_([X | Xs], A) :- !,
-  max_list_(Xs, B),
-  A is max(X, B).
+max_list_([X | Xs], Result) :- !,
+  max_list_(Xs, Result0),
+  Result is max(X, Result0).
 
   % trace,
   % (
