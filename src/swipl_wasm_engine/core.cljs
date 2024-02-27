@@ -240,8 +240,11 @@
                  (str/replace it #" " ""))
   goal' (-> goal clj->swipl str (str/replace #" " ""))
 
-  _ (js/console.log "Program: " program')
-  _ (js/console.log "Goal: " goal')
+  _ (jsi/call js/console :log "Input L4 program:\n" program)
+  _ (jsi/call js/console :log "Input L4 goal:\n" goal)
+
+  _ (jsi/call js/console :log "Transpiled Prolog program:\n" program')
+  _ (jsi/call js/console :log "Transpiled Prolog goal:\n" goal')
 
   trace (eval-and-trace program' goal')]
-  (js/console.log "Trace: " trace))
+  (jsi/call js/console :log "Trace:\n" trace))
