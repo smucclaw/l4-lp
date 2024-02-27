@@ -61,13 +61,13 @@
       ;; m, n ≥ 0
       ;; ------------------------------------------------
       ;; ⟦DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ⟧ =
-      ;;   :-((⟦?head₀⟧ ... ⟦?headₘ⟧), (⟦?body₀⟧ ... ⟦?bodyₙ⟧))
+      ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
       (DECIDE . !head ..1 IF . !body ..1)
       ((~turnstile (!head ...) (!body ...)))
 
       ;; n ≥ 0
       ;; -------------------------------------------------
-      ;; ⟦DECIDE ?head₀ ... ?headₙ⟧ = (⟦?head₀⟧ ... ⟦?headₙ⟧)
+      ;; ⟦DECIDE ?head₀ ... ?headₙ⟧ = ⟦(?head₀ ... ?headₙ)⟧
       (DECIDE . !head ..1) ((!head ...))
 
       ;; TODO: (& [!conjuncts ... ?conjunct] AND ...) nil
@@ -108,7 +108,7 @@
       ;; m, n ≥ 0
       ;; --------------------------------------------------------------------
       ;; ⟦(?lhs₀ ... lhsₘ IS THE ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
-      ;;   (⟦?op⟧ (⟦?rhs₀⟧ ... ⟦?rhsₘ⟧) (⟦?lhs₀⟧ ... ⟦?lhsₙ⟧))
+      ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
       (. !lhs ..1 IS THE (m/and (m/or SUM PRODUCT MIN MAX) ?op) OF . !rhs ..1)
       ((?op (!rhs ...) (!lhs ...)))
 
@@ -119,7 +119,7 @@
       ;; m, n ≥ 0
       ;; -------------------------------------------------
       ;; ⟦(?lhs₀ ... lhsₘ ?op ?rhs₀ ... ?rhsₙ)⟧ =
-      ;;   (⟦?op⟧ (⟦?lhs₀⟧ ... ⟦lhsₘ⟧) (⟦?rhs₀⟧ ... ⟦?rhsₙ⟧))
+      ;;   ⟦(?op (?lhs₀ ... ?lhsₘ) (?rhs₀ ... ?rhsₙ))⟧
       (m/and (!lhs ..1 (m/pred #(contains? infix-ops %) ?op) . !rhs ..1))
       ((?op (!lhs ...) (!rhs ...)))
 
