@@ -1,5 +1,4 @@
 % https://swi-prolog.discourse.group/t/tool-for-drawing-sld-trees-in-prolog/4737
-% https://swi-prolog.discourse.group/t/using-prolog-trace-interception-4/4376/5
 
 % https://www.swi-prolog.org/pldoc/man?section=debugoverview
 % https://swi-prolog.discourse.group/t/swi-prolog-in-the-browser-using-wasm/5650

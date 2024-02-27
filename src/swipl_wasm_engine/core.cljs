@@ -123,10 +123,9 @@
       (m/and (!lhs ..1 (m/pred #(contains? infix-ops %) ?op) . !rhs ..1))
       ((?op (!lhs ...) (!rhs ...)))
 
-      ;; ?pred ∈ symbol
-      ;; n ≥ 1
+      ;; ?pred ∈ symbol    n ≥ 0
       ;; ----------------------------------------------------------
-      ;;  ⟦(?pred ?arg₁ ... ?argₙ)⟧ = ⟦?pred⟧(⟦?arg₁⟧ , ... , ⟦?argₙ⟧)
+      ;;  ⟦(?pred ?arg₀ ... ?argₙ)⟧ = ⟦?pred⟧(⟦?arg₀⟧ , ... , ⟦?argₙ⟧)
       ((m/and (m/symbol _) ?pred) . !args ... ?arg)
       (?pred ~open-brace & [!args ~comma ... ?arg] ~close-brace)
 
@@ -137,7 +136,7 @@
 
       (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
 
-      ;; ?x ∈ atom ∪ ℝ 
+      ;; ?x ∈ atom ∪ ℝ ∪ string 
       ;; --------------------
       ;; ⟦?x⟧ = ?x
       ?x ?x))))
