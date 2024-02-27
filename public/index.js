@@ -14,5 +14,5 @@ const program = `
 
 const goal = 'grandparent(X, adam)';
 
-// const trace = await eval_and_trace(program, goal);
-// console.log("Trace: ", trace);
+const trace = await eval_and_trace(program, goal);
+console.log("Trace: ", trace);

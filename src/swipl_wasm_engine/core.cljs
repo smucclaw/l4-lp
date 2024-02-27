@@ -214,6 +214,12 @@
 
     (-> stack-trace persistent!)))
 
+;; TODO:
+;; Can use dicts to model objects and method calls.
+;; See comment here: https://www.swi-prolog.org/pldoc/man?predicate=is/2
+;; https://www.swi-prolog.org/pldoc/man?section=bidicts
+;; Also look at records: https://www.swi-prolog.org/pldoc/man?section=record
+
 (prom/let
  [program
   ['(DECIDE
