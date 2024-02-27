@@ -126,6 +126,7 @@
       (m/and (!lhs ..1 (m/pred infix-ops ?op) . !rhs ..1))
       ((?op (!lhs ...) (!rhs ...)))
 
+      ;; TODO: Consider how to deal with mixfix parsing.
       ;; ?pred ∈ symbol
       ;; -----------------------------------------------------------
       ;;  ⟦(?pred ?arg₀ ... ?argₙ)⟧ = ⟦?pred⟧(⟦?arg₀⟧ , ... , ⟦?argₙ⟧)
@@ -141,7 +142,7 @@
       ;;   ⟦?var-name⟧ = (symbol (str/capitalize ?var-name'))
       (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
 
-      ;; ?x ∈ atom ∪ ℝ ∪ string 
+      ;; ?x ∈ atom ∪ ℝ ∪ string
       ;; -----------------------
       ;;       ⟦?x⟧ = ?x
       ?x ?x))))
