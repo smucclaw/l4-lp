@@ -1,6 +1,6 @@
 (ns l4-swipl-wasm.core
   (:require [applied-science.js-interop :as jsi]
-            [clojure.string :as str]
+            [tupelo.string :as str]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
             [promesa.core :as prom]
@@ -40,6 +40,32 @@
 
     ?term ?term)))
 
+(def ^:private mixfix->prefix
+  (r/pipe
+   (r/rewrite
+   ;; Partition all the elements into args and non-args.
+   ;; Non-args are later mashed together into an atom representing the predicate.
+    ((m/or (m/and (m/or (m/symbol "var" _)
+                        (m/pred number?)
+                        (m/pred seq?))
+                  !args)
+           !non-args)
+     ..1)
+    {:non-args [!non-args ...] :args [!args ...]})
+
+   ;; Convert the non-args into a valid atom representing the predicate.
+   (r/match
+    {:non-args ?non-args :args ?args}
+     {:pred (it-> ?non-args (str/join "_" it) (str "'" it "'") (symbol it))
+      :args ?args})
+
+   ;; Convert the predicate and list of arguments to prefix form.
+   (r/rewrite
+    {:pred ?pred :args []} ?pred
+
+    {:pred ?pred :args [!args ... ?arg]}
+    (?pred ~(symbol "(") & (!args ~(symbol ",") ... ?arg) ~(symbol ")")))))
+
 (def ^:private clj->swipl
   (let [turnstile (symbol ":-")
         comma (symbol ",")
@@ -47,9 +73,9 @@
         semicolon (symbol ";")
         open-brace (symbol "(")
         close-brace (symbol ")")
-        open-sq-brace (symbol "[")
-        close-sq-brace (symbol "]")
-        infix-ops #{'+ '- '* '/ '< '<= '= '> '>= 'IS}
+        _open-sq-brace (symbol "[")
+        _close-sq-brace (symbol "]")
+        infix-ops #{'+ '- '* '/ '< '<= '= '> '>= '=< 'IS}
         math-list-ops #{'MIN 'MAX 'PRODUCT 'SUM}]
     ;; Here we formalise a denotational semantics for the transpiler from L4 to
     ;; SWI Prolog, and implement it.
@@ -57,7 +83,7 @@
     ;; primary construct is the interpretation function ⟦.⟧ which maps the
     ;; Natural4 term algebra to that of SWI Prolog.
     ;; This is implemented via a top-down traversal of the Natural4
-    ;; concrete syntax tree, transforming each node via Meander term rewriting
+    ;; AST, transforming each node via Meander term rewriting
     ;; rules that orient the equational theory from left to right.
     (r/top-down
      (r/rewrite
@@ -92,7 +118,21 @@
       (m/and (!lhs ..1 (m/pred infix-ops ?op) . !rhs ..1))
       ((?op (!lhs ...) (!rhs ...)))
 
-      ;; TODO: Consider how to deal with mixfix parsing.
+      ;; Auxiliary stuff for parsing predicate applications that are presented
+      ;; in mixfix form.
+      ;; TODO: Formalise the semantics of this operation.
+      (m/and
+       ;; Restrict mixfix parsing to seqs where there is > 1 item present,
+       ;; because otherwise there is no need for this.
+       (_ _ & _)
+       ;; The next 2 clauses restricts mixfix parsing to ignore AST nodes that
+       ;; contain L4 keywords.
+       ;; Such nodes include BoolStructs like (... AND ... AND ...).
+       (m/gather (m/pred #(-> % str str/uppercase?)) ?count)
+       (m/guard (zero? ?count))
+       ?predicate-application)
+      ~(mixfix->prefix ?predicate-application)
+
       ;; ?pred ∈ symbol
       ;; -----------------------------------------------------------
       ;;  ⟦(?pred ?arg₀ ... ?argₙ)⟧ = ⟦?pred⟧(⟦?arg₀⟧ , ... , ⟦?argₙ⟧)
@@ -101,7 +141,7 @@
 
       ;; ---------------------------------------
       ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
-      [!xs ... !x] [!xs ~comma ... !x]
+      [!xs ... !x] [!xs ~(symbol ",") ... !x]
 
       ;; ?var-name = (symbol "var" ?var-name')
       ;; -----------------------------------------------------
@@ -109,7 +149,7 @@
       (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
 
       ;; TODO: (& [!conjuncts ... ?conjunct] AND ...) nil
-
+      
       ;; ---------
       ;; ⟦AND⟧ = ,
       AND ~comma
@@ -138,13 +178,9 @@
       ;; ⟦MAX⟧ = max_list_
       MAX max_list_
 
-      ;; ---------
-      ;; ⟦<=⟧ = =<
-      <= =<
-
-      ;; ---------
-      ;; ⟦IS⟧ = '=
-      IS =
+      ;; -----------
+      ;; ⟦IS⟧ = 'IS'
+      IS ~(symbol "'IS'")
 
       ;; ?x ∈ atom ∪ ℝ ∪ string
       ;; -----------------------
@@ -233,16 +269,20 @@
 (prom/let
  [program
   ['(DECIDE
-     p var/xs var/x
-     IF (var/xs IS THE LIST OF ALL var/x SUCH THAT q var/x)
+     the sum of the list of all elements satisfying q, say var/xs, is var/x,
+     which is strictly between 0 and 10
+     IF (var/xs IS THE LIST OF ALL var/x SUCH THAT
+                q holds for var/x)
      AND (var/x IS THE SUM OF var/xs)
+     AND ((2 + 1) IS var/x)
      AND (NOT ((var/x <= 0) OR (var/x >= 10))))
 
-   '(DECIDE q 0)
-   '(DECIDE q 1)
-   '(DECIDE q 2)]
+   '(DECIDE q holds for 0)
+   '(DECIDE q holds for 1)
+   '(DECIDE q holds for 2)]
 
-  goal '(p var/xs var/x)
+  goal '(the sum of the list of all elements satisfying q, say var/xs, is var/x,
+             which is strictly between 0 and 10)
 
   program' (it-> program
                  (eduction (map #(-> % clj->swipl (str ".\n"))) it)

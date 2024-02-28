@@ -33,26 +33,79 @@ eval_and_trace(Goal) :-
   trace,
   ((call(Goal), !, notrace, nodebug) ; notrace, nodebug).
 
+% Judgement forms for semantics:
+% 1. Γ ⊢ expr ⇓ val
+%   Under context Γ, expr big-step evaluates to val 
+% 2. Γ ⊢ p
+%   Under context Γ, p holds.
+
+% ------------------------
+% Γ ⊢ product_list [] ⇓ 0
 product_list([], 0) :- !.
+
+% -------------------------
+% Γ ⊢ product_list [X] ⇓ X 
 product_list([X], X) :- !.
+
+% Γ ⊢ product_list [Y | T] ⇓ Result0
+% Γ ⊢ X * Result0 ⇓ Result
+% -------------------------------------
+% Γ ⊢ product_list [X, Y | T] ⇓ Result 
 product_list([X | Xs], Result) :- !,
   product_list(Xs, Result0),
   Result is X * Result0.
 
+% Γ ⊢ sum_list_ [] ⇓ 0
 sum_list_([], 0) :- !.
+
+% Γ ⊢ sum_list_ T ⇓ Result0
+% Γ ⊢ X + Result0 ⇓ Result
+% ------------------------------
+% Γ ⊢ sum_list_ [X | T] ⇓ Result 
 sum_list_([X | Xs], Result) :- !,
   sum_list_(Xs, Result0),
   Result is X + Result0.
 
+% ----------------------
+% Γ ⊢ min_list_ [] ⇓ ∞
 min_list_([], inf) :- !.
+
+% Γ ⊢ min_list_ T ⇓ Result0
+% Γ ⊢ min(X, Result0) ⇓ Result
+% ------------------------------
+% Γ ⊢ min_list_ [X | T] ⇓ Result 
 min_list_([X | Xs], Result) :- !,
   min_list_(Xs, Result0),
   Result is min(X, Result0).
 
+% ----------------------
+% Γ ⊢ max_list_ [] ⇓ -∞
 max_list_([], -inf) :- !.
+
+% Γ ⊢ max_list_ T ⇓ Result0
+% Γ ⊢ max(X, Result0) ⇓ Result
+% ------------------------------
+% Γ ⊢ max_list_ [X | T] ⇓ Result 
 max_list_([X | Xs], Result) :- !,
   max_list_(Xs, Result0),
   Result is max(X, Result0).
+
+% ---------------
+%   Γ ⊢ X IS X
+'IS'(X, X) :- !.
+
+%  (ℝ, Γ) ⊨ X = Y    (Abuse of notation because we're technically working with)
+% ----------------     order-sorted algebras)
+%  Γ ⊢ X IS Y
+'IS'(X, Y) :-
+  % is/2 throws a type error if the 2nd argument is not numeric.
+  % This catches the type error and forces the predicate to fail if that happens.
+  catch((Z is X, Z is Y), _, fail).
+
+% Γ ⊢ X =< Y     (ie. %  (ℝ, Γ) ⊨ X <= Y)
+% -------------------
+% Γ ⊢ X <= Y
+'<='(X, Y) :- X =< Y.
 
   % trace,
   % (
