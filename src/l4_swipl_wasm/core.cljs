@@ -1,5 +1,6 @@
 (ns l4-swipl-wasm.core
   (:require [applied-science.js-interop :as jsi]
+            [cljs-bean.core :as bean]
             [tupelo.string :as str]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
@@ -45,9 +46,11 @@
    (r/rewrite
    ;; Partition all the elements into args and non-args.
    ;; Non-args are later mashed together into an atom representing the predicate.
-    ((m/or (m/and (m/or (m/symbol "var" _)
+    ((m/or (m/and (m/or (m/symbol "_")
+                        (m/symbol "var" _)
                         (m/pred number?)
-                        (m/pred seq?))
+                        (m/pred seq?)
+                        (m/pred vector?))
                   !args)
            !non-args)
      ..1)
@@ -128,7 +131,9 @@
        ;; The next 2 clauses restricts mixfix parsing to ignore AST nodes that
        ;; contain L4 keywords.
        ;; Such nodes include BoolStructs like (... AND ... AND ...).
-       (m/gather (m/pred #(-> % str str/uppercase?)) ?count)
+       (m/gather (m/or (m/pred #(-> % str str/uppercase?))
+                       (m/pred infix-ops))
+                 ?count)
        (m/guard (zero? ?count))
        ?predicate-application)
       ~(mixfix->prefix ?predicate-application)
@@ -181,6 +186,13 @@
       ;; -----------
       ;; ⟦IS⟧ = 'IS'
       IS ~(symbol "'IS'")
+
+      < ~(symbol "lt")
+      <= ~(symbol "leq")
+      =< ~(symbol "leq")
+
+      > ~(symbol "gt")
+      >= ~(symbol "geq")
 
       ;; ?x ∈ atom ∪ ℝ ∪ string
       ;; -----------------------
@@ -253,12 +265,23 @@
                        ;; "eval_and_trace(Goal)" #js {:Goal goal}
                        (str "eval_and_trace(" goal ")"))
 
-    _ (jsi/call query :once)]
+    bindings (jsi/call query :once)]
 
     ;; (jsi/call js/console :log "Loaded Swipl Mod: " swipl-mod)
     ;; (jsi/call js/console :log "SWIPL: " swipl)
 
-    (-> stack-trace persistent!)))
+    {:trace (-> stack-trace persistent!)
+     :bindings
+     (-> bindings
+         bean/bean
+         (m/match
+          {:$tag (m/some "bindings") :success (m/some true) & ?rest}
+           (-> ?rest
+               (update-keys
+                (r/match
+                 (m/keyword ?kw) (symbol "var" (str/lower-case ?kw))))
+               (update-vals swipl-data->clj))
+           _ {}))}))
 
 ;; TODO:
 ;; Can use dicts to model objects and method calls.
@@ -269,20 +292,21 @@
 (prom/let
  [program
   ['(DECIDE
-     the sum of the list of all elements satisfying q, say var/xs, is var/x,
-     which is strictly between 0 and 10
-     IF (var/xs IS THE LIST OF ALL var/x SUCH THAT
+     1 less than the sum of the list of all elements satisfying q,
+     say var/xs, is var/z, which is strictly between 0 and 10
+     ;; IF (NOT ((var/x <= 0) OR (var/x >= 10)))
+     IF (var/z > 0)
+     AND (var/z < 10)
+     AND (var/xs IS THE LIST OF ALL var/x SUCH THAT
                 q holds for var/x)
-     AND (var/x IS THE SUM OF var/xs)
-     AND ((2 + 1) IS var/x)
-     AND (NOT ((var/x <= 0) OR (var/x >= 10))))
+     AND ((var/z + 1) IS THE SUM OF var/xs))
 
    '(DECIDE q holds for 0)
    '(DECIDE q holds for 1)
    '(DECIDE q holds for 2)]
 
-  goal '(the sum of the list of all elements satisfying q, say var/xs, is var/x,
-             which is strictly between 0 and 10)
+  goal '(1 less than the sum of the list of all elements satisfying q,
+         say var/xs, is var/z which is strictly between _ and _)
 
   program' (it-> program
                  (eduction (map #(-> % clj->swipl (str ".\n"))) it)
@@ -296,5 +320,5 @@
   _ (jsi/call js/console :log "Transpiled Prolog program:\n" program')
   _ (jsi/call js/console :log "Transpiled Prolog goal:\n" goal')
 
-  trace (eval-and-trace program' goal')]
-  (jsi/call js/console :log "Trace:\n" trace))
+  output (eval-and-trace program' goal')]
+  (jsi/call js/console :log "Output:\n" output))
