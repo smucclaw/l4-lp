@@ -76,7 +76,7 @@ X 'IS' Y :-
   % unification with arithmetic evaluation via "is", or the unify with occurs
   % check with plain old unification.
   notrace,
-  catch({X == Y}, _, (unify_with_occurs_check(X, Y), trace)),
+  catch(({X == Y}, solve([X, Y])), _, (unify_with_occurs_check(X, Y), trace)),
   trace.
 
   % catch(X is Y, _, fail), !

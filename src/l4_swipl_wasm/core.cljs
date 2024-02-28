@@ -78,7 +78,7 @@
         close-brace (symbol ")")
         _open-sq-brace (symbol "[")
         _close-sq-brace (symbol "]")
-        infix-ops #{'+ '- '* '/ '< '<= '= '> '>= '=< 'IS}
+        infix-ops #{'+ '- '* '/ '< '<= '= '> '>= '=< 'IS '**}
         math-list-ops #{'MIN 'MAX 'PRODUCT 'SUM}]
     ;; Here we formalise a denotational semantics for the transpiler from L4 to
     ;; SWI Prolog, and implement it.
@@ -194,6 +194,8 @@
       > ~(symbol "gt")
       >= ~(symbol "geq")
 
+      ~(symbol "**") pow
+
       ;; ?x ∈ atom ∪ ℝ ∪ string
       ;; -----------------------
       ;;       ⟦?x⟧ = ?x
@@ -298,15 +300,21 @@
      IF (var/z > 0)
      AND (var/z < 10)
      AND (var/xs IS THE LIST OF ALL var/x SUCH THAT
-                q holds for var/x)
-     AND ((var/z + 1) IS THE SUM OF var/xs))
+                 q holds for var/x)
+     AND ((var/y + 1) IS 0)
+     AND ((var/z + (1 - var/y)) IS THE SUM OF var/xs))
 
    '(DECIDE q holds for 0)
    '(DECIDE q holds for 1)
-   '(DECIDE q holds for 2)]
+   '(DECIDE q holds for 2)
+   
+   '(DECIDE
+     var/x is a solution
+     IF ((2 * (var/x ** 3)) + (3 * (var/x ** 2))) IS 0)]
 
-  goal '(1 less than the sum of the list of all elements satisfying q,
-         say var/xs, is var/z which is strictly between _ and _)
+  ;;goal '(1 less than the sum of the list of all elements satisfying q,
+  ;;       say var/xs, is var/z which is strictly between _ and _)
+  goal '(var/x is a solution)
 
   program' (it-> program
                  (eduction (map #(-> % clj->swipl (str ".\n"))) it)
