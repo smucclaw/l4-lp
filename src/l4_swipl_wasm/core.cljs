@@ -34,6 +34,7 @@
            (m/app #(jsi/get % ?functor) #js [!args ...]))
     (~(symbol ?functor) & [!args ...])
 
+    IS is
     lt <
     =< <=
     lte <=
