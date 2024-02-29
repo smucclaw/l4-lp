@@ -65,28 +65,34 @@ max_list_([X | Xs], Result) =>
   max_list_(Xs, Result0),
   Result 'IS' max(X, Result0).
 
+% This first uses constraint solving via clpBNR for unifying arithmetic
+% expressions, modulo the theory of reals.
+% If that fails, we revert to syntatic unification, ie modulo the empty
+% theory.
+%
+% If this is too slow, we can replace the replace the constraint based
+% unification with arithmetic evaluation via "is", or the unify with occurs
+% check with plain old unification.
+%
+% This is buggy in that the constraint solver doesn't throw a type error
+% when we try to unify 2 lists. It always fails, so that lists are never
+% unified correctly.
+% It only throws a type error when we try to unify a list with
+% a number.
+X 'IS' Y :-
+  notrace,
+  catch(
+    ({X == Y, Y == X}, solve([X, Y])),
+    _,
+    (unify_with_occurs_check(X, Y), trace)
+  ),
+  trace.
+
 % X 'IS' Y :-
-  % This first uses constraint solving via clpBNR for unifying arithmetic
-  % expressions, modulo the theory of reals.
-  % If that fails, we revert to syntatic unification, ie modulo the empty
-  % theory.
-  %
-  % If this is too slow, we can replace the replace the constraint based
-  % unification with arithmetic evaluation via "is", or the unify with occurs
-  % check with plain old unification.
-  % notrace,
-  % catch(
-  %   ({X == Y, Y == X}, solve([X, Y])),
-  %   _,
-  %   (unify_with_occurs_check(X, Y), trace)
-  % ),
-  % trace.
+%   #toggle_tracing(notrace, (unify_with_occurs_check(X, Y), !), trace).
 
-X 'IS' Y :-
-  #toggle_tracing(notrace, (unify_with_occurs_check(X, Y), !), trace).
-
-X 'IS' Y :-
-  #toggle_tracing(notrace, ({X == Y, Y == X}, solve([X, Y])), trace).
+% X 'IS' Y :-
+%   #toggle_tracing(notrace, ({X == Y, Y == X}, solve([X, Y])), trace).
 
   % catch(X is Y, _, fail), !
 
