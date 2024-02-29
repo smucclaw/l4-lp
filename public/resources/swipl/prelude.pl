@@ -65,7 +65,7 @@ max_list_([X | Xs], Result) =>
   max_list_(Xs, Result0),
   Result 'IS' max(X, Result0).
 
-X 'IS' Y :-
+% X 'IS' Y :-
   % This first uses constraint solving via clpBNR for unifying arithmetic
   % expressions, modulo the theory of reals.
   % If that fails, we revert to syntatic unification, ie modulo the empty
@@ -74,13 +74,19 @@ X 'IS' Y :-
   % If this is too slow, we can replace the replace the constraint based
   % unification with arithmetic evaluation via "is", or the unify with occurs
   % check with plain old unification.
-  notrace,
-  catch(
-    ({X == Y, Y == X}, solve([X, Y])),
-    _,
-    (unify_with_occurs_check(X, Y), trace)
-  ),
-  trace.
+  % notrace,
+  % catch(
+  %   ({X == Y, Y == X}, solve([X, Y])),
+  %   _,
+  %   (unify_with_occurs_check(X, Y), trace)
+  % ),
+  % trace.
+
+X 'IS' Y :-
+  #toggle_tracing(notrace, (unify_with_occurs_check(X, Y), !), trace).
+
+X 'IS' Y :-
+  #toggle_tracing(notrace, ({X == Y, Y == X}, solve([X, Y])), trace).
 
   % catch(X is Y, _, fail), !
 

@@ -174,7 +174,7 @@
       (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
 
       ;; TODO: (& [!conjuncts ... ?conjunct] AND ...) nil
-      
+
       ;; ---------
       ;; ⟦AND⟧ = ,
       AND ~comma
