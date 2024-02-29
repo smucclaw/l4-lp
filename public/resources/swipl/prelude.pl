@@ -83,21 +83,33 @@ max_list_([X | Xs], Result) =>
 % If this is too slow, we can replace the replace the constraint based
 % unification with arithmetic evaluation via "is", or the unify with occurs
 % check with plain old unification.
+%
+% Is there a better way to do this kind of unification?
+% Perhaps SWI Prolog provides some meta-level hooks that we can use to tweak
+% the standard unification procedure to be modulo the theory of reals.
 X 'IS' Y :-
   notrace,
   catch(
     ({X == Y, Y == X}, solve([X, Y])),
     _,
-    (X 'IS_' Y, trace)
+    (trace, fail)
   ), !,
   trace.
 
-X 'IS' Y :- #toggle_tracing(notrace, X 'IS_' Y, trace).
+% Optimisation for when X and Y are both lists. In that case, just use maplist
+% to unify all their arguments, instead of using the next clause to split apart
+% the terms into functors and args.
+X 'IS' Y :-
+  #toggle_tracing(notrace, maplist('IS', X, Y), trace), !.
 
-X 'IS_' Y :-
-  X =.. [Functor | X_args],
-  Y =.. [Functor | Y_args],
-  maplist('IS', X_args, Y_args).
+X 'IS' Y :- #toggle_tracing(
+  notrace, (
+    X =.. [Functor | X_args],
+    Y =.. [Functor | Y_args],
+    maplist('IS', X_args, Y_args)
+  ),
+  trace
+).
 
 % X 'IS' Y :-
   % catch(X is Y, _, fail), !
