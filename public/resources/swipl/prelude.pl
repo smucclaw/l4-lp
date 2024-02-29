@@ -6,9 +6,13 @@
 
 :- use_module(library(macros)).
 :- use_module(library(dicts)).
+
+:- use_module(library(clpBNR)).
+:- use_module(library(date_time)).
+
 % :- use_module(library(clpq)).
 
-:- [library(date_time), library(clpBNR)].
+% :- [library(date_time), library(clpBNR)].
 
 % :- set_prolog_flag(gc, off).
 
@@ -43,6 +47,7 @@ eval_and_trace(Goal) :-
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(800, xfx, 'IS').
+:- op(800, xfx, 'IS_').
 
 product_list([], Result) => Result 'IS' 0.
 product_list([X], Result) => Result 'IS' X.
@@ -67,41 +72,43 @@ max_list_([X | Xs], Result) =>
 
 % This first uses constraint solving via clpBNR for unifying arithmetic
 % expressions, modulo the theory of reals.
-% If that fails, we revert to syntatic unification, ie modulo the empty
-% theory.
+% If that fails, then we know that at least one of the terms that we're trying
+% to unify is compound, with a functor that is not in the signature of the
+% first order theory of reals.
+% In this case, we do the following (which is a variant of unification
+% with an occurs check, just modulo the theory of reals):
+% 1. Syntactically unify the functor, ie modulo the empty theory.
+% 2. Recursively unify the arguments, modulo the theory of reals.
 %
 % If this is too slow, we can replace the replace the constraint based
 % unification with arithmetic evaluation via "is", or the unify with occurs
 % check with plain old unification.
-%
-% This is buggy in that the constraint solver doesn't throw a type error
-% when we try to unify 2 lists. It always fails, so that lists are never
-% unified correctly.
-% It only throws a type error when we try to unify a list with
-% a number.
 X 'IS' Y :-
   notrace,
   catch(
     ({X == Y, Y == X}, solve([X, Y])),
     _,
-    (unify_with_occurs_check(X, Y), trace)
-  ),
+    (X 'IS_' Y, trace)
+  ), !,
   trace.
 
-% X 'IS' Y :-
-%   #toggle_tracing(notrace, (unify_with_occurs_check(X, Y), !), trace).
+X 'IS' Y :- #toggle_tracing(notrace, X 'IS_' Y, trace).
+
+X 'IS_' Y :-
+  X =.. [Functor | X_args],
+  Y =.. [Functor | Y_args], !,
+  maplist('IS', X_args, Y_args), !.
 
 % X 'IS' Y :-
-%   #toggle_tracing(notrace, ({X == Y, Y == X}, solve([X, Y])), trace).
-
   % catch(X is Y, _, fail), !
 
-% 'IS'(X, Y) :-
+% X 'IS' Y :-
 %   catch(Y is X, _, fail), !.
 
-% 'IS'(X, Y) :-
+% X 'IS' Y :-
 %   catch((Z is X, Z is Y), _, fail), !.
 
+% X 'IS' Y :-
   % notrace, ((unify_with_occurs_check(X, Y), !, trace); trace).
 
 #define(
