@@ -4,6 +4,7 @@
 % https://swi-prolog.discourse.group/t/swi-prolog-in-the-browser-using-wasm/5650
 % https://www.swi-prolog.org/pldoc/man?section=wasm
 
+:- use_module(library(macros)).
 :- use_module(library(dicts)).
 % :- use_module(library(clpq)).
 
@@ -32,21 +33,19 @@ prolog_trace_interception(Port, Frame, _Choice, continue) :-
 
   log_stack_frame(StackFrame).
 
-eval_and_trace(Goal) :-
-  trace,
-  ((call(Goal), !, notrace, nodebug) ; (notrace, nodebug, fail)).
+#define(
+  toggle_tracing(Toggle, Goal, Toggle0),
+  (Toggle, ((Goal, !, Toggle0) ; (Toggle0, fail)))
+).
 
-% Judgement forms for semantics:
-% 1. Γ ⊢ expr ⇓ val
-%   Under context Γ, expr big-step evaluates to val 
-% 2. Γ ⊢ p
-%   Under context Γ, p holds.
+eval_and_trace(Goal) :-
+  #toggle_tracing(trace, call(Goal), notrace).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(800, xfx, 'IS').
 
 product_list([], 0) :- !.
-product_list([X], X) :- !.
+product_list([X], Y) :- !, Y 'IS' X.
 product_list([X | Xs], Result) :- !,
   product_list(Xs, Result0),
   Result 'IS' X * Result0.
@@ -76,7 +75,11 @@ X 'IS' Y :-
   % unification with arithmetic evaluation via "is", or the unify with occurs
   % check with plain old unification.
   notrace,
-  catch(({X == Y}, solve([X, Y])), _, (unify_with_occurs_check(X, Y), trace)),
+  catch(
+    ({X == Y}, solve([X, Y])),
+    _,
+    (unify_with_occurs_check(X, Y), trace)
+  ),
   trace.
 
   % catch(X is Y, _, fail), !
@@ -89,60 +92,18 @@ X 'IS' Y :-
 
   % notrace, ((unify_with_occurs_check(X, Y), !, trace); trace).
 
+#define(
+  arithmetic_comparison(Comparison),
+  #toggle_tracing(notrace, {Comparison}, trace)
+).
+
 % As with 'IS', we use constraint solving via clpBNR for handling arithmetic
 % comparisons.
 % If this is slow, try reverting to plain old arithmetic comparisons.
-lt(X, Y) :- notrace, (({X < Y}, !, trace) ; (trace, fail)).
-leq(X, Y) :- notrace, (({X =< Y}, !, trace) ; (trace, fail)).
+lt(X, Y) :- #arithmetic_comparison(X < Y).
+leq(X, Y) :- #arithmetic_comparison(X =< Y).
 
 % '<='(X, Y) :- X =< Y.
 
-gt(X, Y) :- notrace, (({X > Y}, !, trace) ; (trace, fail)).
-geq(X, Y) :- notrace, (({X >= Y}, !, trace) ; (trace, fail)).
-
-  % trace,
-  % (
-  %     call(Goal),
-  %     fail,
-  %     !
-  % ;
-  %     notrace,
-  %     nodebug
-  % ).
-
-% run0 :-
-%   trace,
-%   (
-%       mother(_,_),
-%       fail,
-%       !
-%   ;
-%       notrace,
-%       nodebug
-%   ).
-
-% female(pam).
-% female(liz).
-% female(pat).
-% female(ann).
-
-% male(tom).
-% male(bob).
-% male(jim).
-
-% parent(pam,bob).
-% parent(tom,bob).
-% parent(tom,liz).
-% parent(bob,ann).
-% parent(bob,pat).
-% parent(pat,jim).
-% parent(bob,peter).
-% parent(peter,jim).
-
-% mother(X,Y) :-
-%   parent(X,Y),
-%   female(X).
-
-% grandmother(X,Z) :-
-%   mother(X,Y),
-%   parent(Y,Z).
+gt(X, Y) :- #arithmetic_comparison(X > Y).
+geq(X, Y) :- #arithmetic_comparison(X >= Y).

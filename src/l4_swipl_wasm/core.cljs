@@ -34,12 +34,33 @@
            (m/app #(jsi/get % ?functor) #js [!args ...]))
     (~(symbol ?functor) & [!args ...])
 
+    lt <
     =< <=
+    lte <=
+    gt >
+    gte >=
 
     (m/symbol ";") or
     (m/symbol ",") and
 
     ?term ?term)))
+
+(def ^:private swipl-result->bindings
+  (r/pipe
+   (r/match
+    (m/app bean/bean
+           {:$tag (m/some "bindings")
+            :success (m/some true)
+            & ?bindings})
+     ?bindings
+   _ {})
+
+   (r/repeat
+    (r/rewrite
+     {(m/keyword ?var-id) (m/some ?swipl-data) & ?bindings}
+     {~(symbol "var" (str/lower-case ?var-id))
+      ~(swipl-data->clj ?swipl-data)
+      & ?bindings}))))
 
 (def ^:private mixfix->prefix
   (r/pipe
@@ -65,7 +86,6 @@
    ;; Convert the predicate and list of arguments to prefix form.
    (r/rewrite
     {:pred ?pred :args []} ?pred
-
     {:pred ?pred :args [!args ... ?arg]}
     (?pred ~(symbol "(") & (!args ~(symbol ",") ... ?arg) ~(symbol ")")))))
 
@@ -194,7 +214,7 @@
       > ~(symbol "gt")
       >= ~(symbol "geq")
 
-      ~(symbol "**") pow
+      ;; ~(symbol "**") pow
 
       ;; ?x ∈ atom ∪ ℝ ∪ string
       ;; -----------------------
@@ -267,23 +287,13 @@
                        ;; "eval_and_trace(Goal)" #js {:Goal goal}
                        (str "eval_and_trace(" goal ")"))
 
-    bindings (jsi/call query :once)]
+    result (jsi/call query :once)]
 
     ;; (jsi/call js/console :log "Loaded Swipl Mod: " swipl-mod)
     ;; (jsi/call js/console :log "SWIPL: " swipl)
 
     {:trace (-> stack-trace persistent!)
-     :bindings
-     (-> bindings
-         bean/bean
-         (m/match
-          {:$tag (m/some "bindings") :success (m/some true) & ?rest}
-           (-> ?rest
-               (update-keys
-                (r/match
-                 (m/keyword ?kw) (symbol "var" (str/lower-case ?kw))))
-               (update-vals swipl-data->clj))
-           _ {}))}))
+     :bindings (-> result swipl-result->bindings)}))
 
 ;; TODO:
 ;; Can use dicts to model objects and method calls.
@@ -307,14 +317,16 @@
    '(DECIDE q holds for 0)
    '(DECIDE q holds for 1)
    '(DECIDE q holds for 2)
-   
-   '(DECIDE
-     var/x is a solution
-     IF ((2 * (var/x ** 3)) + (3 * (var/x ** 2))) IS 0)]
 
-  ;;goal '(1 less than the sum of the list of all elements satisfying q,
-  ;;       say var/xs, is var/z which is strictly between _ and _)
-  goal '(var/x is a solution)
+   '(DECIDE
+     var/x and var/y are solutions
+     IF (((var/x ** 3) + (var/y ** 3)) IS 0)
+     AND (((var/x ** 2) + (var/y ** 2)) IS 1)
+     #_AND #_(var/x IS var/y))]
+
+  goal '(1 less than the sum of the list of all elements satisfying q,
+         say var/xs, is var/z which is strictly between _ and _)
+  ;; goal '(var/x and var/y are solutions)
 
   program' (it-> program
                  (eduction (map #(-> % clj->swipl (str ".\n"))) it)
