@@ -96,8 +96,8 @@ X 'IS' Y :- #toggle_tracing(notrace, X 'IS_' Y, trace).
 
 X 'IS_' Y :-
   X =.. [Functor | X_args],
-  Y =.. [Functor | Y_args], !,
-  maplist('IS', X_args, Y_args), !.
+  Y =.. [Functor | Y_args],
+  maplist('IS', X_args, Y_args).
 
 % X 'IS' Y :-
   % catch(X is Y, _, fail), !
