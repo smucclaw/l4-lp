@@ -304,7 +304,7 @@
 (prom/let
  [program
   ['(DECIDE
-     1 less than the sum of the list of all elements satisfying q,
+     the sum of the list of all elements satisfying q,
      say var/xs, is var/z, which is strictly between 0 and 10
      ;; IF (NOT ((var/x <= 0) OR (var/x >= 10)))
      IF (var/z > 0)
@@ -312,7 +312,7 @@
      AND (var/xs IS THE LIST OF ALL var/x SUCH THAT
                  q holds for var/x)
      AND ((var/y + 1) IS 0)
-     AND ((var/z + (1 - var/y)) IS THE SUM OF var/xs))
+     AND ((var/z + (-1 - var/y)) IS THE SUM OF var/xs))
 
    '(DECIDE q holds for 0)
    '(DECIDE q holds for 1)
@@ -324,7 +324,7 @@
      AND (((var/x ** 2) + (var/y ** 2)) IS 1)
      #_AND #_(var/x IS var/y))]
 
-  goal '(1 less than the sum of the list of all elements satisfying q,
+  goal '(the sum of the list of all elements satisfying q,
          say var/xs, is var/z which is strictly between _ and _)
   ;; goal '(var/x and var/y are solutions)
 

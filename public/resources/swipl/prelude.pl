@@ -44,24 +44,24 @@ eval_and_trace(Goal) :-
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(800, xfx, 'IS').
 
-product_list([], 0) :- !.
-product_list([X], Y) :- !, Y 'IS' X.
-product_list([X | Xs], Result) :- !,
+product_list([], Result) => Result 'IS' 0.
+product_list([X], Result) => Result 'IS' X.
+product_list([X | Xs], Result) =>
   product_list(Xs, Result0),
   Result 'IS' X * Result0.
 
-sum_list_([], 0) :- !.
-sum_list_([X | Xs], Result) :- !,
+sum_list_([], Result) => Result 'IS' 0.
+sum_list_([X | Xs], Result) =>
   sum_list_(Xs, Result0),
   Result 'IS' X + Result0.
 
-min_list_([], inf) :- !.
-min_list_([X | Xs], Result) :- !,
+min_list_([], Result) => Result 'IS' inf.
+min_list_([X | Xs], Result) =>
   min_list_(Xs, Result0),
   Result 'IS' min(X, Result0).
 
-max_list_([], -inf) :- !.
-max_list_([X | Xs], Result) :- !,
+max_list_([], Result) => Result 'IS' -inf.
+max_list_([X | Xs], Result) =>
   max_list_(Xs, Result0),
   Result 'IS' max(X, Result0).
 
