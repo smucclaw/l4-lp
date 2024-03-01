@@ -12,7 +12,6 @@ pom.xml.asc
 *.class
 /lib/
 /classes/
-/target/
 *.log
 .shadow-cljs
 .idea
