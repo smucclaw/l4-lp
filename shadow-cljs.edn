@@ -13,10 +13,10 @@
 
            :exports
            {l4_to_prolog_str
-            l4-swipl-wasm.core/l4->prolog-str
+            l4-lp.core/l4->prolog-str
 
             l4_program_to_prolog_program_str
-            l4-swipl-wasm.core/l4-program->prolog-program-str
+            l4-lp.core/l4-program->prolog-program-str
 
             query_and_trace
-            l4-swipl-wasm.core/query-and-trace}}}}}}
+            l4-lp.core/query-and-trace}}}}}}

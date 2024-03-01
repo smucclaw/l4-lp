@@ -1,8 +1,8 @@
-(ns l4-swipl-wasm.syntax.l4-to-prolog 
+(ns l4-lp.syntax.l4-to-prolog 
   (:require [clojure.edn :as edn]
-            [l4-swipl-wasm.syntax.mixfix-parser
+            [l4-lp.syntax.mixfix-parser
              :refer [l4-mixfix->prolog-prefix]]
-            [l4-swipl-wasm.syntax.symbol-db :as symbol-db]
+            [l4-lp.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
             [tupelo.core :refer [it-> spy]]

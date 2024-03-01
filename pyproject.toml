@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "l4-swipl-wasm"
+name = "l4-lp"
 version = "0.1.0"
 description = ""
 authors = ["CCLAW"]

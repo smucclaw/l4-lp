@@ -1,5 +1,5 @@
 {
-  "name": "l4-swipl-wasm",
+  "name": "l4-lp",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {

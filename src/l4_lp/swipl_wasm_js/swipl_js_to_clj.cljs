@@ -1,7 +1,7 @@
-(ns l4-swipl-wasm.swipl-wasm-js.swipl-js-to-clj 
+(ns l4-lp.swipl-wasm-js.swipl-js-to-clj 
   (:require [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
-            [l4-swipl-wasm.syntax.symbol-db :as symbol-db]
+            [l4-lp.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
             [tupelo.string :as str]))

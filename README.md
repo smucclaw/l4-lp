@@ -1,4 +1,4 @@
-# l4-swipl-wasm
+# l4-lp
 
 Experiments with:
 - Using term rewriting via [Meander](https://github.com/noprompt/meander) to

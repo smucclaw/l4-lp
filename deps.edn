@@ -16,7 +16,7 @@
         ;; lambdaisland/fetch {:mvn/version "1.5.83"}
         metosin/malli {:mvn/version "0.14.0"}}
  :aliases
- {:neil {:project {:name l4-swipl-wasm/l4-swipl-wasm
+ {:neil {:project {:name l4-lp/l4-lp
                    :version "0.0.1"}}
 
   :nrepl ;; added by neil

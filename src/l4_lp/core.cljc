@@ -1,7 +1,7 @@
-(ns l4-swipl-wasm.core
+(ns l4-lp.core
   (:require #?(:cljs [applied-science.js-interop :as jsi])
-            #?(:cljs [l4-swipl-wasm.swipl-wasm-js.query :as swipl-wasm-js-query])
-            [l4-swipl-wasm.syntax.l4-to-prolog :as l4->prolog]
+            #?(:cljs [l4-lp.swipl-wasm-js.query :as swipl-wasm-js-query])
+            [l4-lp.syntax.l4-to-prolog :as l4->prolog]
             #?(:cljs [promesa.core :as prom])))
 
 (def l4->prolog-str

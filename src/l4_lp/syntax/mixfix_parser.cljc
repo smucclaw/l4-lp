@@ -1,5 +1,5 @@
-(ns l4-swipl-wasm.syntax.mixfix-parser 
-  (:require [l4-swipl-wasm.syntax.symbol-db :as symbol-db]
+(ns l4-lp.syntax.mixfix-parser 
+  (:require [l4-lp.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
             [tupelo.core :refer [it->]]

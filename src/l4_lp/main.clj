@@ -1,5 +1,5 @@
-(ns l4-swipl-wasm.main
-  (:require [l4-swipl-wasm.core :as l4-swipl-wasm]
+(ns l4-lp.main
+  (:require [l4-lp.core :as l4-lp]
             [libpython-clj2.python :as py]
             [libpython-clj2.require :refer [require-python]]
             [tupelo.core :refer [it->]])
@@ -15,10 +15,10 @@
                AND (var/x IS THE SUM OF var/xs))
               (DECIDE q holds for 1)
               (DECIDE q holds for 2)]"
-            l4-swipl-wasm/l4-program->prolog-program-str)
+            l4-lp/l4-program->prolog-program-str)
 
         goal (-> "(p of var/xs and var/x)"
-                 l4-swipl-wasm/l4->prolog-str)]
+                 l4-lp/l4->prolog-str)]
 
     (println "Program: " program)
     (println "Goal: " goal)

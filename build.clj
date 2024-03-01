@@ -44,11 +44,11 @@
   (b/compile-clj {:basis basis
                   :src-dirs ["src"]
                   :class-dir class-dir
-                  :ns-compile '[l4-swipl-wasm.main]})
+                  :ns-compile '[l4-lp.main]})
   (b/uber {:class-dir class-dir
            :uber-file uber-file
            :basis basis
-           :main 'l4-swipl-wasm.main}))
+           :main 'l4-lp.main}))
 
 (defn deploy [opts]
   (jar opts)
