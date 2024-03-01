@@ -12,9 +12,8 @@
    In such cases, each element in the left item (resp right item) is related to
    each element of the right item.
 
-   Internally, each pair is stored as datoms (ie RDF-like triples) in a Datalog
-   database powered by Datascript, and we axiomatise a binary relation called
-   l4-prolog-symbol in terms of these pairs."
+   Internally, each pair is represented as a Datascript datom, and we
+   axiomatise a binary relation called l4-prolog-symbol in terms of these pairs."
   #{[['IS '= '==] ['eq 'is]]
     ['AND ","]
     ['OR ";"]
