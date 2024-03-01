@@ -6,7 +6,8 @@
   {:target :esm
   :output-dir "public/js"
    :modules {:main {:js-options {:js-provider :import}
-                    :compiler-options {:output-feature-set :es2018}
+                    :compiler-options {:output-feature-set :es2018
+                                       :externs ["datascript/externs.js"]}
                     :optimizations :advanced
 
                     :exports

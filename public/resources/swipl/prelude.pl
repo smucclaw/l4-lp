@@ -7,12 +7,10 @@
 :- use_module(library(macros)).
 :- use_module(library(dicts)).
 
-:- use_module(library(clpBNR)).
-:- use_module(library(date_time)).
-
 % :- use_module(library(clpq)).
 
-% :- [library(date_time), library(clpBNR)].
+:- [library(clpBNR)].
+:- [library(date_time)].
 
 % :- set_prolog_flag(gc, off).
 
@@ -46,29 +44,32 @@ eval_and_trace(Goal) :-
   #toggle_tracing(trace, call(Goal), notrace).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
-:- op(800, xfx, 'IS').
-:- op(800, xfx, 'IS_').
+:- op(700, xfx, eq).
+:- op(700, xfx, lt).
+:- op(700, xfx, leq).
+:- op(700, xfx, gt).
+:- op(700, xfx, geq).
 
-product_list([], Result) => Result 'IS' 0.
-product_list([X], Result) => Result 'IS' X.
+product_list([], Result) => Result eq 0.
+product_list([X], Result) => Result eq X.
 product_list([X | Xs], Result) =>
   product_list(Xs, Result0),
-  Result 'IS' X * Result0.
+  Result eq X * Result0.
 
-sum_list_([], Result) => Result 'IS' 0.
+sum_list_([], Result) => Result eq 0.
 sum_list_([X | Xs], Result) =>
   sum_list_(Xs, Result0),
-  Result 'IS' X + Result0.
+  Result eq X + Result0.
 
-min_list_([], Result) => Result 'IS' inf.
+min_list_([], Result) => Result eq inf.
 min_list_([X | Xs], Result) =>
   min_list_(Xs, Result0),
-  Result 'IS' min(X, Result0).
+  Result eq min(X, Result0).
 
-max_list_([], Result) => Result 'IS' -inf.
+max_list_([], Result) => Result eq -inf.
 max_list_([X | Xs], Result) =>
   max_list_(Xs, Result0),
-  Result 'IS' max(X, Result0).
+  Result eq max(X, Result0).
 
 % This first uses constraint solving via clpBNR for unifying arithmetic
 % expressions, modulo the theory of reals.
@@ -87,7 +88,7 @@ max_list_([X | Xs], Result) =>
 % Is there a better way to do this kind of unification?
 % Perhaps SWI Prolog provides some meta-level hooks that we can use to tweak
 % the standard unification procedure to be modulo the theory of reals.
-X 'IS' Y :-
+X eq Y :-
   notrace,
   catch(
     ({X == Y, Y == X}, solve([X, Y])),
@@ -99,14 +100,14 @@ X 'IS' Y :-
 % Optimisation for when X and Y are both lists. In that case, just use maplist
 % to unify all their arguments, instead of using the next clause to split apart
 % the terms into functors and args.
-X 'IS' Y :-
-  #toggle_tracing(notrace, maplist('IS', X, Y), trace), !.
+X eq Y :-
+  #toggle_tracing(notrace, maplist(eq, X, Y), trace), !.
 
-X 'IS' Y :- #toggle_tracing(
+X eq Y :- #toggle_tracing(
   notrace, (
     X =.. [Functor | X_args],
     Y =.. [Functor | Y_args],
-    maplist('IS', X_args, Y_args)
+    maplist(eq, X_args, Y_args)
   ),
   trace
 ).
@@ -131,10 +132,10 @@ X 'IS' Y :- #toggle_tracing(
 % As with 'IS', we use constraint solving via clpBNR for handling arithmetic
 % comparisons.
 % If this is slow, try reverting to plain old arithmetic comparisons.
-lt(X, Y) :- #arithmetic_comparison(X < Y).
-leq(X, Y) :- #arithmetic_comparison(X =< Y).
+X lt Y :- #arithmetic_comparison(X < Y).
+X leq Y :- #arithmetic_comparison(X =< Y).
 
 % '<='(X, Y) :- X =< Y.
 
-gt(X, Y) :- #arithmetic_comparison(X > Y).
-geq(X, Y) :- #arithmetic_comparison(X >= Y).
+X gt Y :- #arithmetic_comparison(X > Y).
+X geq Y :- #arithmetic_comparison(X >= Y).

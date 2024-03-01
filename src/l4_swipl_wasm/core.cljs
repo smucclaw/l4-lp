@@ -1,12 +1,13 @@
 (ns l4-swipl-wasm.core
   (:require [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
-            [tupelo.string :as str]
+            [l4-swipl-wasm.syntax.swipl-to-clj :as swipl-js->clj]
+            [l4-swipl-wasm.syntax.l4-to-prolog :as l4->prolog]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
             [promesa.core :as prom]
             [shadow.esm :refer [dynamic-import]]
-            [tupelo.core :refer [it->]]))
+            [tupelo.string :as str]))
 
 (def ^:private swipl-wasm-cdn-url
   "https://SWI-Prolog.github.io/npm-swipl-wasm/3/7/0/dynamic-import.js")
@@ -16,35 +17,6 @@
 
 ;; https://swi-prolog.discourse.group/t/clojure-clojurescript-with-swi-prolog/5399/4
 ;; https://github.com/SWI-Prolog/roadmap/issues/43
-
-(def ^:private swipl-data->clj
-  (r/top-down
-   (r/rewrite
-    #js {:$t (m/some "s") :v (m/some ?str)} ?str
-    #js {:$t (m/some "v") :v (m/some ?var-id)} ~(symbol "var" ?var-id)
-
-    #js [!xs ...] [!xs ...]
-
-    #js {:$t (m/some "t")
-         :functor (m/some ":")
-         ":" (m/some #js [_ (m/cata ?term)])}
-    ?term
-
-    (m/and #js {:$t (m/some "t") :functor (m/some ?functor)}
-           (m/app #(jsi/get % ?functor) #js [!args ...]))
-    (~(symbol ?functor) & [!args ...])
-
-    IS is
-    lt <
-    =< <=
-    lte <=
-    gt >
-    gte >=
-
-    (m/symbol ";") or
-    (m/symbol ",") and
-
-    ?term ?term)))
 
 (def ^:private swipl-result->bindings
   (r/pipe
@@ -60,167 +32,8 @@
     (r/rewrite
      {(m/keyword ?var-id) (m/some ?swipl-data) & ?bindings}
      {~(symbol "var" (str/lower-case ?var-id))
-      ~(swipl-data->clj ?swipl-data)
+      ~(swipl-js->clj/swipl-js-data->clj ?swipl-data)
       & ?bindings}))))
-
-(def ^:private mixfix->prefix
-  (r/pipe
-   (r/rewrite
-   ;; Partition all the elements into args and non-args.
-   ;; Non-args are later mashed together into an atom representing the predicate.
-    ((m/or (m/and (m/or (m/symbol "_")
-                        (m/symbol "var" _)
-                        (m/pred number?)
-                        (m/pred seq?)
-                        (m/pred vector?))
-                  !args)
-           !non-args)
-     ..1)
-    {:non-args [!non-args ...] :args [!args ...]})
-
-   ;; Convert the non-args into a valid atom representing the predicate.
-   (r/match
-    {:non-args ?non-args :args ?args}
-     {:pred (it-> ?non-args (str/join "_" it) (str "'" it "'") (symbol it))
-      :args ?args})
-
-   ;; Convert the predicate and list of arguments to prefix form.
-   (r/rewrite
-    {:pred ?pred :args []} ?pred
-    {:pred ?pred :args [!args ... ?arg]}
-    (?pred ~(symbol "(") & (!args ~(symbol ",") ... ?arg) ~(symbol ")")))))
-
-(def ^:private clj->swipl
-  (let [turnstile (symbol ":-")
-        comma (symbol ",")
-        _dot (symbol ".")
-        semicolon (symbol ";")
-        open-brace (symbol "(")
-        close-brace (symbol ")")
-        _open-sq-brace (symbol "[")
-        _close-sq-brace (symbol "]")
-        infix-ops #{'+ '- '* '/ '< '<= '= '> '>= '=< 'IS '**}
-        math-list-ops #{'MIN 'MAX 'PRODUCT 'SUM}]
-    ;; Here we formalise a denotational semantics for the transpiler from L4 to
-    ;; SWI Prolog, and implement it.
-    ;; We axiomatise our semantics via a (first-order) equational theory whose
-    ;; primary construct is the interpretation function ⟦.⟧ which maps the
-    ;; Natural4 term algebra to that of SWI Prolog.
-    ;; This is implemented via a top-down traversal of the Natural4
-    ;; AST, transforming each node via Meander term rewriting
-    ;; rules that orient the equational theory from left to right.
-    (r/top-down
-     (r/rewrite
-      ;; --------------------------------------------------
-      ;; ⟦DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ⟧ =
-      ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
-      (DECIDE . !head ..1 IF . !body ..1)
-      ((~turnstile (!head ...) (!body ...)))
-
-      ;; -------------------------------------------------
-      ;; ⟦DECIDE ?head₀ ... ?headₙ⟧ = ⟦(?head₀ ... ?headₙ)⟧
-      (DECIDE . !head ..1) ((!head ...))
-
-      ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
-      ;; ---------------------------------------------------
-      ;; ⟦(?lhs₀ ... lhsₘ IS THE ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
-      ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
-      (. !lhs ..1 IS THE (m/pred math-list-ops ?op) OF . !rhs ..1)
-      ((?op (!rhs ...) (!lhs ...)))
-
-      ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
-      ;; -----------------------------------------------------
-      ;; ⟦(?xs IS THE LIST OF ALL ?x SUCH THAT ?φ₀ ... ?φₙ)⟧ =
-      ;;   ⟦(findall ?x (?φ₀ ... ?φₙ) ?xs)⟧
-      (?xs IS THE LIST OF ALL ?x SUCH THAT & ?phi-x)
-      ((findall ?x ?phi-x ?xs))
-
-      ;;  ?op ∈ infix-ops              ?lhsᵢ ∉ infix-ops
-      ;; -------------------------------------------------
-      ;; ⟦(?lhs₀ ... lhsₘ ?op ?rhs₀ ... ?rhsₙ)⟧ =
-      ;;   ⟦(?op (?lhs₀ ... ?lhsₘ) (?rhs₀ ... ?rhsₙ))⟧
-      (m/and (!lhs ..1 (m/pred infix-ops ?op) . !rhs ..1))
-      ((?op (!lhs ...) (!rhs ...)))
-
-      ;; Auxiliary stuff for parsing predicate applications that are presented
-      ;; in mixfix form.
-      ;; TODO: Formalise the semantics of this operation.
-      (m/and
-       ;; Restrict mixfix parsing to seqs where there is > 1 item present,
-       ;; because otherwise there is no need for this.
-       (_ _ & _)
-       ;; The next 2 clauses restricts mixfix parsing to ignore AST nodes that
-       ;; contain L4 keywords.
-       ;; Such nodes include BoolStructs like (... AND ... AND ...).
-       (m/gather (m/or (m/pred #(-> % str str/uppercase?))
-                       (m/pred infix-ops))
-                 ?count)
-       (m/guard (zero? ?count))
-       ?predicate-application)
-      ~(mixfix->prefix ?predicate-application)
-
-      ;; ?pred ∈ symbol
-      ;; -----------------------------------------------------------
-      ;;  ⟦(?pred ?arg₀ ... ?argₙ)⟧ = ⟦?pred⟧(⟦?arg₀⟧ , ... , ⟦?argₙ⟧)
-      ((m/and (m/symbol _) ?pred) . !args ... ?arg)
-      (?pred ~open-brace & (!args ~comma ... ?arg) ~close-brace)
-
-      ;; ---------------------------------------
-      ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
-      [!xs ... !x] [!xs ~(symbol ",") ... !x]
-
-      ;; ?var-name = (symbol "var" ?var-name')
-      ;; -----------------------------------------------------
-      ;;   ⟦?var-name⟧ = (symbol (str/capitalize ?var-name'))
-      (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
-
-      ;; TODO: (& [!conjuncts ... ?conjunct] AND ...) nil
-
-      ;; ---------
-      ;; ⟦AND⟧ = ,
-      AND ~comma
-
-      ;; ---------
-      ;; ⟦OR⟧ = ;
-      OR ~semicolon
-
-      ;; -----------
-      ;; ⟦NOT⟧ = not
-      NOT not
-
-      ;; ------------------
-      ;; ⟦SUM⟧ = sum_list_
-      SUM sum_list_
-
-      ;; ------------------------
-      ;; ⟦PRODUCT⟧ = product_list
-      PRODUCT product_list
-
-      ;; ------------------
-      ;; ⟦MIN⟧ = min_list_
-      MIN min_list_
-
-      ;; -----------------
-      ;; ⟦MAX⟧ = max_list_
-      MAX max_list_
-
-      ;; -----------
-      ;; ⟦IS⟧ = 'IS'
-      IS ~(symbol "'IS'")
-
-      < ~(symbol "lt")
-      <= ~(symbol "leq")
-      =< ~(symbol "leq")
-
-      > ~(symbol "gt")
-      >= ~(symbol "geq")
-
-      ;; ~(symbol "**") pow
-
-      ;; ?x ∈ atom ∪ ℝ ∪ string
-      ;; -----------------------
-      ;;       ⟦?x⟧ = ?x
-      ?x ?x))))
 
 (def ^:private stack-frame->clj
   (r/match
@@ -228,9 +41,9 @@
         :current_goal (m/some ?current-goal)
         :port (m/some ?port)
         :recursion_depth (m/some ?recursion-depth)}
-    {:parent-goal (swipl-data->clj ?parent-goal)
-     :current-goal (swipl-data->clj ?current-goal)
-     :port (swipl-data->clj ?port)
+    {:parent-goal (swipl-js->clj/swipl-js-data->clj ?parent-goal)
+     :current-goal (swipl-js->clj/swipl-js-data->clj ?current-goal)
+     :port (swipl-js->clj/swipl-js-data->clj ?port)
      :recursion-depth ?recursion-depth}))
 
 (defn- fn->functional-interface [func]
@@ -329,11 +142,8 @@
          say var/xs, is var/z which is strictly between _ and _)
   ;; goal '(var/x and var/y are solutions)
 
-  program' (it-> program
-                 (eduction (map #(-> % clj->swipl (str ".\n"))) it)
-                 (apply str it)
-                 (str/replace it #" " ""))
-  goal' (-> goal clj->swipl str (str/replace #" " ""))
+  program' (l4->prolog/l4-program->prolog-program-str program)
+  goal' (l4->prolog/l4->prolog-str goal)
 
   _ (jsi/call js/console :log "Input L4 program:\n" program)
   _ (jsi/call js/console :log "Input L4 goal:\n" goal)
@@ -343,3 +153,12 @@
 
   output (eval-and-trace program' goal')]
   (jsi/call js/console :log "Output:\n" output))
+
+#_(->>
+ "[(DECIDE p of var/x IF ((var/x ** 1) IS 0))
+   (DECIDE q holds for 1)
+   (DECIDE q holds for 2)]"
+
+ l4->prolog/l4-program->prolog-program-str
+
+ (jsi/call js/console :log))
