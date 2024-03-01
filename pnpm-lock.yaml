@@ -6,8 +6,8 @@ settings:
 
 devDependencies:
   shadow-cljs:
-    specifier: 2.27.4
-    version: 2.27.4
+    specifier: 2.27.5
+    version: 2.27.5
 
 packages:
 
@@ -581,8 +581,8 @@ packages:
     resolution: {integrity: sha512-cZB2pzVXBnhpJ6PQdsjO+j/MksR28mv4QD/hP/2y1fsIa9Z9RutYgh3N34FZ8Ktl4puAXaIGlct+gMCJ5BmwmA==}
     dev: true
 
-  /shadow-cljs@2.27.4:
-    resolution: {integrity: sha512-NgLkdK1hpjDCCVAwQdBebz+0DzgaVYaGOw1ojUwY627DLL+kG/pwhw+qiDEFeJl+CWCMFiWJgnwVEM8d/Cit5g==}
+  /shadow-cljs@2.27.5:
+    resolution: {integrity: sha512-K0/7+kiRYvEpTyvXfjFp6RhedRyoo6bEQ452VhQqM3l15ekbRMoKSwxMn0sGp/DqFZTsKoADc+tPc7uipCRhFw==}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:

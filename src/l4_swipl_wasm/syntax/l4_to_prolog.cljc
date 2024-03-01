@@ -11,7 +11,7 @@
 (def ^:private l4-ast->prolog-ast
   "This function transforms the AST of an individual L4 rule or goal to the
    Prolog AST.
-   
+
    Semantically its behaviour is axiomatised via an equational theory whose
    primary construct is the interpretation function ⟦.⟧ which maps the L4 term
    algebra to that of Prolog.
