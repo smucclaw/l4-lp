@@ -4,11 +4,19 @@
  :builds
  {:app
   {:target :esm
-  :output-dir "public/js"
-   :modules {:main {:js-options {:js-provider :import}
-                    :compiler-options {:output-feature-set :es2018
-                                       :externs ["datascript/externs.js"]}
-                    :optimizations :advanced
+   :output-dir "public/js"
+   :modules
+   {:main {:js-options {:js-provider :import}
+           :compiler-options {:output-feature-set :es2018
+                              :externs ["datascript/externs.js"]}
+           :optimizations :advanced
 
-                    :exports
-                    {eval_and_trace l4-swipl-wasm.core/eval-and-trace}}}}}}
+           :exports
+           {l4_to_prolog_str
+            l4-swipl-wasm.core/l4->prolog-str
+
+            l4_program_to_prolog_program_str
+            l4-swipl-wasm.core/l4-program->prolog-program-str
+
+            query_and_trace
+            l4-swipl-wasm.core/query-and-trace}}}}}}

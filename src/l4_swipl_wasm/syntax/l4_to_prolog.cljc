@@ -1,45 +1,12 @@
 (ns l4-swipl-wasm.syntax.l4-to-prolog 
   (:require [clojure.edn :as edn]
+            [l4-swipl-wasm.syntax.mixfix-parser
+             :refer [l4-mixfix->prolog-prefix]]
             [l4-swipl-wasm.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
             [tupelo.core :refer [it->]]
             [tupelo.string :as str]))
-
-(def ^:private l4-mixfix->prolog-prefix
-  "Parses and transforms L4 mixfix predicate application into prefix form in
-   Prolog."
-  (r/pipe
-   (r/rewrite
-   ;; Partition all the elements into args and non-args.
-   ;; Non-args are later mashed together into an atom representing the predicate.
-    (m/app #(group-by symbol-db/is-l4-symbol? %)
-           {true (m/some (m/and [_] ?non-arg))
-            false (m/some ?args)})
-    {:non-args ?non-arg :args ?args}
-
-    ((m/or (m/and (m/or (m/symbol "_") (m/symbol "var" _)
-                        (m/pred number?)
-                        (m/pred seqable?))
-                  !args)
-           !non-args)
-     ..1)
-    {:non-args [!non-args ...] :args [!args ...]})
-
-   ;; Convert the non-args into a valid atom representing the predicate.
-   (r/match
-    {:non-args [?non-arg] :args ?args}
-     {:pred (symbol ?non-arg) :args ?args}
-
-     {:non-args ?non-args :args ?args}
-     {:pred (it-> ?non-args (str/join "_" it) (str "'" it "'") (symbol it))
-      :args ?args})
-
-   ;; Convert the predicate and list of arguments to prefix form.
-   (r/rewrite
-    {:pred ?pred :args []} ?pred
-    {:pred ?pred :args [!args ... ?arg]}
-    (?pred ~(symbol "(") & (!args ~(symbol ",") ... ?arg) ~(symbol ")")))))
 
 (def ^:private l4-ast->prolog-ast
   "This function transforms the AST of an individual L4 rule or goal to the
