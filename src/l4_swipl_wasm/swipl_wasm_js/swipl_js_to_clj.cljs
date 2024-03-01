@@ -7,9 +7,13 @@
             [tupelo.string :as str]))
 
 ;; https://swi-prolog.discourse.group/t/clojure-clojurescript-with-swi-prolog/5399/4
-;; https://github.com/SWI-Prolog/roadmap/issues/43
 
 (def ^:private swipl-data->clj
+  "Transforms Javascript data output by the SWIPL wasm interpreter into Clj
+   data.
+   
+   The format of the Javascript data is described here:
+   https://swi-prolog.discourse.group/t/swi-prolog-in-the-browser-using-wasm/5650#calling-between-javascript-and-prolog-5"
   (r/top-down
    (r/rewrite
     #js {:$t (m/some "s") :v (m/some ?str)} ?str
@@ -35,7 +39,10 @@
     ?term ?term)))
 
 (def swipl-query-result->bindings
+  "Given a SWIPL wasm query result, extract the bindings map and transform it
+   back into Clojure data."
   (r/pipe
+  ;; Extract bindings map from a swipl query result.
    (r/match
     (m/app bean/bean
            {:$tag (m/some "bindings")
@@ -44,6 +51,8 @@
      ?bindings
    _ {})
 
+   ;; Transform all keys (ie variables) and values (ie bindings) in
+   ;; the bindings map back to Clojure data.
    (r/repeat
     (r/rewrite
      {(m/keyword ?var-id) (m/some ?swipl-data) & ?bindings}
@@ -52,6 +61,8 @@
       & ?bindings}))))
 
 (def swipl-stack-frame->clj
+  "Given a stack frame logged by the SWIPL interpreter wasm, transform it into
+   Clojure data."
   (r/match
    #js {:parent_goal (m/some ?parent-goal)
         :current_goal (m/some ?current-goal)

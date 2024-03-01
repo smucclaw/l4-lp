@@ -80,6 +80,7 @@
     ?x ?x)))
 
 (def ^:private ->l4-ast
+  "Transforms EDN strings representing L4 programs into Clojure data."
   (r/match
    (m/or (m/pred string? (m/app edn/read-string ?l4-program-ast))
          ?l4-program-ast)
@@ -88,10 +89,20 @@
 (defn- remove-all-spaces [s]
   (str/replace s #" " ""))
 
-(defn l4->prolog-str [l4-goal]
+(defn l4->prolog-str
+  "Given an L4 rule/fact/goal, transpiles it into a string representing a Prolog
+   rule/fact/goal.
+
+   The input can either be an EDN string or Clojure data."
+  [l4-goal]
   (-> l4-goal ->l4-ast l4-ast->prolog-ast str remove-all-spaces))
 
-(defn l4-program->prolog-program-str [l4-program]
+(defn l4-program->prolog-program-str
+  "Given an L4 program, transpiles it into a string representing a Prolog
+   program.
+
+   The input can either be an EDN string or Clojure data."
+  [l4-program]
   (it-> l4-program
         (->l4-ast it)
         (eduction (map l4-ast->prolog-ast) it)

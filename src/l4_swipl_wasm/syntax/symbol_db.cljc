@@ -5,14 +5,16 @@
             [net.cgrand.xforms :as xforms]))
 
 (def l4-prolog-symbol-pairs
-  "Ordered pairs axiomatising the l4-prolog-symbol relation which relates
-   L4 and Prolog symbols.
-   This functions as a bidirectional map for translating symbols from L4 to
-   Prolog and vice versa.
+  "Ordered pairs relating L4 and Prolog symbols, used as a bidirectional map
+   for translating symbols from L4 to Prolog and vice versa.
 
    For convenience, we allow both elements in the pair to be sequences.
    In such cases, each element in the left item (resp right item) is related to
-   each element of the right item."
+   each element of the right item.
+
+   Internally, each pair is stored as datoms (ie RDF-like triples) in a Datalog
+   database powered by Datascript, and we axiomatise a binary relation called
+   l4-prolog-symbol in terms of these pairs."
   #{[['IS '= '==] ['eq 'is]]
     ['AND ","]
     ['OR ";"]
@@ -77,7 +79,7 @@
    functor.
    
    Technically, this function is the result of transforming the l4-prolog-symbol
-   relation into a function in its first argument via a choice function that
+   relation into a function in its first argument via a Choice function that
    picks the first ?prolog-symbol such that the following Datalog query
    succeeds:
      ⊢ ∃ ?l4-symbol, l4-prolog-symbol(?l4-symbol, ?prolog-symbol)."
