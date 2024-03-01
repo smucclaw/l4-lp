@@ -1,6 +1,8 @@
 {:paths ["src"]
  :deps {thheller/shadow-cljs {:mvn/version "2.27.5"}
         binaryage/devtools {:mvn/version "1.0.7"}
+        clj-python/libpython-clj {:mvn/version "2.025"}
+        com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}
         net.cgrand/xforms {:mvn/version "0.19.6"}
         datascript/datascript {:mvn/version "1.6.3"}
         ;; vvvvalvalval/datalog-rules {:mvn/version "0.1.0"}
@@ -12,4 +14,23 @@
         cljs-bean/cljs-bean {:mvn/version "1.9.0"}
         ;; lambdaisland/uri {:mvn/version "1.19.155"}
         ;; lambdaisland/fetch {:mvn/version "1.5.83"}
-        metosin/malli {:mvn/version "0.14.0"}}}
+        metosin/malli {:mvn/version "0.14.0"}}
+ :aliases
+ {:neil {:project {:name l4-swipl-wasm/l4-swipl-wasm
+                   :version "0.0.1"}}
+
+  :nrepl ;; added by neil
+  {:extra-deps {nrepl/nrepl {:mvn/version "1.1.0"}}
+   :main-opts ["-m" "nrepl.cmdline" "--interactive" "--color"]}
+
+  :test ;; added by neil
+  {:extra-paths ["test"]
+   :extra-deps {io.github.cognitect-labs/test-runner
+                {:git/tag "v0.5.0" :git/sha "b3fd0d2"}}
+   :main-opts ["-m" "cognitect.test-runner"]
+   :exec-fn cognitect.test-runner.api/test}
+
+  :build ;; added by neil
+  {:deps {io.github.clojure/tools.build {:git/tag "v0.9.6" :git/sha "8e78bcc"}
+          slipset/deps-deploy {:mvn/version "0.2.0"}}
+   :ns-default build}}}

@@ -11,7 +11,7 @@
 (def ^:private swipl-data->clj
   "Transforms Javascript data output by the SWIPL wasm interpreter into Clj
    data.
-   
+
    The format of the Javascript data is described here:
    https://swi-prolog.discourse.group/t/swi-prolog-in-the-browser-using-wasm/5650#calling-between-javascript-and-prolog-5"
   (r/top-down

@@ -5,7 +5,7 @@
             [l4-swipl-wasm.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
-            [tupelo.core :refer [it->]]
+            [tupelo.core :refer [it-> spy]]
             [tupelo.string :as str]))
 
 (def ^:private l4-ast->prolog-ast
@@ -95,7 +95,7 @@
 
    The input can either be an EDN string or Clojure data."
   [l4-goal]
-  (-> l4-goal ->l4-ast l4-ast->prolog-ast str remove-all-spaces))
+  (-> l4-goal ->l4-ast l4-ast->prolog-ast list str remove-all-spaces))
 
 (defn l4-program->prolog-program-str
   "Given an L4 program, transpiles it into a string representing a Prolog
@@ -106,6 +106,7 @@
   (it-> l4-program
         (->l4-ast it)
         (eduction (map l4-ast->prolog-ast) it)
+        (eduction (map list) it)
         (eduction (interpose ".\n") it)
         (apply str it)
         (str it ".")

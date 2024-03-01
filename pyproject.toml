@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "l4-swipl-wasm"
+version = "0.1.0"
+description = ""
+authors = ["CCLAW"]
+readme = "README.md"
+packages = []
+
+[tool.poetry.dependencies]
+python = "^3.11.0"
+janus-swi = {git = "https://github.com/SWI-Prolog/packages-swipy.git", tag = "V9.3.2"}
+
+[tool.poetry.dev-dependencies]
+ipdb = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
