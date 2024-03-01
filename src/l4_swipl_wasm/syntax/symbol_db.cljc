@@ -13,7 +13,8 @@
    each element of the right item.
 
    Internally, each pair is represented as a Datascript datom, and we
-   axiomatise a binary relation called l4-prolog-symbol in terms of these pairs."
+   axiomatise a binary relation called l4-prolog-symbol in terms of these
+   datoms to lookup and translate from L4 to Prolog and vice versa."
   #{[['IS '= '==] ['eq 'is]]
     ['AND ","]
     ['OR ";"]
