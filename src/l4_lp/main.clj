@@ -1,10 +1,10 @@
 (ns l4-lp.main
-  (:require [l4-lp.core :as l4-lp]
-            ;; [libpython-clj2.python :as py]
-            ;; [libpython-clj2.require :refer [require-python]]
-            [l4-lp.swipl.jpl-jvm.query :refer [query!]]
-            [tupelo.core :refer [it->]])
-  (:gen-class))
+  (:require ;; [libpython-clj2.python :as py]
+ ;; [libpython-clj2.require :refer [require-python]]
+            [l4-lp.core :as l4-lp] ;; [libpython-clj2.python :as py]
+            [l4-lp.swipl.jpl-jvm.query :refer [query!]])
+  (:gen-class) 
+  (:import [org.jpl7 Query]))
 
 ;; (def janus
 ;;   (py/import-module "janus_swi"))
@@ -24,8 +24,9 @@
     (println "Program: " program)
     (println "Goal: " goal)
 
+    (-> "0 = 0" (Query.) (.oneSolution))
 
-    (query!)
+    (println @(query!))
 
     ;; (py/get-attr janus :attach_engine)
     ;; (py/call-attr janus :consult "public/resources/swipl/prelude.qlf")

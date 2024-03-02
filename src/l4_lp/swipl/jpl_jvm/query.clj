@@ -1,6 +1,7 @@
 (ns l4-lp.swipl.jpl-jvm.query
  (:require [meander.epsilon :as m]
            [promesa.core :as prom]
+           [promesa.exec :as promx]
            [tupelo.core :refer [it->]])
   (:import [org.jpl7 Atom Compound Query Term Variable]
            [org.jpl7.fli Prolog]))
@@ -20,14 +21,13 @@
 ;; https://github.com/SWI-Prolog/packages-jpl/tree/2c6cd0abd5ef6d46e4a78e49c55774db3a17f162/src/examples/java/thread
 
 (defn query! []
-  (it-> (prom/promise (Prolog/create_engine))
-        (prom/map
-         (fn [_]
-           (-> "member(X, [1, 2, 3])"
-               Term/textToTerm
-               (Query.)
-               (.oneSolution)))
-         it)
-        (prom/finally it (fn [_ _] (Prolog/destroy_engine)))
-        (deref it)
-        (println it)))
+  (promx/submit!
+   #_(promx/vthread-per-task-executor)
+   (fn []
+     (Prolog/create_engine)
+     (let [soln (-> "member(X, [1, 2, 3])"
+                    #_Term/textToTerm
+                    (Query.)
+                    (.oneSolution))]
+       (Prolog/destroy_engine)
+       soln))))
