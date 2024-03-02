@@ -9,6 +9,10 @@ packages = []
 [tool.poetry.dependencies]
 python = "^3.11.0"
 janus-swi = {git = "https://github.com/SWI-Prolog/packages-swipy.git", tag = "V9.3.2"}
+javascript = "^1!1.1.3"
+edn-format = "^0.7.5"
+pyrsistent = "^0.20.0"
+cytoolz = "^0.12.3"
 
 [tool.poetry.dev-dependencies]
 ipdb = "*"

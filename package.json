@@ -11,6 +11,7 @@
     "start": "shadow-cljs watch app",
     "build:prod": "shadow-cljs release app",
     "build:dev": "shadow-cljs compile app",
+    "build:node-lib": "shadow-cljs release node-lib",
     "server": "shadow-cljs server"
   }
 }

@@ -5,16 +5,17 @@
   (:gen-class))
 
 ;; [libpython-clj2.python :as py]
-; [libpython-clj2.require :refer [require-python]]
+;; [libpython-clj2.require :refer [require-python]]
 
 ;; (def janus
 ;;   (py/import-module "janus_swi"))
 
 (defn -main [& args]
   (let [program
-        (-> "[(DECIDE p of var/xs and var/x IF
-               (var/xs IS THE LIST OF ALL var/y SUCH THAT q holds for var/y)
-               AND (var/x IS THE SUM OF var/xs))
+        (-> "[(DECIDE p of var/xs and var/x
+              IF (var/xs IS THE LIST OF ALL var/y SUCH THAT q holds for var/y)
+              AND (var/x IS THE SUM OF var/xs))
+
               (DECIDE q holds for 1)
               (DECIDE q holds for 2)]"
             l4-lp/l4-program->prolog-program-str)
@@ -24,7 +25,6 @@
 
     (println "Program: " program)
     (println "Goal: " goal)
-
 
     (init!)
     @(->> (query! program goal) (prom/map prn))
