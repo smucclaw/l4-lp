@@ -1,33 +1,41 @@
 (ns l4-lp.swipl.jpl-jvm.query
- (:require [meander.epsilon :as m]
-           [promesa.core :as prom]
-           [promesa.exec :as promx]
-           [tupelo.core :refer [it->]])
+  (:require [meander.epsilon :as m]
+            [promesa.core :as prom]
+            [promesa.exec :as promx]
+            [tupelo.core :refer [it->]])
   (:import [org.jpl7 Atom Compound Query Term Variable]
            [org.jpl7.fli Prolog]))
-
-;; https://github.com/SWI-Prolog/packages-swipy/blob/feff32f02a82363df86483f1b9448ccc16d5ac1b/janus/janus.py#L334
-;; https://github.com/SWI-Prolog/packages-swipy/blob/feff32f02a82363df86483f1b9448ccc16d5ac1b/janus/janus.pl#L1234
-(defn consult [file & {:keys [data module]
-                       :or {data ""
-                            module "user"}}]
-    (->> [file data module]
-         (eduction (map #(Atom. %)))
-         into-array
-         (Query. "jpl_consult")
-         (.oneSolution)))
 
 ;; https://jpl7.org/TutorialMultithreaded
 ;; https://github.com/SWI-Prolog/packages-jpl/tree/2c6cd0abd5ef6d46e4a78e49c55774db3a17f162/src/examples/java/thread
 
-(defn query! []
+(def ^:private swipl-query-executor
+  (atom nil))
+
+(defn init!
+  [& {:keys [query-executor]
+      :or {query-executor (promx/vthread-per-task-executor)}}]
+
+  (reset! swipl-query-executor query-executor)
+
+  (it-> "public/resources/swipl/prelude.qlf"
+        (str "consult(user:'" it "')")
+        (Query. it)
+        (.oneSolution it)))
+
+(defn query! [program goal]
   (promx/submit!
-   #_(promx/vthread-per-task-executor)
+   @swipl-query-executor
    (fn []
      (Prolog/create_engine)
-     (let [soln (-> "member(X, [1, 2, 3])"
-                    #_Term/textToTerm
-                    (Query.)
-                    (.oneSolution))]
+
+     ;; Load Prolog program.
+     (->> ["program" (str program) "user"]
+          (eduction (map #(Atom. %)))
+          into-array
+          (Query. "load_from_string")
+          (.oneSolution))
+
+     (let [soln (-> goal (Query.) (.oneSolution))]
        (Prolog/destroy_engine)
        soln))))

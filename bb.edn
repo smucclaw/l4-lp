@@ -2,18 +2,18 @@
  {:requires ([babashka.fs :as fs])
 
   test {:doc "Run tests"
-        :task (apply clojure "-M:test" *command-line-args*)}
+        :task (apply clojure "-A:swipl-jpl -M:test" *command-line-args*)}
 
   nrepl {:doc "Start REPL"
-         :task (shell "clj" "-M:nrepl")}
+         :task (shell "clj" "-A:swipl-jpl -M:nrepl")}
 
   run-main {:doc "Run main"
             :task (apply clojure
-                         "-A:swipl -M -m l4-lp.main"
+                         "-A:swipl-jpl -M -m l4-lp.main"
                          *command-line-args*)}
 
   uber {:doc "Build uberjar"
-        :task (clojure "-A:swipl -T:build uber")}
+        :task (clojure "-A:swipl-jpl -T:build uber")}
 
   native-image {:doc "Builds native image"
                 :depends [uber]

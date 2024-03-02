@@ -14,6 +14,15 @@
 
 % :- set_prolog_flag(gc, off).
 
+% https://github.com/SWI-Prolog/packages-swipy/blob/feff32f02a82363df86483f1b9448ccc16d5ac1b/janus/janus.py#L334
+% https://github.com/SWI-Prolog/packages-swipy/blob/feff32f02a82363df86483f1b9448ccc16d5ac1b/janus/janus.pl#L1234
+load_from_string(File, Data, Module) =>
+  setup_call_cleanup(
+    open_string(Data, In),
+    load_files(Module:File, [stream(In)]),
+    close(In)
+  ). 
+
 :- leash(-all).
 :- visible(+all).
 
@@ -35,13 +44,8 @@ prolog_trace_interception(Port, Frame, _Choice, continue) :-
 
   log_stack_frame(StackFrame).
 
-#define(
-  toggle_tracing(Toggle, Goal, Toggle0),
-  (Toggle, ((Goal, !, Toggle0) ; (Toggle0, fail)))
-).
-
 eval_and_trace(Goal) :-
-  #toggle_tracing(trace, call(Goal), notrace).
+  setup_call_cleanup(trace, call(Goal), notrace).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(700, xfx, eq).
@@ -89,21 +93,19 @@ max_list_([X | Xs], Result) =>
 % Perhaps SWI Prolog provides some meta-level hooks that we can use to tweak
 % the standard unification procedure to be modulo the theory of reals.
 X eq Y :-
-  notrace,
-  catch(
-    ({X == Y, Y == X}, solve([X, Y])),
-    _,
-    (trace, fail)
-  ), !,
-  trace.
+  setup_call_cleanup(
+    notrace,
+    catch(({X == Y, Y == X}, solve([X, Y])), _, fail),
+    trace
+  ).
 
 % Optimisation for when X and Y are both lists. In that case, just use maplist
 % to unify all their arguments, instead of using the next clause to split apart
 % the terms into functors and args.
 X eq Y :-
-  #toggle_tracing(notrace, maplist(eq, X, Y), trace), !.
+  setup_call_cleanup(notrace, maplist(eq, X, Y), trace), !.
 
-X eq Y :- #toggle_tracing(
+X eq Y :- setup_call_cleanup(
   notrace, (
     X =.. [Functor | X_args],
     Y =.. [Functor | Y_args],
@@ -126,7 +128,7 @@ X eq Y :- #toggle_tracing(
 
 #define(
   arithmetic_comparison(Comparison),
-  #toggle_tracing(notrace, {Comparison}, trace)
+  setup_call_cleanup(notrace, {Comparison}, trace)
 ).
 
 % As with 'IS', we use constraint solving via clpBNR for handling arithmetic

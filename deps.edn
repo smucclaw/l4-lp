@@ -1,8 +1,8 @@
 {:paths ["src"]
  :deps {thheller/shadow-cljs {:mvn/version "2.27.5"}
         binaryage/devtools {:mvn/version "1.0.7"}
-        ;; jpl/jpl {:local/root "/usr/lib/swipl/lib/jpl.jar"}
-        com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.2"}
+        com.github.SWI-Prolog/packages-jpl {:local/root "/usr/lib/swipl/lib/jpl.jar"}
+        ;; com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.2"}
         clj-python/libpython-clj {:mvn/version "2.025"}
         com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}
         net.cgrand/xforms {:mvn/version "0.19.6"}
@@ -18,10 +18,10 @@
         ;; lambdaisland/fetch {:mvn/version "1.5.83"}
         metosin/malli {:mvn/version "0.14.0"}}
 
- :mvn/repos {"jitpack" {:url "https://jitpack.io"}}
+ ;; :mvn/repos {"jitpack" {:url "https://jitpack.io"}}
 
  :aliases
- {:swipl
+ {:swipl-jpl
   {:jvm-opts ["-Djava.library.path=/usr/lib/swipl/lib/x86_64-linux/"]}
 
   :neil {:project {:name l4-lp/l4-lp
