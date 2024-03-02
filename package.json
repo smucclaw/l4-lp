@@ -5,7 +5,7 @@
   "devDependencies": {
     "shadow-cljs": "2.27.5"
   },
-    "scripts": {
+  "scripts": {
     "preinstall": "npx only-allow pnpm",
     "shadow-cljs:release": "shadow-cljs release app",
     "start": "shadow-cljs watch app",
@@ -13,5 +13,8 @@
     "build:dev": "shadow-cljs compile app",
     "build:node-lib": "shadow-cljs release node-lib",
     "server": "shadow-cljs server"
+  },
+  "dependencies": {
+    "pythonia": "^1.1.3"
   }
 }

@@ -16,16 +16,20 @@ program_str = '''
 
 program_edn = [
   (
-    Symbol("DECIDE"), Symbol("p"), Symbol("of"), Symbol("var/xs"), Symbol("and"), Symbol("var/x"),
+    Symbol("DECIDE"), Symbol("p"), Symbol("of"), Symbol("var/xs"),
+    Symbol("and"), Symbol("var/x"),
     Symbol("IF"), (
-     Symbol("var/xs"), Symbol("IS"), Symbol("THE"), Symbol("LIST"), Symbol("OF"), Symbol("ALL"),
-     Symbol("var/y"), Symbol("SUCH"), Symbol("THAT"), Symbol("q"), Symbol("holds"), Symbol("for"), Symbol("var/y")
+      Symbol("var/xs"), Symbol("IS"), Symbol("THE"), Symbol("LIST"),
+      Symbol("OF"), Symbol("ALL"), Symbol("var/y"), Symbol("SUCH"),
+      Symbol("THAT"), Symbol("q"), Symbol("holds"), Symbol("for"),
+      Symbol("var/y")
    ),
     Symbol("AND"), (
-      Symbol("var/x"), Symbol("IS"), Symbol("THE"), Symbol("SUM"), Symbol("OF"), Symbol("var/xs")
+      Symbol("var/x"), Symbol("IS"), Symbol("THE"), Symbol("SUM"), Symbol("OF"),
+      Symbol("var/xs")
     )
   ),
- 
+
   (Symbol("DECIDE"), Symbol("q"), Symbol("holds"), Symbol("for"), 1),
   
   (Symbol("DECIDE"), Symbol("q"), Symbol("holds"), Symbol("for"), 2)
