@@ -1,4 +1,4 @@
-(ns l4-lp.swipl-wasm-js.swipl-js-to-clj 
+(ns l4-lp.swipl.wasm-js.swipl-js-to-clj 
   (:require [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
             [l4-lp.syntax.symbol-db :as symbol-db]

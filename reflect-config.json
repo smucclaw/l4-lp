@@ -1,0 +1,10 @@
+[
+  {
+    "name" : "clojure.lang.PersistentVector$ChunkedSeq[]",
+    "unsafeAllocateed": true 
+  },
+  {
+    "name" : "clojure.lang.LazySeq[]",
+    "unsafeAllocateed": true 
+  }
+]

@@ -8,18 +8,19 @@
          :task (shell "clj" "-M:nrepl")}
 
   run-main {:doc "Run main"
-            :task (apply clojure "-M -m l4-lp.main"
+            :task (apply clojure
+                         "-A:swipl -M -m l4-lp.main"
                          *command-line-args*)}
 
   uber {:doc "Build uberjar"
-        :task (clojure "-T:build uber")}
+        :task (clojure "-A:swipl -T:build uber")}
 
   native-image {:doc "Builds native image"
                 :depends [uber]
                 :task (shell "native-image"
                              "-jar" "target/l4-lp-0.0.1-standalone.jar"
                              "--no-fallback"
-                             ;; "-H:ReflectionConfigurationFiles=reflect-config.json"
+                             "-H:ReflectionConfigurationFiles=reflect-config.json"
                              "-H:Name=l4-lp"
                              ;; https://clojurians-log.clojureverse.org/graalvm/2022-05-19
                              "--features=clj_easy.graal_build_time.InitClojureClasses"

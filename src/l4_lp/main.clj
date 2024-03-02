@@ -1,12 +1,13 @@
 (ns l4-lp.main
   (:require [l4-lp.core :as l4-lp]
-            [libpython-clj2.python :as py]
-            [libpython-clj2.require :refer [require-python]]
+            ;; [libpython-clj2.python :as py]
+            ;; [libpython-clj2.require :refer [require-python]]
+            [l4-lp.swipl.jpl-jvm.query :refer [query!]]
             [tupelo.core :refer [it->]])
   (:gen-class))
 
-(def janus
-  (py/import-module "janus_swi"))
+;; (def janus
+;;   (py/import-module "janus_swi"))
 
 (defn -main [& args]
   (let [program
@@ -23,16 +24,19 @@
     (println "Program: " program)
     (println "Goal: " goal)
 
-    (py/get-attr janus :attach_engine)
-    (py/call-attr janus :consult "public/resources/swipl/prelude.qlf")
-    (py/call-attr janus :consult "program" program)
 
-    (it-> goal
-          (py/call-attr janus :query_once it)
-          ;; (get it "Xs")
-          ;; (type it)
-          (println it))
+    (query!)
 
-    (py/get-attr janus :detach_engine)
+    ;; (py/get-attr janus :attach_engine)
+    ;; (py/call-attr janus :consult "public/resources/swipl/prelude.qlf")
+    ;; (py/call-attr janus :consult "program" program)
+
+    ;; (it-> goal
+    ;;       (py/call-attr janus :query_once it)
+    ;;       ;; (get it "Xs")
+    ;;       ;; (type it)
+    ;;       (println it))
+
+    ;; (py/get-attr janus :detach_engine)
     
     (System/exit 0)))

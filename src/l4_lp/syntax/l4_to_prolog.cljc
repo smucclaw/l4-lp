@@ -5,7 +5,7 @@
             [l4-lp.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
-            [tupelo.core :refer [it-> spy]]
+            [tupelo.core :refer [it->]]
             [tupelo.string :as str]))
 
 (def ^:private l4-ast->prolog-ast
