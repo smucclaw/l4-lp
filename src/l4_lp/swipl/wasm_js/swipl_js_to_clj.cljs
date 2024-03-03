@@ -60,15 +60,19 @@
       ~(swipl-data->clj ?swipl-data)
       & ?bindings}))))
 
-(def swipl-stack-frame->clj
-  "Given a stack frame logged by the SWIPL interpreter wasm, transform it into
-   Clojure data."
-  (r/match
-   #js {:parent_goal (m/some ?parent-goal)
-        :current_goal (m/some ?current-goal)
-        :port (m/some ?port)
-        :recursion_depth (m/some ?recursion-depth)}
+(defn swipl-stack-frame->clj
+  "Given a stack frame logged by the SWIPL interpreter in wasm, transform it
+   into Clojure data."
+  [swipl-stack-frame]
+  (m/match swipl-stack-frame
+    #js {:parent_goal (m/some ?parent-goal)
+         :current_goal (m/some ?current-goal)
+         :port (m/some ?port)
+         :recursion_depth (m/some ?recursion-depth)}
     {:parent-goal (swipl-data->clj ?parent-goal)
      :current-goal (swipl-data->clj ?current-goal)
      :port (swipl-data->clj ?port)
      :recursion-depth ?recursion-depth}))
+
+(defn swipl-stack-frame->edn-str [swipl-stack-frame]
+  (-> swipl-stack-frame swipl-stack-frame->clj str))

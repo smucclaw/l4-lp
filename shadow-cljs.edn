@@ -37,6 +37,9 @@
 
     :query_and_trace
     l4-lp.core/query-and-trace
+
+    :swipl_stack_frame_to_edn_str
+    l4-lp.swipl.wasm-js.swipl-js-to-clj/swipl-stack-frame->edn-str
     
     :janus
     l4-lp.swipl.janus-swipy-nodejs.query/janus}}}}
