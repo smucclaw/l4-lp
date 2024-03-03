@@ -124,7 +124,7 @@ def query_and_trace(program, goal):
   )
 
   try:
-    result = janus.query_once(goal)
+    result = janus.query_once(f'eval_and_trace({goal})')
   except janus.PrologException as e:
     print(f'Error: {e}')
   else:
