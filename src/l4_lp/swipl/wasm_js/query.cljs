@@ -46,7 +46,7 @@
 
     assert-callback-fn-query
     (jsi/call-in swipl [:prolog :query]
-                 "asserta((js_log_stack_frame_callback(Func) :- !))"
+                 "asserta(js_log_stack_frame_callback(Func))"
                  #js {:Func log-stack-frame-callback})
     _ (jsi/call assert-callback-fn-query :once)
 
@@ -56,7 +56,7 @@
     ;; CANNOT be pre-compiled and loaded in a qlf or buried under an "assert".
     ;; Doing so results in a runtime error.
     _ (jsi/call-in swipl [:prolog :load_string]
-                   "log_stack_frame(StackFrame) :- !,
+                   "log_stack_frame(StackFrame) =>
                       js_log_stack_frame_callback(Func),
                       _ := Func.apply(StackFrame).")
 

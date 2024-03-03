@@ -44,7 +44,7 @@ prolog_trace_interception(Port, Frame, _Choice, continue) :-
 
   log_stack_frame(StackFrame).
 
-eval_and_trace(Goal) :-
+eval_and_trace(Goal) =>
   setup_call_cleanup(trace, call(Goal), notrace).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
