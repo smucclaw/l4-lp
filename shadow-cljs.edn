@@ -39,4 +39,26 @@
     ;; l4-lp.core/query-and-trace
 
     :swipl_stack_frame_to_edn_str
-    l4-lp.swipl.swipl-js-to-clj/swipl-stack-frame->edn-str}}}}
+    l4-lp.swipl.js.common.swipl-js-to-clj/swipl-stack-frame->edn-str}}
+  
+  :node-lib
+  {:target :node-library
+   :output-to "public/js/l4_lp_nodejs_lib.js"
+   :compiler-options {:output-feature-set :es2020
+                      :externs ["datascript/externs.js"]}
+   :optimizations :advanced
+   :exports
+   {:l4_edn_str_to_prolog_str
+    l4-lp.core/l4->prolog-str
+
+    :l4_program_edn_str_to_prolog_program_str
+    l4-lp.core/l4-program->prolog-program-str
+
+    ;; :query_and_trace
+    ;; l4-lp.core/query-and-trace
+
+    :init_swipl_engine
+    l4-lp.swipl.js.janus-py-nodejs-query/init-swipl-engine!
+
+    :query_and_trace
+    l4-lp.swipl.js.janus-py-nodejs-query/query-and-trace!}}}}
