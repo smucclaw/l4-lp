@@ -1,7 +1,7 @@
 (ns l4-lp.swipl.wasm-js.query 
   (:require [applied-science.js-interop :as jsi]
             [promesa.core :as prom]
-            [l4-lp.swipl.wasm-js.swipl-js-to-clj :as swipl-js->clj]
+            [l4-lp.swipl.swipl-js-to-clj :as swipl-js->clj]
             [shadow.esm :refer [dynamic-import]]))
 
 (def ^:private swipl-wasm-cdn-url

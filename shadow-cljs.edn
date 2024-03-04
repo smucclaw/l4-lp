@@ -7,7 +7,7 @@
    :output-dir "public/js"
    :modules
    {:main {:js-options {:js-provider :import}
-           :compiler-options {:output-feature-set :es2018
+           :compiler-options {:output-feature-set :es2020
                               :externs ["datascript/externs.js"]}
            :optimizations :advanced
 
@@ -21,25 +21,22 @@
             query_and_trace
             l4-lp.core/query-and-trace}}}}
 
-  :node-lib
+  :py-node-lib
   {:target :node-library
-   :output-to "public/js/node_lib.js"
+   :output-to "src/l4_lp_py/_l4_lp_nodejs_lib/nodejs_lib.js"
    ;; :js-options {:js-provider :import}
-   :compiler-options {:output-feature-set :es2018
+   :compiler-options {:output-feature-set :es2020
                       :externs ["datascript/externs.js"]}
    :optimizations :advanced
    :exports
-   {:l4_to_prolog_str
+   {:l4_edn_str_to_prolog_str
     l4-lp.core/l4->prolog-str
 
-    :l4_program_to_prolog_program_str
+    :l4_program_edn_str_to_prolog_program_str
     l4-lp.core/l4-program->prolog-program-str
 
-    :query_and_trace
-    l4-lp.core/query-and-trace
+    ;; :query_and_trace
+    ;; l4-lp.core/query-and-trace
 
     :swipl_stack_frame_to_edn_str
-    l4-lp.swipl.wasm-js.swipl-js-to-clj/swipl-stack-frame->edn-str
-    
-    :janus
-    l4-lp.swipl.janus-swipy-nodejs.query/janus}}}}
+    l4-lp.swipl.swipl-js-to-clj/swipl-stack-frame->edn-str}}}}

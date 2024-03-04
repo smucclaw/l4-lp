@@ -26,3 +26,6 @@ pom.xml.asc
 .clj-kondo/
 .lsp/
 .calva/
+
+__pycache__/
+**/_l4_lp_nodejs_lib/nodejs_lib.js
