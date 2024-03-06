@@ -21,14 +21,14 @@ program = [
   # Fact('test', ('p', [0, 1]))
 ]
 
-# goal = Fact('p of', Var('xs'), 'and', Var('x'))
+goal = Fact('p of', Var('xs'), 'and', Var('x'))
 
-goal = Fact(
-  And(
-    (Var('date'), 'IS A VALID DATE'),
-    (datetime.date(2024, 1, 20), '+', 3, 'DAYS', 'IS', Var('date'))
-  )
-)
+# goal = Fact(
+#   And(
+#     (Var('date'), 'IS A VALID DATE'),
+#     (datetime.date(2024, 1, 20), '+', 3, 'DAYS', 'IS', Var('date'))
+#   )
+# )
 
 program = l4_program_to_prolog_str(program)
 goal = l4_to_prolog_str(goal)

@@ -23,8 +23,15 @@ load_from_string(File, Data, Module) =>
     close(In)
   ). 
 
-% TODO: Only trace Exit and Fail ports. 
-% See https://www.swi-prolog.org/pldoc/man?section=debugoverview
+% The more stack frames that we trace, and the more data that we capture in
+% each stack frame, the slower the interpreter will run, and the more work
+% will need to be done afterwards to post-process and filter through the stack
+% stack trace.
+% What info do we really need to capture?
+% - Maybe we can just trace Exit and Fail ports. Not sure about Redo.
+%   See https://www.swi-prolog.org/pldoc/man?section=debugoverview
+% - Maybe we don't need the recursion level.
+
 :- leash(-all).
 :- visible(+all).
 
