@@ -115,12 +115,12 @@ X eq_ Y :-
 % Optimisation for when X and Y are both lists. In that case, just use maplist
 % to unify all their arguments, instead of using the next clause to split apart
 % the terms into functors and args.
-X eq_ Y :- maplist(eq, X, Y), !.
+X eq_ Y :- maplist(eq_, X, Y), !.
 
 X eq_ Y :-
   X =.. [Functor | X_args],
   Y =.. [Functor | Y_args],
-  maplist(eq, X_args, Y_args).
+  maplist(eq_, X_args, Y_args).
 
 % X 'IS' Y :-
   % catch(X is Y, _, fail), !
