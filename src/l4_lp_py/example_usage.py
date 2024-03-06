@@ -12,9 +12,15 @@ program = [
     And(
       (Var('xs'), 'IS THE LIST OF ALL', Var('y'), 'SUCH THAT', 'q holds for', Var('y')),
 
+      (Var('ys'), 'IS THE LIST OF ALL', Var('y'), 'SUCH THAT', 'q holds for', Var('y')),
+
       ('r holds for', Var('z')),
 
-      (Var('x'), 'IS THE SUM OF', Var('xs'))
+      (Var('x'), 'IS THE SUM OF', Var('xs')),
+      
+      (Var('y'), 'IS THE SUM OF', Var('ys')),
+
+      (Var('y'), '>', 0)
     )
   ),
 
