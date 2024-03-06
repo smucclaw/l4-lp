@@ -40,6 +40,9 @@
     (. !lhs ..1 IS THE (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op) OF . !rhs ..1)
     ((?op (!rhs ...) (!lhs ...)))
 
+    (. !element ..1 IS IN . !collection ..1)
+    ((is_in (!element ...) (!collection ...)))
+
     (. !year ..1 - . !month ..1 - . !day ..1)
     ((date (!year ...) (!month ...) (!day ...)))
 

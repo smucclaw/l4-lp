@@ -33,6 +33,7 @@
     [['WEEKS 'WEEK] 'weeks]
     [['MONTHS 'MONTH] 'months]
     [['YEARS 'YEAR] 'years]
+    ["IS IN" 'is_in]
     ['SUM ['sum_list_ 'sum_list]]
     ['PRODUCT 'product_list]
     ['MIN ['min_list_ 'min_list]]

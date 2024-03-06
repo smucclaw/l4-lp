@@ -90,6 +90,9 @@ max_list_([X | Xs], Result) =>
   max_list_(Xs, Result0),
   Result eq max(X, Result0).
 
+is_in(X, [Y | _]) :- X eq Y.
+is_in(X, [_ | Xs]) :- is_in(X, Xs).
+
 % This first uses constraint solving via clpBNR for unifying arithmetic
 % expressions, modulo the theory of reals.
 % If that fails, then we know that at least one of the terms that we're trying
