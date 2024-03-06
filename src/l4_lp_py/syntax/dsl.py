@@ -41,7 +41,7 @@ class Or:
   disjuncts: Sequence[Any]
 
   def __init__(self, *disjuncts):
-    self.dijuncts = disjuncts
+    self.disjuncts = disjuncts
 
 def l4_to_edn(l4_program):
   match l4_program:

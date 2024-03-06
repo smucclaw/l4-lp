@@ -33,7 +33,7 @@ load_from_string(File, Data, Module) =>
 % - Maybe we don't need the recursion level.
 
 :- leash(-all).
-:- visible(+all).
+:- visible(-all), visible([+exit, +fail]).
 
 :- dynamic log_stack_frame/1.
 
@@ -53,8 +53,13 @@ prolog_trace_interception(Port, Frame, _Choice, continue) :-
 
   log_stack_frame(StackFrame).
 
+#define(
+  toggle_tracing(Toggle0, Goal, Toggle1),
+  (Toggle0, setup_call_cleanup(true, call(Goal), Toggle1))
+).
+
 eval_and_trace(Goal) =>
-  setup_call_cleanup(trace, call(Goal), notrace).
+  #toggle_tracing(trace, call(Goal), notrace).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(700, xfx, eq).
@@ -102,7 +107,7 @@ max_list_([X | Xs], Result) =>
 % Perhaps SWI Prolog provides some meta-level hooks that we can use to tweak
 % the standard unification procedure to be modulo the theory of reals.
 X eq Y :-
-  setup_call_cleanup(
+  #toggle_tracing(
     notrace,
     catch(({X == Y, Y == X}, solve([X, Y])), _, fail),
     trace
@@ -112,9 +117,9 @@ X eq Y :-
 % to unify all their arguments, instead of using the next clause to split apart
 % the terms into functors and args.
 X eq Y :-
-  setup_call_cleanup(notrace, maplist(eq, X, Y), trace), !.
+  #toggle_tracing(notrace, maplist(eq, X, Y), trace), !.
 
-X eq Y :- setup_call_cleanup(
+X eq Y :- #toggle_tracing(
   notrace, (
     X =.. [Functor | X_args],
     Y =.. [Functor | Y_args],
@@ -137,7 +142,7 @@ X eq Y :- setup_call_cleanup(
 
 #define(
   arithmetic_comparison(Comparison),
-  setup_call_cleanup(notrace, catch({Comparison}, _, fail), trace)
+  #toggle_tracing(notrace, catch({Comparison}, _, fail), trace)
 ).
 
 % As with 'IS', we use constraint solving via clpBNR for handling arithmetic
@@ -161,7 +166,7 @@ X geq Y :- #arithmetic_comparison(X >= Y), !.
 X geq Y :- date_is_after_or_eq_date(X, Y).
 
 is_valid_date(date(Year, Month, Day)) :-
-  setup_call_cleanup(
+  #toggle_tracing(
     notrace,
     (
       [Year, Month, Day]::integer, {
@@ -212,7 +217,7 @@ is_valid_unit(years) :- !.
 date_add_duration(Date0, Duration, Date1) =>
   % #wrap_date_duration_goal(
   %   Date0, Date1, Duration,
-  setup_call_cleanup(notrace, date_add(Date0, Duration, Date1), trace).
+  #toggle_tracing(notrace, date_add(Date0, Duration, Date1), trace).
   % ).
 
 date_minus_duration(Date0, Duration, Date1) =>
@@ -220,7 +225,7 @@ date_minus_duration(Date0, Duration, Date1) =>
   %   Date0, Date1,
   %  (
       % is_valid_duration_with_unit_number(Duration, Unit, Number),
-  setup_call_cleanup(
+  #toggle_tracing(
     notrace,
     (
       Duration =.. [Unit, Number],
@@ -240,7 +245,7 @@ date_minus_duration(Date0, Duration, Date1) =>
 
 #define(
   wrap_date_compare(Date0, Op, Date1),
-  setup_call_cleanup(notrace, date_compare(Date0, Op, Date1), trace)
+  #toggle_tracing(notrace, date_compare(Date0, Op, Date1), trace)
 ).
 
 date_is_before_date(Date0, Date1) =>

@@ -8,20 +8,28 @@ from swipl.query import init_swipl_engine, query_and_trace
 
 program = [
   Rule(
-    ('p of', Var('xs'), 'and', Var('x')),
+    ('p of', Var('xs'), 'and', Var('x'), 'and', Var('z')),
     And(
       (Var('xs'), 'IS THE LIST OF ALL', Var('y'), 'SUCH THAT', 'q holds for', Var('y')),
+
+      ('r holds for', Var('z')),
 
       (Var('x'), 'IS THE SUM OF', Var('xs'))
     )
   ),
+
   Fact('q holds for', 0),
   Fact('q holds for', 1),
+
+  Rule(
+    ('r holds for', Var('z')),
+    Or((Var('z'), 'IS', 3), (Var('z'), 'IS', 4))
+  ),
 
   # Fact('test', ('p', [0, 1]))
 ]
 
-goal = Fact('p of', Var('xs'), 'and', Var('x'))
+goal = Fact('p of', Var('xs'), 'and', Var('x'), 'and', Var('z'))
 
 # goal = Fact(
 #   And(
