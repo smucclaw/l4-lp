@@ -12,7 +12,7 @@ program = [
     And(
       (Var('xs'), 'IS THE LIST OF ALL', Var('y'), 'SUCH THAT', 'q holds for', Var('y')),
 
-      (Var('ys'), 'IS THE LIST OF ALL', Var('y'), 'SUCH THAT', 'q holds for', Var('y')),
+      (Var('ys'), 'IS THE LIST OF ALL', Var('y'), 'SUCH THAT', 'r holds for', Var('y')),
 
       ('r holds for', Var('z')),
 
