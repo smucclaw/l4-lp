@@ -63,6 +63,7 @@ eval_and_trace(Goal) =>
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(700, xfx, eq).
+:- op(700, xfx, eq_).
 :- op(700, xfx, lt).
 :- op(700, xfx, leq).
 :- op(700, xfx, gt).
@@ -106,27 +107,20 @@ max_list_([X | Xs], Result) =>
 % Is there a better way to do this kind of unification?
 % Perhaps SWI Prolog provides some meta-level hooks that we can use to tweak
 % the standard unification procedure to be modulo the theory of reals.
-X eq Y :-
-  #toggle_tracing(
-    notrace,
-    catch(({X == Y, Y == X}, solve([X, Y])), _, fail),
-    trace
-  ), !.
+X eq Y :- #toggle_tracing(notrace, X eq_ Y, trace).
+
+X eq_ Y :-
+  catch(({X == Y, Y == X}, solve([X, Y])), _, fail), !.
 
 % Optimisation for when X and Y are both lists. In that case, just use maplist
 % to unify all their arguments, instead of using the next clause to split apart
 % the terms into functors and args.
-X eq Y :-
-  #toggle_tracing(notrace, maplist(eq, X, Y), trace), !.
+X eq_ Y :- maplist(eq, X, Y), !.
 
-X eq Y :- #toggle_tracing(
-  notrace, (
-    X =.. [Functor | X_args],
-    Y =.. [Functor | Y_args],
-    maplist(eq, X_args, Y_args)
-  ),
-  trace
-).
+X eq_ Y :-
+  X =.. [Functor | X_args],
+  Y =.. [Functor | Y_args],
+  maplist(eq, X_args, Y_args).
 
 % X 'IS' Y :-
   % catch(X is Y, _, fail), !

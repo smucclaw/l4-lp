@@ -23,13 +23,14 @@ program = [
 
   Rule(
     ('r holds for', Var('z')),
+    # ('member', Var('z'), [3, 4])
     Or((Var('z'), 'IS', 3), (Var('z'), 'IS', 4))
   ),
 
   # Fact('test', ('p', [0, 1]))
 ]
 
-goal = Fact('p of', Var('xs'), 'and', Var('x'), 'and', Var('z'))
+goal = Fact('p of', Var('xs'), 'and', Var('x'), 'and', 4)
 
 # goal = Fact(
 #   And(
