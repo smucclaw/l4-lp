@@ -152,64 +152,76 @@ X geq Y :- #arithmetic_comparison(X >= Y), !.
 X geq Y :- date_is_after_or_eq_date(X, Y).
 
 is_valid_date(date(Year, Month, Day)) :-
-  [Year, Month, Day]::integer, {
-    Year > 0,
-    1 =< Month, Month =< 12,
-    1 =< Day, Day =< 31,
-    (
-      ((Month == 4) or (Month == 6) or (Month == 9) or (Month == 11)) ->
-        (Day =< 30)
-    ),
-    ((Month == 2) -> (Day =< 29)),
-    (
-      ((Month == 2) and (Day == 29)) ->
-        (integer(Year / 4) and (integer(Year / 100) -> integer(Year / 400)))
-    )
-  }.
-
-is_valid_duration(Duration) =>
-  Number::integer, {Number >= 0},
-  once(
-    member(
-      Duration,
-      [days(Number), weeks(Number), months(Number), years(Number)]
-    )
-  ).
-
-#define(
-  wrap_date_goal(Date0, Date1, Goal),
   setup_call_cleanup(
     notrace,
-    (is_valid_date(Date0), is_valid_date(Date1), Goal), 
+    (
+      [Year, Month, Day]::integer, {
+        Year > 0,
+        1 =< Month, Month =< 12,
+        1 =< Day, Day =< 31,
+        (
+          ((Month == 4) or (Month == 6) or (Month == 9) or (Month == 11)) ->
+            (Day =< 30)
+        ),
+        ((Month == 2) -> (Day =< 29)),
+        (
+          ((Month == 2) and (Day == 29)) ->
+            (integer(Year / 4) and (integer(Year / 100) -> integer(Year / 400)))
+        )
+      }
+    ),
     trace
-  )
-).
-
-#define(
-  wrap_date_duration_goal(Date0, Date1, Duration, Goal),
-  #wrap_date_goal(Date0, Date1, (is_valid_duration(Duration), Goal))
-).
-
-#define(
-  wrap_date_compare(Date0, Date1, Op),
-  #wrap_date_goal(Date0, Date1, date_compare(Date0, Op, Date1))
-).
-
-date_add_duration(Date0, Duration, Date1) =>
-  #wrap_date_duration_goal(
-    Date0, Date1, Duration,
-    date_add(Date0, Duration, Date1)
   ).
 
+is_valid_unit(days) :- !.
+is_valid_unit(weeks) :- !.
+is_valid_unit(months) :- !.
+is_valid_unit(years) :- !.
+
+% is_valid_duration_with_unit_number(Duration, Unit, Number) :-
+%   Number::integer, {Number >= 0},
+%   is_valid_unit(Unit),
+%   Duration =.. [Unit, Number].
+
+% is_valid_duration(Duration) :-
+%   is_valid_duration_with_unit_number(Duration, _, _).
+
+% #define(
+%   wrap_date_goal(Date0, Date1, Goal),
+%   setup_call_cleanup(
+%     notrace,
+%     (is_valid_date(Date0), is_valid_date(Date1), Goal), 
+%     trace
+%   )
+% ).
+
+% #define(
+%   wrap_date_duration_goal(Date0, Date1, Duration, Goal),
+%   #wrap_date_goal(Date0, Date1, (is_valid_duration(Duration), Goal))
+% ).
+
+date_add_duration(Date0, Duration, Date1) =>
+  % #wrap_date_duration_goal(
+  %   Date0, Date1, Duration,
+  setup_call_cleanup(notrace, date_add(Date0, Duration, Date1), trace).
+  % ).
+
 date_minus_duration(Date0, Duration, Date1) =>
-  #wrap_date_duration_goal(
-    Date0, Date1, Duration,
+  % #wrap_date_goal(
+  %   Date0, Date1,
+  %  (
+      % is_valid_duration_with_unit_number(Duration, Unit, Number),
+  setup_call_cleanup(
+    notrace,
     (
       Duration =.. [Unit, Number],
       Negated_duration =.. [Unit, -Number],
       date_add(Date0, Negated_duration, Date1)
-    )
+    ),
+    trace
   ).
+  %  )
+  % ).
 
 % date_minus_date(Date0, Date1, Duration) =>
 %   #wrap_date_duration_goal(
@@ -217,17 +229,22 @@ date_minus_duration(Date0, Duration, Date1) =>
 %     date_difference(Date0, Date1, Duration)
 %   ).
 
+#define(
+  wrap_date_compare(Date0, Op, Date1),
+  setup_call_cleanup(notrace, date_compare(Date0, Op, Date1), trace)
+).
+
 date_is_before_date(Date0, Date1) =>
-  #wrap_date_compare(Date0, Date1, <).
+  #wrap_date_compare(Date0, <, Date1).
 
 date_is_before_or_eq_date(Date0, Date1) =>
-  #wrap_date_compare(Date0, Date1, =<).
+  #wrap_date_compare(Date0, =<, Date1).
 
 date_is_after_date(Date0, Date1) =>
-  #wrap_date_compare(Date0, Date1, >).
+  #wrap_date_compare(Date0, >, Date1).
 
 date_is_after_or_eq_date(Date0, Date1) =>
-  #wrap_date_compare(Date0, Date1, >=).
+  #wrap_date_compare(Date0, >=, Date1).
 
 date_is_within_duration_of_date(Date0, Duration, Date1),
   date_is_before_or_eq_date(Date0, Date1) =>

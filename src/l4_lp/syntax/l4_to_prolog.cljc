@@ -43,6 +43,9 @@
     (. !year ..1 - . !month ..1 - . !day ..1)
     ((date (!year ...) (!month ...) (!day ...)))
 
+    (. !date ..1 IS A VALID DATE)
+    ((is_valid_date (!date ...)))
+
     (. ?date-0
        (m/or (m/and + (m/let [?pred 'date_add_duration]))
              (m/and - (m/let [?pred 'date_minus_duration])))
