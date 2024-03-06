@@ -19,7 +19,7 @@
     (when py-query-mod
       (prom/let
        [^js stack-trace-py-ref
-        (jsi/call py-query-mod .-query_and_trace program goal)
+        (jsi/call py-query-mod .-query_and_trace_sync program goal)
 
         ^js stack-trace
         (jsi/call stack-trace-py-ref .-valueOf)]

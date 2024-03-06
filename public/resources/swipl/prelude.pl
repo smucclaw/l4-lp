@@ -97,7 +97,7 @@ X eq Y :-
     notrace,
     catch(({X == Y, Y == X}, solve([X, Y])), _, fail),
     trace
-  ).
+  ), !.
 
 % Optimisation for when X and Y are both lists. In that case, just use maplist
 % to unify all their arguments, instead of using the next clause to split apart
@@ -128,16 +128,112 @@ X eq Y :- setup_call_cleanup(
 
 #define(
   arithmetic_comparison(Comparison),
-  setup_call_cleanup(notrace, {Comparison}, trace)
+  setup_call_cleanup(notrace, catch({Comparison}, _, fail), trace)
 ).
 
 % As with 'IS', we use constraint solving via clpBNR for handling arithmetic
 % comparisons.
 % If this is slow, try reverting to plain old arithmetic comparisons.
-X lt Y :- #arithmetic_comparison(X < Y).
-X leq Y :- #arithmetic_comparison(X =< Y).
+X lt Y :- #arithmetic_comparison(X < Y), !.
+X lt Y :- date_is_before_date(X, Y).
+
+% [years(Y0), months(M0), days(D0)] lt [years(Y1), months(M1), days(D1)] :-
+%   maplist(lt, [Y0, M0, D0], [Y1, M1, D1]).
+
+X leq Y :- #arithmetic_comparison(X =< Y), !.
+X leq Y :- date_is_before_or_eq_date(X, Y).
 
 % '<='(X, Y) :- X =< Y.
 
-X gt Y :- #arithmetic_comparison(X > Y).
-X geq Y :- #arithmetic_comparison(X >= Y).
+X gt Y :- #arithmetic_comparison(X > Y), !.
+X gt Y :- date_is_after_date(X, Y).
+
+X geq Y :- #arithmetic_comparison(X >= Y), !.
+X geq Y :- date_is_after_or_eq_date(X, Y).
+
+is_valid_date(date(Year, Month, Day)) :-
+  [Year, Month, Day]::integer, {
+    Year > 0,
+    1 =< Month, Month =< 12,
+    1 =< Day, Day =< 31,
+    (
+      ((Month == 4) or (Month == 6) or (Month == 9) or (Month == 11)) ->
+        (Day =< 30)
+    ),
+    ((Month == 2) -> (Day =< 29)),
+    (
+      ((Month == 2) and (Day == 29)) ->
+        (integer(Year / 4) and (integer(Year / 100) -> integer(Year / 400)))
+    )
+  }.
+
+is_valid_duration(Duration) =>
+  Number::integer, {Number >= 0},
+  once(
+    member(
+      Duration,
+      [days(Number), weeks(Number), months(Number), years(Number)]
+    )
+  ).
+
+#define(
+  wrap_date_goal(Date0, Date1, Goal),
+  setup_call_cleanup(
+    notrace,
+    (is_valid_date(Date0), is_valid_date(Date1), Goal), 
+    trace
+  )
+).
+
+#define(
+  wrap_date_duration_goal(Date0, Date1, Duration, Goal),
+  #wrap_date_goal(Date0, Date1, (is_valid_duration(Duration), Goal))
+).
+
+#define(
+  wrap_date_compare(Date0, Date1, Op),
+  #wrap_date_goal(Date0, Date1, date_compare(Date0, Op, Date1))
+).
+
+date_add_duration(Date0, Duration, Date1) =>
+  #wrap_date_duration_goal(
+    Date0, Date1, Duration,
+    date_add(Date0, Duration, Date1)
+  ).
+
+date_minus_duration(Date0, Duration, Date1) =>
+  #wrap_date_duration_goal(
+    Date0, Date1, Duration,
+    (
+      Duration =.. [Unit, Number],
+      Negated_duration =.. [Unit, -Number],
+      date_add(Date0, Negated_duration, Date1)
+    )
+  ).
+
+% date_minus_date(Date0, Date1, Duration) =>
+%   #wrap_date_duration_goal(
+%     Date0, Date1, Duration,
+%     date_difference(Date0, Date1, Duration)
+%   ).
+
+date_is_before_date(Date0, Date1) =>
+  #wrap_date_compare(Date0, Date1, <).
+
+date_is_before_or_eq_date(Date0, Date1) =>
+  #wrap_date_compare(Date0, Date1, =<).
+
+date_is_after_date(Date0, Date1) =>
+  #wrap_date_compare(Date0, Date1, >).
+
+date_is_after_or_eq_date(Date0, Date1) =>
+  #wrap_date_compare(Date0, Date1, >=).
+
+date_is_within_duration_of_date(Date0, Duration, Date1),
+  date_is_before_or_eq_date(Date0, Date1) =>
+    date_add_duration(Date0, Duration, Date),
+    date_is_before_or_eq_date(Date1, Date).
+
+date_is_within_duration_of_date(Date0, Duration, Date1) =>
+  date_minus_duration(Date0, Duration, Date),
+  date_is_after_or_eq_date(Date1, Date).

@@ -1,5 +1,6 @@
 from collections.abc import Sequence
 from dataclasses import dataclass
+import datetime
 from typing import Any, Optional
 
 import cytoolz.functoolz as ft
@@ -21,6 +22,12 @@ class Fact:
 
   def __init__(self, *head):
     self.head = head
+
+@dataclass
+class Date:
+  year: Any
+  month: Any
+  day: Any
 
 @dataclass(init = False)
 class And:
@@ -50,7 +57,13 @@ def l4_to_edn(l4_program):
     case Rule(head, body):
       body = ('IF', body) if body else ()
       return l4_to_edn(('DECIDE', *head, *body))
-    
+
+    case Date(year, month, day):
+      return l4_to_edn((year, '-', month, '-', day))
+
+    case datetime.date(year = year, month = month, day = day):
+      return l4_to_edn(Date(year, month, day))
+
     case tuple() as tuple_node:
       return tuple(map(l4_to_edn, tuple_node))
 

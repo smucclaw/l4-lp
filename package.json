@@ -13,7 +13,9 @@
     "build:dev": "shadow-cljs compile app",
     "build:py-node-lib": "shadow-cljs release py-node-lib",
     "build:node-lib": "shadow-cljs release node-lib",
-    "run-node-test": "poetry run node public/node_test.js",
+    "build:all": "shadow-cljs release app && shadow-cljs release py-node-lib && shadow-cljs release node-lib",
+    "run-node-eg": "poetry run node public/node_example_usage.js",
+    "run-py-eg": "cd src/l4_lp_py && poetry run python example_usage.py && cd -",
     "server": "shadow-cljs server"
   },
   "dependencies": {

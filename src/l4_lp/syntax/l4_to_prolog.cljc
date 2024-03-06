@@ -40,6 +40,18 @@
     (. !lhs ..1 IS THE (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op) OF . !rhs ..1)
     ((?op (!rhs ...) (!lhs ...)))
 
+    (. !year ..1 - . !month ..1 - . !day ..1)
+    ((date (!year ...) (!month ...) (!day ...)))
+
+    (. ?date-0
+       (m/or (m/and + (m/let [?pred 'date_add_duration]))
+             (m/and - (m/let [?pred 'date_minus_duration])))
+       ?number ?unit IS ?date-1)
+    ((?pred ?date-0 (?unit ?number) ?date-1))
+
+    (. !date-0 ..1 IS WITHIN . !number ..1 ?unit OF . !date-1 ..1)
+    ((date_is_within_duration_of_date !date-0 (?unit (!number ...)) !date-1))
+
       ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
       ;; -----------------------------------------------------
       ;; ⟦(?xs IS THE LIST OF ALL ?x SUCH THAT ?φ₀ ... ?φₙ)⟧ =
@@ -54,7 +66,7 @@
      ;; Restrict mixfix parsing to seqs where there is > 1 item present,
      ;; because otherwise there is no need for this.
      (_ _ & _)
-     ;; The next 2 clauses restricts mixfix parsing to ignore BoolStructs,
+     ;; The next clause restricts mixfix parsing to ignore BoolStructs,
      ;; ie things like (... AND ... AND ...).
      (m/gather (m/pred #{'AND 'OR}) ?count) (m/guard (zero? ?count))
      ?predicate-application)

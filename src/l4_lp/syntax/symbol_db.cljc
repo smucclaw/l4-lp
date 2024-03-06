@@ -5,16 +5,17 @@
             [net.cgrand.xforms :as xforms]))
 
 (def l4-lp-symbol-pairs
-  "Ordered pairs relating L4 and Prolog symbols, used as a bidirectional map
-   for translating symbols from L4 to Prolog and vice versa.
+  "Ordered pairs defining a binary relation between L4 and Prolog symbols,
+   used as a bidirectional map for translating symbols from L4 to Prolog and
+   vice versa.
 
    For convenience, we allow both elements in the pair to be sequences.
    In such cases, each element in the left item (resp right item) is related to
    each element of the right item.
 
    Internally, each pair is represented as a Datascript datom, and we
-   axiomatise a binary relation called l4-lp-symbol in terms of these
-   datoms to lookup and translate from L4 to Prolog and vice versa."
+   axiomatise a binary relation called l4-lp-symbol via a Datalog rule in terms
+   of these datoms to lookup and translate from L4 to Prolog and vice versa."
   #{[['IS '= '==] ['eq 'is]]
     ['AND ","]
     ['OR ";"]
@@ -23,11 +24,15 @@
     [['<= '=<] ['lte '=<]]
     ['> 'gt]
     ['>= 'gte]
-    ['+ '+]
-    ['- '-]
-    ['* '*]
-    ['/ '/]
-    ['** '**]
+    ;; ['+ '+]
+    ;; ['- '-]
+    ;; ['* '*]
+    ;; ['/ '/]
+    ;; ['** '**]
+    [['DAYS 'DAY] 'days]
+    [['WEEKS 'WEEK] 'weeks]
+    [['MONTHS 'MONTH] 'months]
+    [['YEARS 'YEAR] 'years]
     ['SUM ['sum_list_ 'sum_list]]
     ['PRODUCT 'product_list]
     ['MIN ['min_list_ 'min_list]]
@@ -77,7 +82,7 @@
 (defn l4-symbol->prolog-symbol
   "Given a L4 symbol, returns an appropriate symbol representing a Prolog
    functor.
-   
+
    Technically, this function is the result of transforming the l4-lp-symbol
    relation into a function in its first argument via a Choice function that
    picks the first ?prolog-symbol such that the following Datalog query

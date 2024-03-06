@@ -1,4 +1,4 @@
-:- ['../../../public/resources/swipl/prelude'].
+:- ['../../../../public/resources/swipl/prelude'].
 :- use_module(library(janus)).
 
 :- dynamic py_stack_trace/1.

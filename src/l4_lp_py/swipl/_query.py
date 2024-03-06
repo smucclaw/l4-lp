@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 
 import cytoolz.functoolz as ft
@@ -17,7 +18,10 @@ def init_swipl_engine():
   )
   janus.consult(f'{path}')
 
-def query_and_trace(program, goal):
+# https://www.swi-prolog.org/pldoc/man?section=janus-threads
+# https://swi-prolog.discourse.group/t/janus-and-swish/7142/7
+
+def _query_and_trace(program, goal):
   janus.attach_engine()
   janus.consult('program', program)
 
@@ -32,8 +36,15 @@ def query_and_trace(program, goal):
 
   try:
     janus.query_once(goal)
-  except janus.PrologException as e:
-    print(f'Error: {e}')
+  except Exception as _domain_error:
+    # print(f'Error: {domain_error}')
+    pass
   
   janus.detach_engine()
   return stack_trace.stack_trace
+
+async def query_and_trace(program, goal):
+  return await asyncio.to_thread(_query_and_trace, program, goal)
+
+def query_and_trace_sync(program, goal):
+  return asyncio.run(query_and_trace(program, goal))
