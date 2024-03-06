@@ -23,6 +23,8 @@ load_from_string(File, Data, Module) =>
     close(In)
   ). 
 
+% TODO: Only trace Exit and Fail ports. 
+% See https://www.swi-prolog.org/pldoc/man?section=debugoverview
 :- leash(-all).
 :- visible(+all).
 
