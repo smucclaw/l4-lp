@@ -43,6 +43,12 @@
     (. !element ..1 IS IN . !collection ..1)
     ((is_in (!element ...) (!collection ...)))
 
+    (. !element ..1 IS NOT . !collection ..1)
+    (NOT ((!element ...) IS (!collection ...)))
+
+    (. !element ..1 IS NOT IN . !collection ..1)
+    (NOT ((!element ...) IS IN (!collection ...)))
+
     (. !year ..1 - . !month ..1 - . !day ..1)
     ((date (!year ...) (!month ...) (!day ...)))
 
@@ -58,10 +64,10 @@
     (. !date-0 ..1 IS WITHIN . !number ..1 ?unit OF . !date-1 ..1)
     ((date_is_within_duration_of_date !date-0 (?unit (!number ...)) !date-1))
 
-      ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
-      ;; -----------------------------------------------------
-      ;; ⟦(?xs IS THE LIST OF ALL ?x SUCH THAT ?φ₀ ... ?φₙ)⟧ =
-      ;;   ⟦(findall ?x (?φ₀ ... ?φₙ) ?xs)⟧
+    ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
+    ;; -----------------------------------------------------
+    ;; ⟦(?xs IS THE LIST OF ALL ?x SUCH THAT ?φ₀ ... ?φₙ)⟧ =
+    ;;   ⟦(findall ?x (?φ₀ ... ?φₙ) ?xs)⟧
     (?xs IS THE LIST OF ALL ?x SUCH THAT & ?φ)
     ((findall ?x ?φ ?xs))
 
