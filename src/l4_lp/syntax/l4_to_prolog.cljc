@@ -33,35 +33,77 @@
     ;; ⟦DECIDE ?head₀ ... ?headₙ⟧ = ⟦(?head₀ ... ?headₙ)⟧
     (DECIDE . !head ..1) ((!head ...))
 
-      ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
-      ;; ---------------------------------------------------
-      ;; ⟦(?lhs₀ ... lhsₘ IS THE ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
-      ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
+    ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
+    ;;  ?op ∈ {MIN MAX PRODUCT SUM}
+    ;; ---------------------------------------------------
+    ;; ⟦(?lhs₀ ... ?lhsₘ IS THE ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
+    ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
     (. !lhs ..1 IS THE (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op) OF . !rhs ..1)
     ((?op (!rhs ...) (!lhs ...)))
 
+    ;;  ∀ 0 ≤ i ≤ n - 1, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ IN
+    ;; ---------------------------------------------------------------------
+    ;; ⟦(?element₀ ... ?elementₘ IS IN ?collection₀ ... ?collectionₙ)⟧ =
+    ;;   ⟦(is_in (?element₀ ... ?elementₘ) (?collection₀ ... ?collectionₙ))⟧
     (. !element ..1 IS IN . !collection ..1)
     ((is_in (!element ...) (!collection ...)))
 
-    (. !element ..1 IS NOT . !collection ..1)
-    (NOT ((!element ...) IS (!collection ...)))
-
+    ;;  ∀ 0 ≤ i ≤ n - 2, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ NOT  ?elementᵢ₊₂ ≠ IN
+    ;; ---------------------------------------------------------------------
+    ;; ⟦(?element₀ ... ?elementₘ IS IN ?collection₀ ... ?collectionₙ)⟧ =
+    ;;   ⟦(is_in (?element₀ ... ?elementₘ) (?collection₀ ... ?collectionₙ))⟧
     (. !element ..1 IS NOT IN . !collection ..1)
     (NOT ((!element ...) IS IN (!collection ...)))
 
+    ;;  ∀ 0 ≤ i ≤ n - 1, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ NOT
+    ;;  ?collection₀ ≠ IN
+    ;; ---------------------------------------------------------------------
+    ;; ⟦(?element₀ ... ?elementₘ IS NOT ?collection₀ ... ?collectionₙ)⟧ =
+    ;;   ⟦(is_in (?element₀ ... ?elementₘ) (?collection₀ ... ?collectionₙ))⟧
+    (. !lhs ..1 IS NOT . !rhs ..1)
+    (NOT ((!lhs ...) IS (!rhs ...)))
+
+    ;;  ∀ 0 ≤ i ≤ n, ?dateᵢ ≠ IS
+    ;; -----------------------------------------------------------------------
+    ;; ⟦(?date₀ ... ?dateₙ IS A VALID DATE)⟧ =
+    ;;   ⟦(is_valid_date (?date₀ ... ?dateₘ))⟧
     (. !date ..1 IS A VALID DATE)
     ((is_valid_date (!date ...)))
 
+    ;;  ?number ∈ ℕ
+    ;;  ?unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
+    ;; ---------------------------------------------------------
+    ;; ⟦(?date₀ + ?number ?unit IS ?date₁)⟧ =
+    ;;   ⟦(date_add_duration ?date₀ (?unit ?number) ?date₁)⟧
+
+    ;;  ?number ∈ ℕ
+    ;;  ?unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
+    ;; ---------------------------------------------------------
+    ;; ⟦(?date₀ - ?number ?unit IS ?date₁)⟧ =
+    ;;   ⟦(date_minus_duration ?date₀ (?unit ?number) ?date₁)⟧
     (. ?date-0
        (m/or (m/and + (m/let [?pred 'date_add_duration]))
              (m/and - (m/let [?pred 'date_minus_duration])))
-       ?number ?unit IS ?date-1)
+       ?number
+       (m/pred #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS} ?unit)
+       IS ?date-1)
     ((?pred ?date-0 (?unit ?number) ?date-1))
 
+    ;;  ∀ 0 ≤ i ≤ m - 1, ?dateᵢ ≠ IS ∧ ?dateᵢ₊₁ ≠ WITHIN
+    ;;  ∀ 0 ≤ j ≤ n, ?numberⱼ ∉ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS} 
+    ;;  ?unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
+    ;; -------------------------------------------------------------------------------------------------------
+    ;; ⟦(?date₀ ... ?dateₘ IS WITHIN ?number₀ ... ?numberₙ ?unit OF ?date'₀ ... ?date'ᵣ)⟧ =
+    ;;   ⟦(date_is_within_duration_of_date
+    ;;     (?date₀ ... ?dateₘ) (?number₀ ... ?numberₙ) (?date'₀ ... ?date'ᵣ))⟧
     (. !date-0 ..1 IS WITHIN . !number ..1 ?unit OF . !date-1 ..1)
     ((date_is_within_duration_of_date
       (!date-0 ...) (?unit (!number ...)) (!date-1 ...)))
 
+    ;;  ∀ 0 ≤ i ≤ m, ?yearᵢ ∉ {-}           ∀ 0 ≤ j ≤ n, ?monthⱼ ∉ {-}
+    ;; -----------------------------------------------------------------------
+    ;; ⟦(?year₀ ... ?yearₘ - ?month₀ ... ?monthₙ - ?day₀ ... ?dayᵣ)⟧ =
+    ;;   ⟦(date (?year₀ ... ?yearₘ) (?month₀ ... ?monthₙ) (?day₀ ... ?dayᵣ))⟧
     (. !year ..1 - . !month ..1 - . !day ..1)
     ((date (!year ...) (!month ...) (!day ...)))
 
