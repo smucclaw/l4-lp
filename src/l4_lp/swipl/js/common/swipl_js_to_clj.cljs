@@ -4,6 +4,7 @@
             [l4-lp.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
+            [net.cgrand.xforms :as xforms]
             [tupelo.string :as str]))
 
 ;; https://swi-prolog.discourse.group/t/clojure-clojurescript-with-swi-prolog/5399/4
@@ -78,7 +79,7 @@
   (->> swipl-stack-trace
        seq
        (eduction (map swipl-stack-frame->clj))
-       (eduction (map (juxt :recursion-depth identity)))
+       (eduction (xforms/by-key :recursion-depth (xforms/into [])))
        (into (sorted-map))))
 
 (defn swipl-stack-trace->js [swipl-stack-trace]
