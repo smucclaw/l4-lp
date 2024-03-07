@@ -12,13 +12,13 @@
   "This function transforms the AST of an individual L4 rule or goal to the
    Prolog AST.
 
-   Semantically its behaviour is axiomatised via an equational theory whose
-   primary construct is the interpretation function ⟦.⟧ which maps the L4 term
-   algebra to that of Prolog.
+   Formally, we specify its behaviour via an interpretation function ⟦.⟧ mapping
+   from the L4 term algebra to that of Prolog, which we define via recursive
+   equations.
 
    For the implementation, we:
-   1. Define a term rewriting system (TRS) that orients the equational theory
-      from left to right.
+   1. Define a term rewriting system (TRS) that orients the equations 
+      defining ⟦.⟧ from left to right.
    2. Traverse nodes in the L4 AST in a top-down manner, using the TRS to
       rewrite and transform each node."
   (r/top-down
