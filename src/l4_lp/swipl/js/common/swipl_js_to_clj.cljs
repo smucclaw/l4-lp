@@ -74,5 +74,16 @@
      :port (swipl-data->clj ?port)
      :recursion-depth ?recursion-depth}))
 
-(defn swipl-stack-frame->edn-str [swipl-stack-frame]
-  (-> swipl-stack-frame swipl-stack-frame->clj str))
+(defn swipl-stack-trace->clj [swipl-stack-trace]
+  (->> swipl-stack-trace
+       seq
+       (eduction (map swipl-stack-frame->clj))
+       (group-by :recursion-depth)))
+
+(defn swipl-stack-trace->js [swipl-stack-trace]
+  (-> swipl-stack-trace
+      swipl-stack-trace->clj
+      bean/->js))
+
+;; (defn swipl-stack-frame->edn-str [swipl-stack-frame]
+;;   (-> swipl-stack-frame swipl-stack-frame->clj str))

@@ -1,7 +1,8 @@
 (ns l4-lp.swipl.js.wasm-query 
   (:require [applied-science.js-interop :as jsi]
-            [promesa.core :as prom]
+            [cljs-bean.core :as bean]
             [l4-lp.swipl.js.common.swipl-js-to-clj :as swipl-js->clj]
+            [promesa.core :as prom]
             [shadow.esm :refer [dynamic-import]]))
 
 (def ^:private swipl-wasm-cdn-url
@@ -14,7 +15,7 @@
   (new #(this-as this (jsi/assoc! this :apply f))))
 
 ;; TODO: Document and clean up this function.
-(defn query-and-trace [program goal]
+(defn query-and-trace! [program goal]
   (prom/let
    [^js swipl-mod (dynamic-import swipl-wasm-cdn-url)
     swipl (-> swipl-mod
@@ -71,6 +72,12 @@
     ;; (jsi/call js/console :log "Loaded Swipl Mod: " swipl-mod)
     ;; (jsi/call js/console :log "SWIPL: " swipl)
 
-    {:trace (-> stack-trace persistent!)
+    {:trace (-> stack-trace
+                persistent!
+                swipl-js->clj/swipl-stack-trace->clj)
      :bindings (-> query-result
                    swipl-js->clj/swipl-query-result->bindings)}))
+
+(defn query-and-trace-js! [program goal]
+  (->> (query-and-trace! program goal)
+       (prom/map bean/->js)))

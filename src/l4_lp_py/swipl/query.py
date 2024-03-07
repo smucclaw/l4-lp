@@ -9,10 +9,15 @@ def init_swipl_engine():
 
 async def query_and_trace(program, goal):
   stack_trace = await _query.query_and_trace(program, goal)
+  return ft.pipe(
+    stack_trace,
+    _l4_lp.swipl_stack_trace_to_js,
+    lambda x: x.valueOf()
+  ) 
 
-  for index, stack_frame in enumerate(stack_trace):
-    stack_trace[index] = ft.pipe(
-      stack_frame, _l4_lp.swipl_stack_frame_to_edn_str, edn.loads
-    )
+  # for index, stack_frame in enumerate(stack_trace):
+  #   stack_trace[index] = ft.pipe(
+  #     stack_frame, _l4_lp.swipl_stack_frame_to_edn_str, edn.loads
+  #   )
 
-  return stack_trace
+  # return stack_trace

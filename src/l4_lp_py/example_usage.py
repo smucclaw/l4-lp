@@ -1,6 +1,7 @@
 import asyncio
 import datetime
-import pprint
+
+import pout
 
 from syntax.dsl import And, Or, Var, Fact, Rule, Date, l4_to_edn_str
 from syntax.l4_to_prolog import l4_to_prolog_str, l4_program_to_prolog_str
@@ -50,7 +51,6 @@ goal = l4_to_prolog_str(goal)
 
 init_swipl_engine()
 
-trace = asyncio.run(query_and_trace(program, goal))
+stack_trace = asyncio.run(query_and_trace(program, goal))
 
-print('Stack trace:')
-pprint.pprint(trace)
+pout.v(stack_trace)

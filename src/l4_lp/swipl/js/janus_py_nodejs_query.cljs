@@ -1,6 +1,7 @@
 (ns l4-lp.swipl.js.janus-py-nodejs-query
   (:require ["pythonia" :refer [python]]
             [applied-science.js-interop :as jsi]
+            [cljs-bean.core :as bean]
             [l4-lp.swipl.js.common.swipl-js-to-clj :as swipl-js->clj]
             [promesa.core :as prom]))
 
@@ -23,7 +24,12 @@
 
         ^js stack-trace
         (jsi/call stack-trace-py-ref .-valueOf)]
-        (->> stack-trace
-             seq
-             (eduction (map swipl-js->clj/swipl-stack-frame->clj))
-             (into []))))))
+        (swipl-js->clj/swipl-stack-trace->clj stack-trace)
+        #_(->> stack-trace
+               seq
+               (eduction (map swipl-js->clj/swipl-stack-frame->clj))
+               (into []))))))
+
+(defn query-and-trace-js! [program goal]
+  (->> (query-and-trace! program goal)
+       (prom/map bean/->js)))

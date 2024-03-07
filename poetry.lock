@@ -343,6 +343,20 @@ files = [
 ]
 
 [[package]]
+name = "pout"
+version = "2.3.1"
+description = "Prints out python variables in an easy to read way, handy for debugging"
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "pout-2.3.1-py3-none-any.whl", hash = "sha256:d214fd99e04cf31d56822e5bd102a18df10761532aafa9742d2ace9690289f0d"},
+    {file = "pout-2.3.1.tar.gz", hash = "sha256:b1ee8b591ff829231d854c3ebca513e52ee57b44ccaf2202570676018fcef296"},
+]
+
+[package.extras]
+tests = ["testdata"]
+
+[[package]]
 name = "prompt-toolkit"
 version = "3.0.43"
 description = "Library for building powerful interactive command lines in Python"
@@ -532,4 +546,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.0"
-content-hash = "446c7ca90272a16b9f160a3e9efbb0b4ce0d81082a3029b952bf72229c7fa6c9"
+content-hash = "b72a4ef5bd4682c6629490b787d4e4cdf6ffadfb595ef4ca9699cb40d0958b7f"
