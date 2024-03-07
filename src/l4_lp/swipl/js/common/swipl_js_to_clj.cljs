@@ -78,7 +78,8 @@
   (->> swipl-stack-trace
        seq
        (eduction (map swipl-stack-frame->clj))
-       (group-by :recursion-depth)))
+       (eduction (map (juxt :recursion-depth identity)))
+       (into (sorted-map))))
 
 (defn swipl-stack-trace->js [swipl-stack-trace]
   (-> swipl-stack-trace
