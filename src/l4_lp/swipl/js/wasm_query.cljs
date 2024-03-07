@@ -79,4 +79,4 @@
 
 (defn query-and-trace-js! [program goal]
   (->> (query-and-trace! program goal)
-       #_(prom/map bean/->js)))
+       (prom/map bean/->js)))
