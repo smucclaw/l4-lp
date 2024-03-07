@@ -42,8 +42,7 @@
     ;; treats them both as plain objects and tries to recursively convert it to
     ;; a Prolog dictionary, which fails.
     log-stack-frame-callback
-    (wrap-fn
-     #(->> % swipl-js->clj/swipl-stack-frame->clj (conj! stack-trace)))
+    (wrap-fn #(conj! stack-trace %))
 
     assert-callback-fn-query
     (jsi/call-in swipl [:prolog :query]
@@ -80,4 +79,4 @@
 
 (defn query-and-trace-js! [program goal]
   (->> (query-and-trace! program goal)
-       (prom/map bean/->js)))
+       #_(prom/map bean/->js)))

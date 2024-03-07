@@ -53,4 +53,4 @@ init_swipl_engine()
 
 stack_trace = asyncio.run(query_and_trace(program, goal))
 
-pout.v(stack_trace)
+pout.vs(stack_trace)
