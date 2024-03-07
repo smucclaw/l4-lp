@@ -9,7 +9,7 @@ from swipl.query import init_swipl_engine, query_and_trace
 
 program = [
   Rule(
-    ('p of', Var('xs'), 'and', Var('x'), 'and', Var('z')),
+    ('p of', Var('xs'), 'and', Var('x'), 'and', Var('z'), 'and', Var('date')),
     And(
       (Var('xs'), 'IS THE LIST OF ALL', Var('y'), 'SUCH THAT', 'q holds for', Var('y')),
 
@@ -21,7 +21,9 @@ program = [
       
       (Var('y'), 'IS THE SUM OF', Var('ys')),
 
-      (Var('y'), '>', 0)
+      (Var('y'), '>', 0),
+
+      (Var('date'), 'IS WITHIN', 3, 'DAYS', 'OF', datetime.date(2024, 1, 20))
     )
   ),
 
@@ -37,7 +39,10 @@ program = [
   # Fact('test', ('p', [0, 1]))
 ]
 
-goal = Fact('p of', Var('xs'), 'and', Var('x'), 'and', 4)
+goal = Fact(
+  'p of', Var('xs'), 'and', Var('x'), 'and', 4, 'and',
+  datetime.date(2024, 1, 21)
+)
 
 # goal = Fact(
 #   And(
@@ -53,4 +58,4 @@ init_swipl_engine()
 
 stack_trace = asyncio.run(query_and_trace(program, goal))
 
-pout.vs(stack_trace)
+pout.v(stack_trace)
