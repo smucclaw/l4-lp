@@ -29,6 +29,8 @@
     ;; ['* '*]
     ;; ['/ '/]
     ;; ['** '**]
+    ;; https://swi-prolog.discourse.group/t/why-is-predicate-traced-when-using-trace-predicate-but-not-when-using-trace-then-predicate/3231
+    ;; ['findall ['findall 'findall_loop]]
     [['DAYS 'DAY] 'days]
     [['WEEKS 'WEEK] 'weeks]
     [['MONTHS 'MONTH] 'months]
