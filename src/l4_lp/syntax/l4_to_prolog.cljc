@@ -96,7 +96,9 @@
     ;; ⟦(?date₀ ... ?dateₘ IS WITHIN ?number₀ ... ?numberₙ ?unit OF ?date'₀ ... ?date'ᵣ)⟧ =
     ;;   ⟦(date_is_within_duration_of_date
     ;;     (?date₀ ... ?dateₘ) (?number₀ ... ?numberₙ) (?date'₀ ... ?date'ᵣ))⟧
-    (. !date-0 ..1 IS WITHIN . !number ..1 ?unit OF . !date-1 ..1)
+    (. !date-0 ..1 IS WITHIN . !number ..1
+       (m/pred #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS} ?unit)
+       OF . !date-1 ..1)
     ((date_is_within_duration_of_date
       (!date-0 ...) (?unit (!number ...)) (!date-1 ...)))
 
