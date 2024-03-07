@@ -32,7 +32,19 @@ console.log("Transpiled goal: ", goal);
 
 const stack_trace = await query_and_trace(program, goal); 
 
-console.log("Stack trace: ", stack_trace);
+const Guifier = await import(
+  "https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js"
+);
+
+// console.log("Stack trace: ", stack_trace);
+
+const _guifier = new Guifier.default({
+  data: stack_trace,
+  dataType: "js",
+  elementSelector: "#guifier",
+  withoutContainer: true,
+  readOnlyMode: true
+});
 
 // const program = `
 //   person(adam).
