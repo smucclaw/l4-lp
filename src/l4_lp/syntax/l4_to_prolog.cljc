@@ -49,9 +49,6 @@
     (. !element ..1 IS NOT IN . !collection ..1)
     (NOT ((!element ...) IS IN (!collection ...)))
 
-    (. !year ..1 - . !month ..1 - . !day ..1)
-    ((date (!year ...) (!month ...) (!day ...)))
-
     (. !date ..1 IS A VALID DATE)
     ((is_valid_date (!date ...)))
 
@@ -62,7 +59,11 @@
     ((?pred ?date-0 (?unit ?number) ?date-1))
 
     (. !date-0 ..1 IS WITHIN . !number ..1 ?unit OF . !date-1 ..1)
-    ((date_is_within_duration_of_date !date-0 (?unit (!number ...)) !date-1))
+    ((date_is_within_duration_of_date
+      (!date-0 ...) (?unit (!number ...)) (!date-1 ...)))
+
+    (. !year ..1 - . !month ..1 - . !day ..1)
+    ((date (!year ...) (!month ...) (!day ...)))
 
     ;;  ?op ∈ math-list-ops     ?lhsᵢ ∉ math-list-ops
     ;; -----------------------------------------------------

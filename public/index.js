@@ -6,13 +6,14 @@ import {
 from "./js/main.js";
 
 let program = `
-  [(DECIDE p of var/xs and var/x and var/z
+  [(DECIDE p of var/xs and var/x and var/z and var/date
   IF (var/xs IS THE LIST OF ALL var/y SUCH THAT q holds for var/y)
   AND (var/ys IS THE LIST OF ALL var/y SUCH THAT r holds for var/y)
   AND (r holds for var/z)
   AND (var/x IS THE SUM OF var/xs)
   AND (var/y IS THE SUM OF var/ys)
-  AND (var/y > 0))
+  AND (var/y > 0)
+  AND (var/date IS WITHIN 3 DAYS OF 2024 - 1 - 20))
 
   (DECIDE q holds for 0)
   (DECIDE q holds for 1)
@@ -22,7 +23,7 @@ let program = `
   OR (var/z IS 4))]
 `;
 
-let goal = "(p of var/xs and var/x and 4)";
+let goal = "(p of var/xs and var/x and 4 and (2024 - 1 - 21))";
 
 program = l4_program_to_prolog_program_str(program);
 goal = l4_to_prolog_str(goal);
@@ -32,13 +33,13 @@ console.log("Transpiled goal: ", goal);
 
 const stack_trace = await query_and_trace(program, goal); 
 
-const Guifier = await import(
+const { default: Guifier } = await import(
   "https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js"
 );
 
 // console.log("Stack trace: ", stack_trace);
 
-const _guifier = new Guifier.default({
+const _guifier = new Guifier({
   data: stack_trace,
   dataType: "js",
   elementSelector: "#guifier",
