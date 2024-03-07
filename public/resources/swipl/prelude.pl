@@ -59,7 +59,7 @@ prolog_trace_interception(Port, Frame, _Choice, continue) :-
 % ).
 
 eval_and_trace(Goal) =>
-  setup_call_cleanup(trace, Goal, notrace).
+  setup_call_cleanup(trace, once(Goal), notrace).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(700, xfx, eq).
