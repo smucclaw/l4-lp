@@ -12,7 +12,7 @@
 (def ^:private swipl-query-executor
   (atom nil))
 
-(defn init!
+(defn init-swipl-engine!
   [& {:keys [query-executor]
       :or {query-executor (promx/vthread-per-task-executor)}}]
 
@@ -37,6 +37,6 @@
      (fn []
        (Prolog/create_engine)
        (.oneSolution load-program-query)
-       (let [soln (.oneSolution goal-query)]
+       (let [bindings (.oneSolution goal-query)]
          (Prolog/destroy_engine)
-         soln)))))
+         bindings)))))

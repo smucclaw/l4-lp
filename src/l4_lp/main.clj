@@ -1,6 +1,6 @@
 (ns l4-lp.main
-  (:require [l4-lp.core :as l4-lp]
-            [l4-lp.swipl.jpl-jvm.query :refer [init! query!]]
+  (:require [l4-lp.syntax.l4-to-prolog :as l4->prolog]
+            [l4-lp.swipl.jpl-jvm.query :as l4-lp-jpl-query]
             [promesa.core :as prom])
   (:gen-class))
 
@@ -18,16 +18,16 @@
 
               (DECIDE q holds for 1)
               (DECIDE q holds for 2)]"
-            l4-lp/l4-program->prolog-program-str)
+            l4->prolog/l4-program->prolog-program-str)
 
         goal (-> "(p of var/xs and var/x)"
-                 l4-lp/l4->prolog-str)]
+                 l4->prolog/l4->prolog-str)]
 
     (println "Program: " program)
     (println "Goal: " goal)
 
-    (init!)
-    @(->> (query! program goal) (prom/map prn))
+    (l4-lp-jpl-query/init-swipl-engine!)
+    @(->> (l4-lp-jpl-query/query! program goal) (prom/map prn))
 
     ;; (py/get-attr janus :attach_engine)
     ;; (py/call-attr janus :consult "public/resources/swipl/prelude.qlf")
