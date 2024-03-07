@@ -21,7 +21,7 @@ load_from_string(File, Data, Module) =>
     open_string(Data, In),
     load_files(Module:File, [stream(In)]),
     close(In)
-  ). 
+  ).
 
 % The more stack frames that we trace, and the more data that we capture in
 % each stack frame, the slower the interpreter will run, and the more work
@@ -53,13 +53,13 @@ prolog_trace_interception(Port, Frame, _Choice, continue) :-
 
   log_stack_frame(StackFrame).
 
-#define(
-  toggle_tracing(Toggle0, Goal, Toggle1),
-  (Toggle0, setup_call_cleanup(true, call(Goal), Toggle1))
-).
+% #define(
+%   toggle_tracing(Toggle0, Goal, Toggle1),
+%   (Toggle0, setup_call_cleanup(true, call(Goal), Toggle1))
+% ).
 
 eval_and_trace(Goal) =>
-  #toggle_tracing(trace, call(Goal), notrace).
+  setup_call_cleanup(trace, Goal, notrace).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(700, xfx, eq).
@@ -110,7 +110,7 @@ is_in(X, [_ | Xs]) :- is_in(X, Xs).
 % Is there a better way to do this kind of unification?
 % Perhaps SWI Prolog provides some meta-level hooks that we can use to tweak
 % the standard unification procedure to be modulo the theory of reals.
-X eq Y :- #toggle_tracing(notrace, X eq_ Y, trace).
+X eq Y :- notrace(X eq_ Y).
 
 X eq_ Y :-
   catch(({X == Y, Y == X}, solve([X, Y])), _, fail), !.
@@ -139,7 +139,7 @@ X eq_ Y :-
 
 #define(
   arithmetic_comparison(Comparison),
-  #toggle_tracing(notrace, catch({Comparison}, _, fail), trace)
+  notrace(catch({Comparison}, _, fail))
 ).
 
 % As with 'IS', we use constraint solving via clpBNR for handling arithmetic
@@ -162,32 +162,29 @@ X gt Y :- date_is_after_date(X, Y).
 X geq Y :- #arithmetic_comparison(X >= Y), !.
 X geq Y :- date_is_after_or_eq_date(X, Y).
 
-is_valid_date(date(Year, Month, Day)) :-
-  #toggle_tracing(
-    notrace,
-    (
-      [Year, Month, Day]::integer, {
-        Year > 0,
-        1 =< Month, Month =< 12,
-        1 =< Day, Day =< 31,
-        (
-          ((Month == 4) or (Month == 6) or (Month == 9) or (Month == 11)) ->
-            (Day =< 30)
-        ),
-        ((Month == 2) -> (Day =< 29)),
-        (
-          ((Month == 2) and (Day == 29)) ->
-            (integer(Year / 4) and (integer(Year / 100) -> integer(Year / 400)))
-        )
-      }
-    ),
-    trace
-  ).
+is_valid_date(date(Year, Month, Day)) :- notrace(
+  (
+    [Year, Month, Day]::integer, {
+      Year > 0,
+      1 =< Month, Month =< 12,
+      1 =< Day, Day =< 31,
+      (
+        ((Month == 4) or (Month == 6) or (Month == 9) or (Month == 11)) ->
+          (Day =< 30)
+      ),
+      ((Month == 2) -> (Day =< 29)),
+      (
+        ((Month == 2) and (Day == 29)) ->
+          (integer(Year / 4) and (integer(Year / 100) -> integer(Year / 400)))
+      )
+    }
+  )
+).
 
-is_valid_unit(days) :- !.
-is_valid_unit(weeks) :- !.
-is_valid_unit(months) :- !.
-is_valid_unit(years) :- !.
+% is_valid_unit(days) :- !.
+% is_valid_unit(weeks) :- !.
+% is_valid_unit(months) :- !.
+% is_valid_unit(years) :- !.
 
 % is_valid_duration_with_unit_number(Duration, Unit, Number) :-
 %   Number::integer, {Number >= 0},
@@ -214,7 +211,7 @@ is_valid_unit(years) :- !.
 date_add_duration(Date0, Duration, Date1) =>
   % #wrap_date_duration_goal(
   %   Date0, Date1, Duration,
-  #toggle_tracing(notrace, date_add(Date0, Duration, Date1), trace).
+  notrace(date_add(Date0, Duration, Date1)).
   % ).
 
 date_minus_duration(Date0, Duration, Date1) =>
@@ -222,14 +219,12 @@ date_minus_duration(Date0, Duration, Date1) =>
   %   Date0, Date1,
   %  (
       % is_valid_duration_with_unit_number(Duration, Unit, Number),
-  #toggle_tracing(
-    notrace,
+  notrace(
     (
       Duration =.. [Unit, Number],
       Negated_duration =.. [Unit, -Number],
       date_add(Date0, Negated_duration, Date1)
-    ),
-    trace
+    )
   ).
   %  )
   % ).
@@ -242,7 +237,7 @@ date_minus_duration(Date0, Duration, Date1) =>
 
 #define(
   wrap_date_compare(Date0, Op, Date1),
-  #toggle_tracing(notrace, date_compare(Date0, Op, Date1), trace)
+  notrace(date_compare(Date0, Op, Date1))
 ).
 
 date_is_before_date(Date0, Date1) =>
