@@ -1,5 +1,6 @@
 (ns l4-lp.swipl.js.common.swipl-js-to-clj 
   (:require [applied-science.js-interop :as jsi]
+            [clojure.data.avl :as avl]
             [cljs-bean.core :as bean]
             [l4-lp.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
@@ -80,7 +81,7 @@
        seq
        (eduction (map swipl-stack-frame->clj))
        (eduction (xforms/by-key :recursion-depth (xforms/into [])))
-       (into (sorted-map))))
+       (into (avl/sorted-map))))
 
 (defn swipl-stack-trace->js [swipl-stack-trace]
   (-> swipl-stack-trace
