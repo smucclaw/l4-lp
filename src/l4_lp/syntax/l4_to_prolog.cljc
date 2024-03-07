@@ -121,7 +121,7 @@
      ;; Restrict mixfix parsing to seqs where there is > 1 item present,
      ;; because otherwise there is no need for this.
      (_ _ & _)
-     ;; The next clause restricts mixfix parsing to ignore BoolStructs,
+     ;; The next 2 clauses restrict mixfix parsing to ignore BoolStructs,
      ;; ie things like (... AND ... AND ...).
      (m/gather (m/pred #{'AND 'OR}) ?count) (m/guard (zero? ?count))
      ?predicate-application)
