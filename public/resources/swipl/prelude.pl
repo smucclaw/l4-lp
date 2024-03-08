@@ -71,6 +71,7 @@ once_trace_all(Goal) =>
 
 is_in(X, [Y | _]) :- X eq Y.
 is_in(X, [_ | Xs]) :- is_in(X, Xs).
+
 product_list([], Result) => Result eq 0.
 product_list([X], Result) => Result eq X.
 product_list([X | Xs], Result) =>
