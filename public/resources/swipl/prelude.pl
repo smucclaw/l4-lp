@@ -89,6 +89,20 @@ min_(_, Y, Result) => Result eq Y.
 max_(X, Y, Result), X geq Y => Result eq X.
 max_(_, Y, Result) => Result eq Y.
 
+min_by(P, X, Y, Result) :-
+  call(P, X, X0),
+  call(P, Y, Y0),
+  (
+    X0 leq Y0 -> Result eq X ; Result eq Y
+  ).
+
+max_by(P, X, Y, Result) :-
+  call(P, X, X0),
+  call(P, Y, Y0),
+  (
+    X0 geq Y0 -> Result eq X ; Result eq Y
+  ).
+
 min_list_([], Result) => Result eq inf.
 min_list_([X | Xs], Result) =>
   min_list_(Xs, Result0),
