@@ -69,6 +69,8 @@ once_trace_all(Goal) =>
 :- op(700, xfx, gt).
 :- op(700, xfx, geq).
 
+is_in(X, [Y | _]) :- X eq Y.
+is_in(X, [_ | Xs]) :- is_in(X, Xs).
 product_list([], Result) => Result eq 0.
 product_list([X], Result) => Result eq X.
 product_list([X | Xs], Result) =>
@@ -80,18 +82,27 @@ sum_list_([X | Xs], Result) =>
   sum_list_(Xs, Result0),
   Result eq X + Result0.
 
+min_(X, Y, Result), X leq Y => Result eq X.
+min_(_, Y, Result) => Result eq Y.
+
+max_(X, Y, Result), X geq Y => Result eq X.
+max_(_, Y, Result) => Result eq Y.
+
 min_list_([], Result) => Result eq inf.
 min_list_([X | Xs], Result) =>
   min_list_(Xs, Result0),
-  Result eq min(X, Result0).
+  min_(X, Result0, Result).
+  % Result eq min(X, Result0).
 
 max_list_([], Result) => Result eq -inf.
 max_list_([X | Xs], Result) =>
   max_list_(Xs, Result0),
-  Result eq max(X, Result0).
+  max_(X, Result0, Result).
+  % Result eq max(X, Result0).
 
-is_in(X, [Y | _]) :- X eq Y.
-is_in(X, [_ | Xs]) :- is_in(X, Xs).
+% TODO:
+% Implement min_by and max_by in a way that works for predicates,
+% functions/methods, and attribute projects on dicts.
 
 % This first uses constraint solving via clpBNR for unifying arithmetic
 % expressions, modulo the theory of reals.
