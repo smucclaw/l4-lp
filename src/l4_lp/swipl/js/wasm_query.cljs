@@ -63,8 +63,8 @@
     _ (jsi/call-in swipl [:prolog :load_string] program)
 
     query (jsi/call-in swipl [:prolog :query]
-                       ;; "eval_and_trace(Goal)" #js {:Goal goal}
-                       (str "eval_and_trace(" goal ")"))
+                       ;; "once_trace_all(Goal)" #js {:Goal goal}
+                       (str "once_trace_all(" goal ")"))
 
     query-result (jsi/call query :once)]
 

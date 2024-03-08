@@ -32,7 +32,7 @@ def _query_and_trace(program, goal):
     {'PyStackTrace': stack_trace}
   )
 
-  goal = f'eval_and_trace({goal})'
+  goal = f'once_trace_all({goal})'
 
   try:
     janus.query_once(goal)
