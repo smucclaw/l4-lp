@@ -27,7 +27,7 @@
                        "--no-fallback"
                        "-H:ReflectionConfigurationFiles=reflect-config.json"
                        "-H:Name=l4-lp"
-                             ;; https://clojurians-log.clojureverse.org/graalvm/2022-05-19
+                       ;; https://clojurians-log.clojureverse.org/graalvm/2022-05-19
                        "--features=clj_easy.graal_build_time.InitClojureClasses"
                        "--initialize-at-build-time=com.fasterxml.jackson"
                        "target/l4_lp")}}}

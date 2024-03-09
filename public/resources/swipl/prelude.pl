@@ -64,6 +64,8 @@ once_trace_all(Goal) =>
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(700, xfx, eq).
 :- op(700, xfx, eq_).
+:- op(700, xfx, neq).
+:- op(700, xfx, neq_).
 :- op(700, xfx, lt).
 :- op(700, xfx, leq).
 :- op(700, xfx, gt).
@@ -147,9 +149,13 @@ X eq_ Y :-
 X eq_ Y :- maplist(eq_, X, Y), !.
 
 X eq_ Y :-
-  X =.. [Functor | X_args],
-  Y =.. [Functor | Y_args],
-  maplist(eq_, X_args, Y_args).
+  catch(
+    (
+      X =.. [Functor | X_args],
+      Y =.. [Functor | Y_args],
+      maplist(eq_, X_args, Y_args)
+    ),
+  _, fail).
 
 % X 'IS' Y :-
   % catch(X is Y, _, fail), !
@@ -162,6 +168,49 @@ X eq_ Y :-
 
 % X 'IS' Y :-
   % notrace, ((unify_with_occurs_check(X, Y), !, trace); trace).
+
+X neq Y :- notrace(X neq_ Y).
+
+X neq_ Y :-
+  catch({~(X == Y)}, _, fail), !.
+
+X neq_ Y :-
+  maplist(neq_, X, Y), !.
+
+% This is not really ideal because we still have:
+% ?- X neq_ b(0), X = b(0 + 0).
+% X = b(0+0).
+%
+% Maybe need to use CHR or something else to control unification.
+X neq_ Y :-
+  catch(
+    (
+      X =.. [X_functor | X_args],
+      Y =.. [Y_functor | Y_args],
+      (dif(X_functor, Y_functor) -> true ; maplist(neq_, X_args, Y_args))
+    ),
+  _, fail), !.
+
+X neq_ Y :- dif(X, Y).
+
+not_((X , Y)) => not_(X) ; not_(Y).
+not_((X ; Y)) => not_(X) , not_(Y).
+
+not_(X lt Y) => X geq Y.
+not_(X leq Y) => X gt Y.
+
+not_(X gt Y) => X leq Y.
+not_(X geq Y) => X lt Y.
+
+not_(X eq Y) => X neq Y.
+
+% not_(X eq Y) => dif(X, Y).
+
+% Ideally we want to macro-expand P to a matching body and push the negation
+% into that.
+not_(P) => \+ P.
+
+% test(X) :- 0 leq X, X leq 10.
 
 #define(
   arithmetic_comparison(Comparison),
