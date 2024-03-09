@@ -207,13 +207,13 @@ not_(X geq Y) => X lt Y.
 
 not_(X eq Y) => X neq Y.
 
-not_(P), (
+not_(P), notrace((
   P =.. [Functor | Args],
   % Ugly hack to work around the clpBNR behavior that {X == [1 - 1]}.
-  [0 | Args0] eq [0 | Args],
+  [0 | Args0] eq_ [0 | Args],
   P0 =.. [Functor | Args0],
   clause(P0, P_body)
-) =>
+)) =>
   P_body = true -> \+ P0 ; not_(P_body).
 
 not_(_) => true.
