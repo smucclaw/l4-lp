@@ -197,10 +197,19 @@ X neq_ Y :-
 
 X neq_ Y :- dif(X, Y).
 
-not_(not_(P)) => P.
+% Negate via conversion to negation normal form, so that negations can be
+% appropriate propagated to deeply nested arithmetic constraints.
+% This allows us to override Prolog's default negation as failure behaviour and
+% transform for instance not_((0 leq X, X leq 10)) into ((0 gt X, !) ; X gt 10).
+% Default negation as failure is used as the fallback for non-arithmetic
+% predicates like atomic propositions.
 
-not_((X , Y)) => not_(X) ; not_(Y).
+not_((X , _)), not_(X) => true.
+not_((_ , Y)) => not_(Y).
+
 not_((X ; Y)) => not_(X) , not_(Y).
+
+not_(not_(P)) => P.
 
 not_(X lt Y) => X geq Y.
 not_(X leq Y) => X gt Y.
@@ -210,13 +219,16 @@ not_(X geq Y) => X lt Y.
 
 not_(X eq Y) => X neq Y.
 
-not_(P), notrace((
-  P =.. [Functor | Args],
-  [0 | Args0] eq_ [0 | Args],
-  P0 =.. [Functor | Args0],
-  clause(P0, P_body)
-)) =>
-  P_body = true -> \+ P0 ; not_(P_body).
+not_(P), notrace(
+  % Unify a compound term P with a matching clause, modulo the theory of reals,
+  % so that for instance p(1 - 1) gets unified with p(0).
+  (
+    P =.. [Functor | Args],
+    Args0 eq_ Args,
+    P0 =.. [Functor | Args0],
+    clause(P0, P_body)
+  )
+) => P_body = true -> \+ P0 ; not_(P_body).
 
 not_(_) => true.
 
