@@ -138,9 +138,11 @@ max_list_([X | Xs], Result) =>
 % Is there a better way to do this kind of unification?
 % Perhaps SWI Prolog provides some meta-level hooks that we can use to tweak
 % the standard unification procedure to be modulo the theory of reals.
-X eq Y :- notrace(X eq_ Y).
 
-% Note: This is buggy because {X == [1 - 1]} succeeds with X = 0.
+% Note: Ugly hack to work around clpBNR behavior that {X == [0]} succeeds with
+% X = 0.
+X eq Y :- notrace([0 | X] eq_ [0 | Y]).
+
 X eq_ Y :-
   catch(({X == Y, Y == X}, solve([X, Y])), _, fail), !.
 
@@ -209,7 +211,6 @@ not_(X eq Y) => X neq Y.
 
 not_(P), notrace((
   P =.. [Functor | Args],
-  % Ugly hack to work around the clpBNR behavior that {X == [1 - 1]}.
   [0 | Args0] eq_ [0 | Args],
   P0 =.. [Functor | Args0],
   clause(P0, P_body)
