@@ -140,6 +140,7 @@ max_list_([X | Xs], Result) =>
 % the standard unification procedure to be modulo the theory of reals.
 X eq Y :- notrace(X eq_ Y).
 
+% Note: This is buggy because {X == [1 - 1]} succeeds with X = 0.
 X eq_ Y :-
   catch(({X == Y, Y == X}, solve([X, Y])), _, fail), !.
 
@@ -193,6 +194,8 @@ X neq_ Y :-
 
 X neq_ Y :- dif(X, Y).
 
+not_(not_(P)) => P.
+
 not_((X , Y)) => not_(X) ; not_(Y).
 not_((X ; Y)) => not_(X) , not_(Y).
 
@@ -204,11 +207,18 @@ not_(X geq Y) => X lt Y.
 
 not_(X eq Y) => X neq Y.
 
-% not_(X eq Y) => dif(X, Y).
+not_(P), (
+  P =.. [Functor | Args],
+  % Ugly hack to work around the clpBNR behavior that {X == [1 - 1]}.
+  [0 | Args0] eq [0 | Args],
+  P0 =.. [Functor | Args0],
+  clause(P0, P_body)
+) =>
+  P_body = true -> \+ P0 ; not_(P_body).
 
-% Ideally we want to macro-expand P to a matching body and push the negation
-% into that.
-not_(P) => \+ P.
+not_(_) => true.
+
+% test(0).
 
 % test(X) :- 0 leq X, X leq 10.
 
