@@ -139,11 +139,12 @@ max_list_([X | Xs], Result) =>
 % Perhaps SWI Prolog provides some meta-level hooks that we can use to tweak
 % the standard unification procedure to be modulo the theory of reals.
 
-% Note: Ugly hack to work around clpBNR behavior that {X == [0]} succeeds with
-% X = 0.
-X eq Y :- notrace([0 | X] eq_ [0 | Y]).
+X eq Y :- notrace(X eq_ Y).
 
 X eq_ Y :-
+  % This works around clpBNR behavior that {X == [0]} succeeds with
+  % X = 0.
+  \+ is_list(X), \+ is_list(Y),
   catch(({X == Y, Y == X}, solve([X, Y])), _, fail), !.
 
 % Optimisation for when X and Y are both lists. In that case, just use maplist
