@@ -251,7 +251,7 @@ develop = false
 [package.source]
 type = "git"
 url = "https://github.com/SWI-Prolog/packages-swipy.git"
-reference = "V9.3.2"
+reference = "V9.3.3"
 resolved_reference = "feff32f02a82363df86483f1b9448ccc16d5ac1b"
 
 [[package]]
@@ -546,4 +546,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.0"
-content-hash = "b72a4ef5bd4682c6629490b787d4e4cdf6ffadfb595ef4ca9699cb40d0958b7f"
+content-hash = "cca63324f9ddafdb00081bff51750edbadfaecf959c5274371b94bd0880a52d6"
