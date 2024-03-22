@@ -7,7 +7,7 @@
    :output-dir "public/js"
    :modules
    {:main {:js-options {:js-provider :import}
-           :compiler-options {:output-feature-set :es2020
+           :compiler-options {:output-feature-set :es2021
                               :externs ["datascript/externs.js"]}
            :optimizations :advanced
 
