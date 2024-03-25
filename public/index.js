@@ -6,24 +6,16 @@ import {
 from "./js/main.js";
 
 let program = `
-  [(DECIDE p of var/xs and var/x and var/z and var/date
-  IF (var/xs IS THE LIST OF ALL var/y SUCH THAT q holds for var/y)
-  AND (var/ys IS THE LIST OF ALL var/y SUCH THAT r holds for var/y)
-  AND (r holds for var/z)
-  AND (var/x IS THE SUM OF var/xs)
-  AND (var/y IS THE SUM OF var/ys)
-  AND (var/y > 0)
-  AND (var/date IS WITHIN 3 DAYS OF 2024 - 1 - 20))
+[(DECIDE p
+  IF (q AND r))
 
-  (DECIDE q holds for 0)
-  (DECIDE q holds for 1)
+ (DECIDE (var/x is between 0 and 10 or is 100)
+  IF (((0.0 <= var/x) AND (var/x <= 10.0)) OR (var/x IS 100.0)))
 
-  (DECIDE r holds for var/z
-  IF (var/z IS 3)
-  OR (var/z IS 4))]
+ (DECIDE ((2023 - 1 - 10) is a date))]
 `;
 
-let goal = "(p of var/xs and var/x and 4 and (2024 - 1 - 21))";
+let goal = "(var/d is a date)";
 
 program = l4_program_to_prolog_program_str(program);
 goal = l4_to_prolog_str(goal);
