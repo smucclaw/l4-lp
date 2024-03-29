@@ -32,7 +32,7 @@
     ;; ?symbol ∈ ?givens
     ;; ⊢ (symbol nil ?symbol) ⇓ ?symbol'
     ;; ⊢ (symbol "var" ?symbol) ⇓ ?var
-    ;; ------------------------------------------------------------------------
+    ;; -------------------------------------------------------------------------
     ;; ⟦(GIVEN ?givens ... C[?symbol'] ...)⟧ = ⟦(GIVEN ?givens ... C[?var] ...)⟧
     ;;
     ;; Here, C[.] denotes contexts defined in the obvious way, ie:
