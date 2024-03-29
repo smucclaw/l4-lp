@@ -47,9 +47,9 @@
     ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
     ;;  ?op ∈ {MIN MAX PRODUCT SUM}
     ;; ---------------------------------------------------
-    ;; ⟦(?lhs₀ ... ?lhsₘ IS THE ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
+    ;; ⟦(?lhs₀ ... ?lhsₘ IS ?op ?rhs₀ ... ?rhsₙ)⟧ =
     ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
-    (. !lhs ..1 IS THE (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op) OF . !rhs ..1)
+    (. !lhs ..1 IS (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op) . !rhs ..1)
     ((?op (!rhs ...) (!lhs ...)))
 
     ;;  ∀ 0 ≤ i ≤ n - 1, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ IN
