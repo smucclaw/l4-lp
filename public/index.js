@@ -7,7 +7,7 @@ from "./js/main.js";
 
 let program = await fetch("program.edn").then(resp => resp.text());
 
-let goal = "(var/d is a date)";
+let goal = "q";
 
 program = l4_program_to_prolog_program_str(program);
 goal = l4_to_prolog_str(goal);
