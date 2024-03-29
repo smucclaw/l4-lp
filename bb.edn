@@ -15,7 +15,7 @@
   uber {:doc "Build uberjar"
         :task (clojure "-A:swipl-jpl -T:build uber")}
 
-  native-image {:doc "Builds native image"
+  #_native-image #_{:doc "Builds native image"
                 :depends [uber]
                 :task
                 (shell {:extra-env
