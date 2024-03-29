@@ -50,6 +50,12 @@
 
     (GIVEN _ & ?horn-clause) ?horn-clause
 
+    ;; --------------------------------------------------
+    ;; ⟦(DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ)⟧ =
+    ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
+    (DECIDE . !head ..1 IF . !body ..1)
+    ((~(symbol ":-") (!head ...) (!body ...)))
+
     ;; WIP: Expand nested computations
     ;;
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
@@ -67,15 +73,7 @@
                                         #(every? (some-fn symbol? number?) %))
                                        ?xs)))))
            (m/let [?var (gensym "var/var__")]))
-    (~(?C (list (list ?var 'IS ?op ?xs)
-                'AND
-                (list ?lhs 'IS (?C' ?var)))))
-
-    ;; --------------------------------------------------
-    ;; ⟦(DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ)⟧ =
-    ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
-    (DECIDE . !head ..1 IF . !body ..1)
-    ((~(symbol ":-") (!head ...) (!body ...)))
+    (~(?C (list (list ?var 'IS ?op ?xs) 'AND (list ?lhs 'IS (?C' ?var)))))
 
     ;; -------------------------------------------------
     ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
