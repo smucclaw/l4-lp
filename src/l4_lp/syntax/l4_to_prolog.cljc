@@ -66,7 +66,7 @@
                                         symbol?
                                         #(every? (some-fn symbol? number?) %))
                                        ?xs)))))
-           (m/let [?var (gensym "var/G__")]))
+           (m/let [?var (gensym "var/var__")]))
     (~(?C (list (list ?var 'IS ?op ?xs)
                 'AND
                 (list ?lhs 'IS (?C' ?var)))))
