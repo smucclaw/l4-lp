@@ -70,7 +70,7 @@
     ;;  ?collection₀ ≠ IN
     ;; ---------------------------------------------------------------------
     ;; ⟦(?element₀ ... ?elementₘ IS NOT ?collection₀ ... ?collectionₙ)⟧ =
-    ;;   ⟦(is_in (?element₀ ... ?elementₘ) (?collection₀ ... ?collectionₙ))⟧
+    ;;   ⟦(NOT ((?element₀ ... ?elementₘ) IS (?collection₀ ... ?collectionₙ))⟧
     (. !lhs ..1 IS NOT . !rhs ..1)
     (NOT ((!lhs ...) IS (!rhs ...)))
 
