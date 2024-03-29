@@ -29,23 +29,24 @@
      DECIDE & ?horn-clause)
     ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
 
-    ;; ?symbol ∈ ?givens           ⊢ (symbol "var" ?symbol) ⇓ ?symbol'
-    ;; ---------------------------------------------------------------
-    ;; ⟦(GIVEN ?givens ... E[?symbol] ...)⟧ =
-    ;;   ⟦(GIVEN ?givens ... E[?symbol'] ...)⟧
+    ;; ?symbol' ∈ ?givens
+    ;; ⊢ (symbol nil ?symbol') ⇓ ?symbol
+    ;; ⊢ (symbol "var" ?symbol') ⇓ ?var
+    ;; ------------------------------------------------------------------------
+    ;; ⟦(GIVEN ?givens ... C[?symbol] ...)⟧ = ⟦(GIVEN ?givens ... C[?var] ...)⟧
     ;;
-    ;; Here, E[.] denotes evaluation contexts defined in the obvious way, ie:
-    ;; E ::= [.] | (E ... E) | [E ... E] | #{E ... E} | {E E, ..., E E}
+    ;; Here, C[.] denotes contexts defined in the obvious way, ie:
+    ;;   C ::= [.] | (C ... C) | [C ... C] | #{C ... C} | {C ... C}
     ;;
     ;; For each symbol that appears in a rule:
     ;; - We first (uniquely) decompose the rule into the symbol and its
-    ;;   evaluation context.
+    ;;   context C.
     ;; - If the symbol appears in the ?givens:
-    ;;   - We capture the evaluation context in a continuation ?cont.
-    ;;   - We then label the symbol as a variable and throw that to ?cont.
+    ;;   - We capture the context C in a continuation ?C.
+    ;;   - We then label the symbol as a variable and throw that to ?C.
     (GIVEN (m/and #{?symbol ^& _} ?givens)
-           & (m/$ ?cont (m/symbol nil ?symbol)))
-    ((GIVEN ?givens ~(?cont (symbol "var" ?symbol))))
+           & (m/$ ?C (m/symbol nil ?symbol)))
+    ((GIVEN ?givens ~(?C (symbol "var" ?symbol))))
 
     (GIVEN _ & ?horn-clause) ?horn-clause
 
