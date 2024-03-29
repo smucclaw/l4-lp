@@ -29,8 +29,8 @@
      DECIDE & ?horn-clause)
     ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
 
-    ;; ?symbol ∈ ?givens          ?symbol' = (symbol "var" ?symbol)
-    ;; ------------------------------------------------------------
+    ;; ?symbol ∈ ?givens           ⊢ (symbol "var" ?symbol) ⇓ ?symbol'
+    ;; ---------------------------------------------------------------
     ;; ⟦(GIVEN ?givens ... E[?symbol] ...)⟧ =
     ;;   ⟦(GIVEN ?givens ... E[?symbol'] ...)⟧
     ;;
