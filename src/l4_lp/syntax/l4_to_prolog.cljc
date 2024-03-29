@@ -23,10 +23,11 @@
       rewrite and transform each node."
   (r/top-down
    (r/rewrite
-    (GIVEN . (m/or (m/symbol nil !givens)
-                   [(m/symbol nil !givens) IS A & _])
-           ..1
-           DECIDE & ?horn-clause)
+    (GIVEN
+     . (m/or (m/symbol nil !givens)
+             [(m/symbol nil !givens) IS A & _])
+     ..1
+     DECIDE & ?horn-clause)
     ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
 
     (GIVEN ?givens & (m/$ ?context (m/symbol nil (m/pred ?givens ?symbol))))
