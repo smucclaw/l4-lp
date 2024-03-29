@@ -25,8 +25,7 @@
    (r/rewrite
     (GIVEN
      . (m/or (m/symbol nil !givens)
-             [(m/symbol nil !givens) IS A & _])
-     ..1
+             [(m/symbol nil !givens) IS A & _]) ..1
      DECIDE & ?horn-clause)
     ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
 
