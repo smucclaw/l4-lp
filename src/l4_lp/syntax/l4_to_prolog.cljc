@@ -23,6 +23,14 @@
       rewrite and transform each node."
   (r/top-down
    (r/rewrite
+    (GIVEN . (m/symbol nil !givens) IS A _ ..1 DECIDE & ?horn-clause)
+    ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
+
+    (GIVEN ?givens & (m/$ ?context (m/symbol nil (m/pred ?givens ?symbol))))
+    ((GIVEN ?givens ~(?context (symbol "var" ?symbol))))
+
+    (GIVEN _ & ?horn-clause) ?horn-clause
+
     ;; --------------------------------------------------
     ;; ⟦DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ⟧ =
     ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
