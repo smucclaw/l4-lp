@@ -61,7 +61,7 @@
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
     ;; ⊢ symbol? ?xs ∨ ∀ x ∈ ?xs, symbol? x ∨ number? x
     ;; ?x is a fresh variable
-    ;; ----------------------------------------------------------------
+    ;; ---------------------------------------------------
     ;; ⟦C[(?lhs IS C'[(?op ?xs)]]⟧ =
     ;;   ⟦C[((?x IS ?op ?xs) AND (?lhs IS C'[?x]))]⟧
 
