@@ -2,7 +2,7 @@
   IF (q AND r))
 
  (DECIDE q
-  IF (3 IS (SUM [0, 1, (MIN [2, (SUM [0, 3])])])))
+  IF 3 IS (SUM [0, 1, (MIN [2, (SUM [0, 3])])]))
 
  (GIVEN
   [x IS A Number]
