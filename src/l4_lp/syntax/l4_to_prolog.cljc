@@ -29,8 +29,13 @@
      DECIDE & ?horn-clause)
     ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
 
-    (GIVEN ?givens & (m/$ ?context (m/symbol nil (m/pred ?givens ?symbol))))
-    ((GIVEN ?givens ~(?context (symbol "var" ?symbol))))
+    ;; For each symbol that appears in a rule:
+    ;; - We first (uniquely) decompose the rule into the symbol and its context.
+    ;; - If the symbol appears in the ?givens:
+    ;;   - We capture the context in a continuation ?cont.
+    ;;   - We then mark the symbol as a variable and throw that to ?cont.
+    (GIVEN ?givens & (m/$ ?cont (m/symbol nil (m/pred ?givens ?symbol))))
+    ((GIVEN ?givens ~(?cont (symbol "var" ?symbol))))
 
     (GIVEN _ & ?horn-clause) ?horn-clause
 
