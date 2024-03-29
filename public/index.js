@@ -5,18 +5,7 @@ import {
 }
 from "./js/main.js";
 
-let program = `
-[(DECIDE p
-  IF (q AND r))
-
- (GIVEN [x IS A Number]
-        y
-        [xs IS A LIST OF Number]
-  DECIDE x is between 0 and 10 or is 100
-  IF ((0.0 <= x) AND (x <= 10.0)) OR (x IS 100.0))
-
- (DECIDE ((2023 - 1 - 10) is a date))]
-`;
+let program = await fetch("program.edn").then(resp => resp.text());
 
 let goal = "(var/d is a date)";
 

@@ -29,24 +29,34 @@
      DECIDE & ?horn-clause)
     ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
 
+    ;; ?symbol ∈ ?givens          ?symbol' = (symbol "var" ?symbol)
+    ;; ------------------------------------------------------------
+    ;; ⟦(GIVEN ?givens ... E[?symbol] ...)⟧ =
+    ;;   ⟦(GIVEN ?givens ... E[?symbol'] ...)⟧
+    ;;
+    ;; Here, E[.] denotes evaluation contexts defined in the obvious way, ie:
+    ;; E ::= [.] | (E ... E) | [E ... E] | #{E ... E} | {E E, ..., E E}
+    ;;
     ;; For each symbol that appears in a rule:
-    ;; - We first (uniquely) decompose the rule into the symbol and its context.
+    ;; - We first (uniquely) decompose the rule into the symbol and its
+    ;;   evaluation context.
     ;; - If the symbol appears in the ?givens:
-    ;;   - We capture the context in a continuation ?cont.
-    ;;   - We then mark the symbol as a variable and throw that to ?cont.
-    (GIVEN ?givens & (m/$ ?cont (m/symbol nil (m/pred ?givens ?symbol))))
+    ;;   - We capture the evaluation context in a continuation ?cont.
+    ;;   - We then label the symbol as a variable and throw that to ?cont.
+    (GIVEN (m/and #{?symbol ^& _} ?givens)
+           & (m/$ ?cont (m/symbol nil ?symbol)))
     ((GIVEN ?givens ~(?cont (symbol "var" ?symbol))))
 
     (GIVEN _ & ?horn-clause) ?horn-clause
 
     ;; --------------------------------------------------
-    ;; ⟦DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ⟧ =
+    ;; ⟦(DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ)⟧ =
     ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
     (DECIDE . !head ..1 IF . !body ..1)
     ((~(symbol ":-") (!head ...) (!body ...)))
 
     ;; -------------------------------------------------
-    ;; ⟦DECIDE ?head₀ ... ?headₙ⟧ = ⟦(?head₀ ... ?headₙ)⟧
+    ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
     (DECIDE . !head ..1) ((!head ...))
 
     ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
