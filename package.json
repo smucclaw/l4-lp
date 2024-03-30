@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "shadow-cljs": "2.28.2"
+    "shadow-cljs": "2.28.3"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",

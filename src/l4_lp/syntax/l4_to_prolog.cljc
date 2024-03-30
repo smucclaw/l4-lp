@@ -24,8 +24,8 @@
   (r/top-down
    (r/rewrite
     (GIVEN
-     . (m/or (m/symbol nil !givens)
-             [(m/symbol nil !givens) IS A & _]) ..1
+     . (m/with [%givens (m/symbol nil !givens)]
+               (m/or %givens [%givens & _])) ..1
      DECIDE & ?horn-clause)
     ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
 
@@ -36,13 +36,13 @@
     ;; ⟦(GIVEN ?givens ... C[?symbol'] ...)⟧ = ⟦(GIVEN ?givens ... C[?var] ...)⟧
     ;;
     ;; Here, C[.] denotes contexts defined in the obvious way, ie:
-    ;;   C ::= [.] | (C ... C) | [C ... C] | #{C ... C} | {C ... C}
+    ;;   C ::= [.] | (C ... C) | [C ... C] | #{C ... C} | {C C,..., C C}
     ;;
     ;; For each symbol that appears in a rule:
     ;; - We first (uniquely) decompose the rule into the symbol and its
     ;;   context C.
     ;; - If the symbol appears in the ?givens:
-    ;;   - We capture the context C in a continuation ?C.
+    ;;   - We reify the context as a continuation ?C.
     ;;   - We then label the symbol as a variable and throw that to ?C.
     (GIVEN (m/and #{?symbol ^& _} ?givens)
            & (m/$ ?C (m/symbol nil ?symbol)))
@@ -64,7 +64,6 @@
     ;; ---------------------------------------------------
     ;; ⟦C[(?lhs IS C'[(?op ?xs)]]⟧ =
     ;;   ⟦C[((?x IS ?op ?xs) AND (?lhs IS C'[?x]))]⟧
-
     (m/and (m/$ ?C
                 (?lhs IS (m/$ ?C'
                               ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
