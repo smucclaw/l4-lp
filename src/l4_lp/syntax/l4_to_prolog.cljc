@@ -1,7 +1,6 @@
 (ns l4-lp.syntax.l4-to-prolog 
   (:require [clojure.edn :as edn]
-            [l4-lp.syntax.mixfix-parser
-             :refer [l4-mixfix->prolog-prefix]]
+            [l4-lp.syntax.mixfix-parser :refer [l4-mixfix->prolog-prefix]]
             [l4-lp.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]

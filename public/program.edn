@@ -10,6 +10,7 @@
   [x IS A Number]
   y
   [xs IS A LIST OF Number]
+  [z IS ONE OF A B C D]
 
   DECIDE
   x is between 0 and 10 or is 100
