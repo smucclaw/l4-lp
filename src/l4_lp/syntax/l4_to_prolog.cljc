@@ -61,8 +61,14 @@
      (?lhs IS &
            (m/$ ?C
                 ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
-                 (m/or (m/symbol ?arg)
-                       (m/pred #(every? (some-fn symbol? number?) %) ?arg)))))
+                 & (m/or
+                    (m/seqable
+                     (m/or (m/pred symbol? ?arg)
+                           (m/and [& _]
+                                  (m/pred #(every? (some-fn symbol? number?) %))
+                                  ?arg)))
+                    (m/pred #(every? (some-fn symbol? number?) %)
+                            (m/app #(into [] %) ?arg))))))
      (m/let [?var (gensym "var/var__")]))
     ((?var IS ?op OF ?arg) AND (?lhs IS ~(?C ?var)))
 
