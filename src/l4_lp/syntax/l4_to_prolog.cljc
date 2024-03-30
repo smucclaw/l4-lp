@@ -60,18 +60,18 @@
     ;;
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
     ;; ⊢ symbol? ?xs ∨ ∀ x ∈ ?xs, symbol? x ∨ number? x
-    ;; ?x is a fresh variable
+    ;; ?var is a fresh variable
     ;; ---------------------------------------------------
     ;; ⟦C[(?lhs IS C'[(?op ?xs)]]⟧ =
-    ;;   ⟦C[((?x IS ?op ?xs) AND (?lhs IS C'[?x]))]⟧
-    (m/and (m/$ ?C
-                (?lhs IS (m/$ ?C'
-                              ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
-                               (m/pred (some-fn
-                                        symbol?
-                                        #(every? (some-fn symbol? number?) %))
-                                       ?xs)))))
-           (m/let [?var (gensym "var/var__")]))
+    ;;   ⟦C[((?var IS ?op ?xs) AND (?lhs IS C'[?var]))]⟧
+    (m/and
+     (m/$ ?C
+          (?lhs IS (m/$ ?C'
+                        ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
+                         (m/pred (some-fn symbol?
+                                          #(every? (some-fn symbol? number?) %))
+                                 ?xs)))))
+     (m/let [?var (gensym "var/var__")]))
     (~(?C (list (list ?var 'IS ?op ?xs) 'AND (list ?lhs 'IS (?C' ?var)))))
 
     ;; -------------------------------------------------
