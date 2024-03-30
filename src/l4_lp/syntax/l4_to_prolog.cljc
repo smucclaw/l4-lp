@@ -152,6 +152,18 @@
     (?xs IS THE LIST OF ALL ?x SUCH THAT & ?φ)
     ((findall ?x ?φ ?xs))
 
+    (m/pred #(and (seq? %) (some #{'AND 'OR} %)) ?xs)
+    ~(->> ?xs
+          (eduction (partition-by #{'AND 'OR}))
+          (eduction (map (r/match
+                          (m/seqable (m/and (m/or AND OR) ?and-or)) ?and-or
+                          ?x (sequence ?x))))
+          sequence)
+
+    ;; ---------------------------------------
+    ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
+    [!xs ... !x] [!xs ~(symbol ",") ... !x]
+
     ;; Auxiliary stuff for parsing predicate applications that are presented
     ;; in mixfix form.
     ;; TODO: Formalise the semantics of this operation.
@@ -161,7 +173,7 @@
      (_ _ & _)
      ;; The next 2 clauses restrict mixfix parsing to ignore BoolStructs,
      ;; ie things like (... AND ... AND ...).
-     (m/gather (m/pred #{'AND 'OR}) ?count) (m/guard (zero? ?count))
+     ;; (m/gather (m/pred #{'AND 'OR}) ?count) (m/guard (zero? ?count))
      ?predicate-application)
     ~(l4-mixfix->prolog-prefix ?predicate-application)
 

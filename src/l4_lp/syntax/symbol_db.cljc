@@ -16,7 +16,7 @@
    Internally, each pair is represented as a Datascript datom, and we
    axiomatise a binary relation called l4-lp-symbol via a Datalog rule in terms
    of these datoms to lookup and translate from L4 to Prolog and vice versa."
-  #{[['IS '= '==] ['eq 'is]]
+  #{[['IS 'EQUALS '= '==] ['eq 'is]]
     ['AND ","]
     ['OR ";"]
     ['NOT ['not "\\+"]]
