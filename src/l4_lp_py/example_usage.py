@@ -17,9 +17,9 @@ program = [
 
       ('r holds for', Var('z')),
 
-      (Var('x'), 'IS THE SUM OF', Var('xs')),
+      (Var('x'), 'IS', ('SUM', Var('xs'))),
       
-      (Var('y'), 'IS THE SUM OF', Var('ys')),
+      (Var('y'), 'IS', ('SUM', Var('ys'))),
 
       (Var('y'), '>', 0),
 
