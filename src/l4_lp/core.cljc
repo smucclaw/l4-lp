@@ -21,8 +21,8 @@
               IF (var/xs IS THE LIST OF ALL var/y SUCH THAT q holds for var/y)
               AND (var/ys IS THE LIST OF ALL var/y SUCH THAT r holds for var/y)
               AND (r holds for var/z)
-              AND (var/x IS THE SUM OF var/xs)
-              AND (var/y IS THE SUM OF var/ys)
+              AND (var/x IS (SUM var/xs))
+              AND (var/y IS (SUM var/ys))
               AND (var/y > 0))
 
       '(DECIDE q holds for 0)
