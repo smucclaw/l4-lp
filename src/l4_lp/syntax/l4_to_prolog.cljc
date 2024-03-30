@@ -2,6 +2,7 @@
   (:require [clojure.edn :as edn]
             [l4-lp.syntax.mixfix-parser :refer [l4-mixfix->prolog-prefix]]
             [l4-lp.syntax.symbol-db :as symbol-db]
+            [l4-lp.syntax.arithmetic :as arithmetic]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
             [tupelo.core :refer [it->]]
@@ -187,9 +188,9 @@
     (m/app symbol-db/l4-symbol->prolog-symbol (m/some ?prolog-symbol))
     ?prolog-symbol
 
-      ;; ?x ∈ atom ∪ ℝ ∪ string
-      ;; -----------------------
-      ;;       ⟦?x⟧ = ?x
+    ;; ?x ∈ atom ∪ ℝ ∪ string
+    ;; -----------------------
+    ;;       ⟦?x⟧ = ?x
     ?x ?x)))
 
 (def ^:private ->l4-ast
