@@ -62,7 +62,7 @@
                    ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
                     (m/or (m/symbol ?arg)
                           (m/pred #(every? (some-fn symbol? number?) %) ?arg)))))
-     (m/let [?var (gensym "var/VAR__")]))
+     (m/let [?var (gensym "var/var__")]))
     ((?var IS ?op ?arg) AND (?lhs IS ~(?C ?var)))
 
     ;; -------------------------------------------------
