@@ -32,20 +32,13 @@
     ;; ?symbol ∈ ?givens
     ;; ⊢ (symbol nil ?symbol) ⇓ ?symbol'
     ;; ⊢ (symbol "var" ?symbol) ⇓ ?var
-    ;; -------------------------------------------------------------------------
-    ;; ⟦(GIVEN ?givens ... C[?symbol'] ...)⟧ = ⟦(GIVEN ?givens ... C[?var] ...)⟧
+    ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?e
+    ;; --------------------------------------------------------------------
+    ;; ⟦(GIVEN ?givens ... C[?symbol'] ...)⟧ = ⟦(GIVEN ?givens ... ?e ...)⟧
     ;;
     ;; Here, C[.] denotes contexts defined in the obvious way, ie:
     ;;   C ::= [.] | (C ... C) | [C ... C] | #{C ... C} | {C C,..., C C}
-    ;;
-    ;; For each symbol that appears in a rule:
-    ;; - We first (uniquely) decompose the rule into the symbol and its
-    ;;   context C.
-    ;; - If the symbol appears in the ?givens:
-    ;;   - We reify the context as a continuation ?C.
-    ;;   - We then label the symbol as a variable and throw that to ?C.
-    (GIVEN (m/and #{?symbol ^& _} ?givens)
-           & (m/$ ?C (m/symbol nil ?symbol)))
+    (GIVEN (m/and #{?symbol ^& _} ?givens) & (m/$ ?C (m/symbol nil ?symbol)))
     ((GIVEN ?givens ~(?C (symbol "var" ?symbol))))
 
     (GIVEN _ & ?horn-clause) ?horn-clause
@@ -59,20 +52,18 @@
     ;; WIP: Expand nested computations
     ;;
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
-    ;; ⊢ symbol? ?xs ∨ ∀ x ∈ ?xs, symbol? x ∨ number? x
+    ;; ⊢ symbol? ?arg ∨ ∀ x ∈ ?arg, symbol? x ∨ number? x
     ;; ?var is a fresh variable
-    ;; ---------------------------------------------------
-    ;; ⟦C[(?lhs IS C'[(?op ?xs)]]⟧ =
-    ;;   ⟦C[((?var IS ?op ?xs) AND (?lhs IS C'[?var]))]⟧
+    ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?e
+    ;; -----------------------------------------------------------------------
+    ;; ⟦(?lhs IS C[(?op ?arg)]⟧ = ((?var IS ?op ?arg) AND (?lhs IS ?e))⟧
     (m/and
-     (m/$ ?C
-          (?lhs IS (m/$ ?C'
-                        ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
-                         (m/pred (some-fn symbol?
-                                          #(every? (some-fn symbol? number?) %))
-                                 ?xs)))))
-     (m/let [?var (gensym "var/var__")]))
-    (~(?C (list (list ?var 'IS ?op ?xs) 'AND (list ?lhs 'IS (?C' ?var)))))
+     (?lhs IS (m/$ ?C
+                   ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
+                    (m/or (m/symbol ?arg)
+                          (m/pred #(every? (some-fn symbol? number?) %) ?arg)))))
+     (m/let [?var (gensym "var/VAR__")]))
+    ((?var IS ?op ?arg) AND (?lhs IS ~(?C ?var)))
 
     ;; -------------------------------------------------
     ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
