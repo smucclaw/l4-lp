@@ -58,12 +58,13 @@
     ;; -----------------------------------------------------------------------
     ;; ⟦(?lhs IS C[(?op ?arg)]⟧ = ((?var IS ?op ?arg) AND (?lhs IS ?e))⟧
     (m/and
-     (?lhs IS (m/$ ?C
-                   ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
-                    (m/or (m/symbol ?arg)
-                          (m/pred #(every? (some-fn symbol? number?) %) ?arg)))))
+     (?lhs IS &
+           (m/$ ?C
+                ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
+                 (m/or (m/symbol ?arg)
+                       (m/pred #(every? (some-fn symbol? number?) %) ?arg)))))
      (m/let [?var (gensym "var/var__")]))
-    ((?var IS ?op ?arg) AND (?lhs IS ~(?C ?var)))
+    ((?var IS ?op OF ?arg) AND (?lhs IS ~(?C ?var)))
 
     ;; -------------------------------------------------
     ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
@@ -72,9 +73,9 @@
     ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
     ;;  ?op ∈ {MIN MAX PRODUCT SUM}
     ;; ---------------------------------------------------
-    ;; ⟦(?lhs₀ ... ?lhsₘ IS ?op ?rhs₀ ... ?rhsₙ)⟧ =
+    ;; ⟦(?lhs₀ ... ?lhsₘ IS ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
     ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
-    (. !lhs ..1 IS (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op) . !rhs ..1)
+    (. !lhs ..1 IS (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op) OF . !rhs ..1)
     ((?op (!rhs ...) (!lhs ...)))
 
     ;;  ∀ 0 ≤ i ≤ n - 1, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ IN
