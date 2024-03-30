@@ -2,7 +2,7 @@
  :deps {thheller/shadow-cljs {:mvn/version "2.28.3"}
         binaryage/devtools {:mvn/version "1.0.7"}
         com.github.SWI-Prolog/packages-jpl {:local/root "/usr/lib/swipl/lib/jpl.jar"}
-        instaparse/instaparse {:mvn/version "1.4.12"}
+        instaparse/instaparse {:mvn/version "1.4.14"}
         ;; com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.2"}
         ;; clj-python/libpython-clj {:mvn/version "2.025"}
         ;; com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}
