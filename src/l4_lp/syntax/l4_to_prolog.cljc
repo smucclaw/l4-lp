@@ -58,8 +58,8 @@
     ;; -----------------------------------------------------------------------
     ;; ⟦(?lhs IS C[(?op ?arg)]⟧ = ((?var IS ?op ?arg) AND (?lhs IS ?e))⟧
     (m/and
-     (?lhs IS &
-           (m/$ ?C
+     (?lhs
+      IS & (m/$ ?C
                 ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
                  & (m/or
                     (m/seqable
