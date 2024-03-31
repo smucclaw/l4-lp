@@ -21,6 +21,7 @@ IF 0 <= x AND x <= 10
 OR x IS MAX 100 -20
 
 DECIDE (2023 - 1 - 10) is a date
+
 GIVEN (xs IS A LIST OF Number)
 GIVETH x
 DECIDE b of x and xs
@@ -37,9 +38,13 @@ DECIDE b of 0 and _ OTHERWISE")
   (atom nil))
 
 (defn query-and-trace-and-guifier! []
+  
   (prom/let
    [l4-program @l4-program
     l4-query @l4-query
+
+    guifier-div (jsi/call js/document :getElementById "guifier")
+    _   (jsi/assoc! guifier-div :innerHTML "")
 
     program (-> l4-program l4->prolog/l4-program->prolog-program-str)
     _ (jsi/call js/console :log "Transpiled program: " program)
@@ -49,10 +54,7 @@ DECIDE b of 0 and _ OTHERWISE")
 
     stack-trace (swipl-wasm-query/query-and-trace-js! program query)
 
-    guifier-div (jsi/call js/document :getElementById "guifier")
     Guifier @guifier-constructor]
-
-    (jsi/assoc! guifier-div :innerHTML "")
     (Guifier. #js {:data stack-trace
                    :dataType "js"
                    :elementSelector "#guifier"

@@ -19,7 +19,7 @@ to transpile L4 to Prolog and generate execution traces.
 - java
 - [pnpm](https://pnpm.io/installation)
 
-This project is developed with JDK LTS 21 and nodejs LTS 20.11.1.
+This project is developed with JDK LTS 21 and nodejs LTS 20.12.0.
 
 ## Usage
 ### Setup
