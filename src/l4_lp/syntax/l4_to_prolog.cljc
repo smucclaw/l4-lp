@@ -1,4 +1,4 @@
-(ns l4-lp.syntax.l4-to-prolog 
+(ns l4-lp.syntax.l4-to-prolog
   (:require [clojure.edn :as edn]
             [l4-lp.syntax.mixfix-parser :refer [l4-mixfix->prolog-prefix]]
             [l4-lp.syntax.symbol-db :as symbol-db]
@@ -8,7 +8,36 @@
             [tupelo.core :refer [it->]]
             [tupelo.string :as str]))
 
-(def ^:private l4-ast->prolog-ast
+(def ^:private ->l4-ast
+  "Transforms EDN strings representing L4 programs into Clojure data."
+  (let [parens-if-needed
+        (r/match
+         (m/re #"^(\(.*\)|\[.*\])$" [?edn-str]) ?edn-str
+         ?edn-str (str "(" ?edn-str ")"))]
+    (r/match
+     (m/or (m/pred string?
+                   (m/app #(-> % parens-if-needed edn/read-string)
+                          ?l4-program-ast))
+           ?l4-program-ast)
+      ?l4-program-ast)))
+
+(def ^:private l4-ast->seq-of-rules
+  (r/rewrite
+   (m/with
+    [%rule (m/and (m/or (m/seqable GIVEN . _ ..1 DECIDE _ & _)
+                        (m/seqable DECIDE _ & _))
+                  !rules)
+     %rules (m/or (m/seqable & %rule & %rules)
+                  (m/seqable %rule & %rules)
+                  (m/seqable & %rule)
+                  (m/seqable %rule))]
+    %rules)
+   (!rules ...)))
+
+(def ^:private ->seq-of-rules
+  (r/pipe ->l4-ast l4-ast->seq-of-rules))
+
+(def ^:private l4-rule->prolog-rule
   "This function transforms the AST of an individual L4 rule or goal to the
    Prolog AST.
 
@@ -25,7 +54,7 @@
    (r/rewrite
     (GIVEN
      . (m/with [%givens (m/symbol nil !givens)]
-               (m/or %givens [%givens & _])) ..1
+               (m/or %givens (m/seqable %givens & _))) ..1
      DECIDE & ?horn-clause)
     ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
 
@@ -46,8 +75,16 @@
     ;; --------------------------------------------------
     ;; ⟦(DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ)⟧ =
     ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
-    (DECIDE . !head ..1 IF . !body ..1)
+    (DECIDE . !head ..1 (m/pred #{'IF 'WHEN 'WHERE}) . !body ..1)
     ((~(symbol ":-") (!head ...) (!body ...)))
+
+    (m/pred #(and (seq? %) (some #{'AND 'OR} %)) ?xs)
+    ~(->> ?xs
+          (eduction (partition-by #{'AND 'OR}))
+          (eduction (map (r/match
+                          (m/seqable (m/and (m/or AND OR) ?and-or)) ?and-or
+                          ?x (sequence ?x))))
+          sequence)
 
     ;; WIP: Expand nested computations
     ;;
@@ -56,21 +93,21 @@
     ;; ?var is a fresh variable
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?e
     ;; -----------------------------------------------------------------------
-    ;; ⟦(?lhs IS C[(?op ?arg)]⟧ = ((?var IS ?op ?arg) AND (?lhs IS ?e))⟧
+    ;; ⟦(?lhs IS C[(?op ?arg)]⟧ = ((?var IS ?op OF ?arg) AND (?lhs IS ?e))⟧
     (m/and
      (?lhs
       IS & (m/$ ?C
                 ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
                  & (m/or
                     (m/seqable
-                     (m/or (m/pred symbol? ?arg)
+                     (m/or (m/and (m/symbol _) ?arg)
                            (m/and [& _]
                                   (m/pred #(every? (some-fn symbol? number?) %))
                                   ?arg)))
                     (m/pred #(every? (some-fn symbol? number?) %)
                             (m/app #(into [] %) ?arg))))))
      (m/let [?var (gensym "var/var__")]))
-    ((?var IS ?op OF ?arg) AND (?lhs IS ~(?C ?var)))
+    ((?var IS ~(symbol "OP" ?op) ?arg) AND (?lhs IS ~(?C ?var)))
 
     ;; -------------------------------------------------
     ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
@@ -81,7 +118,8 @@
     ;; ---------------------------------------------------
     ;; ⟦(?lhs₀ ... ?lhsₘ IS ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
     ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
-    (. !lhs ..1 IS (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op) OF . !rhs ..1)
+    (. !lhs ..1 IS (m/symbol "OP" (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op))
+       . !rhs ..1)
     ((?op (!rhs ...) (!lhs ...)))
 
     ;;  ∀ 0 ≤ i ≤ n - 1, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ IN
@@ -159,14 +197,6 @@
     (?xs IS THE LIST OF ALL ?x SUCH THAT & ?φ)
     ((findall ?x ?φ ?xs))
 
-    (m/pred #(and (seq? %) (some #{'AND 'OR} %)) ?xs)
-    ~(->> ?xs
-          (eduction (partition-by #{'AND 'OR}))
-          (eduction (map (r/match
-                          (m/seqable (m/and (m/or AND OR) ?and-or)) ?and-or
-                          ?x (sequence ?x))))
-          sequence)
-
     ;; ---------------------------------------
     ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
     [!xs ... !x] [!xs ~(symbol ",") ... !x]
@@ -203,13 +233,6 @@
     ;;       ⟦?x⟧ = ?x
     ?x ?x)))
 
-(def ^:private ->l4-ast
-  "Transforms EDN strings representing L4 programs into Clojure data."
-  (r/match
-   (m/or (m/pred string? (m/app edn/read-string ?l4-program-ast))
-         ?l4-program-ast)
-    ?l4-program-ast))
-
 (defn- remove-all-spaces [s]
   (str/replace s #" " ""))
 
@@ -219,7 +242,7 @@
 
    The input can either be an EDN string or Clojure data."
   [l4-goal]
-  (-> l4-goal ->l4-ast l4-ast->prolog-ast list str remove-all-spaces))
+  (-> l4-goal ->l4-ast l4-rule->prolog-rule list str remove-all-spaces))
 
 (defn l4-program->prolog-program-str
   "Given an L4 program, transpiles it into a string representing a Prolog
@@ -228,9 +251,8 @@
    The input can either be an EDN string or Clojure data."
   [l4-program]
   (it-> l4-program
-        (->l4-ast it)
-        (eduction (map l4-ast->prolog-ast) it)
-        (eduction (map list) it)
+        (->seq-of-rules it)
+        (eduction (map l4-rule->prolog-rule) it)
         (eduction (interpose ".\n") it)
         (apply str it)
         (str it ".")

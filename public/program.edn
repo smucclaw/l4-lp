@@ -1,12 +1,16 @@
-[(DECIDE p
-  IF q AND r)
+DECIDE p
+IF q AND r
 
- (DECIDE q
-  IF 3 IS SUM 0 1 (MIN (SUM 0 3) 2))
+DECIDE q
+WHEN 3 IS SUM 0 1 (MIN (SUM 0 3) 2)
 
- (GIVEN [x IS A Number]
-  DECIDE x is between 0 and 10 or is 100
-  IF 0 <= x AND x <= 10
-  OR x IS MAX 100 -20)
+GIVEN (x IS A Number)
+DECIDE x is between 0 and 10 or is 100
+IF 0 <= x AND x <= 10
+OR x IS MAX 100 -20
 
- (DECIDE (2023 - 1 - 10) is a date)]
+DECIDE (2023 - 1 - 10) is a date
+
+GIVEN x (xs IS A LIST OF Number)
+DECIDE x is the sum of xs
+WHERE x IS SUM xs
