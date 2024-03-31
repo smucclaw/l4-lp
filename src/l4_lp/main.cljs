@@ -70,6 +70,12 @@ DECIDE b of 0 and _ OTHERWISE")
    (h/title "L4 web editor")
    (h/h1 "L4 web editor")
 
+   (h/a :href "https://github.com/smucclaw/l4-lp"
+        "Click here to visit the project on GitHub!")
+
+   (h/br)
+   (h/br)
+
    (h/div :class "form-group"
           (h/label :for "l4-program"
                    :class "col-sm-1 control-label"
@@ -79,6 +85,8 @@ DECIDE b of 0 and _ OTHERWISE")
                       :rows 7
                       :value l4-program
                       :change #(reset! l4-program @%)))
+
+   (h/br)
 
    (h/div :class "form-group"
           (h/label :for "l4-query"
@@ -93,8 +101,9 @@ DECIDE b of 0 and _ OTHERWISE")
                     :click #(query-and-trace-and-guifier!)
                     (h/text "Run query")))
 
-   (h/div (h/b "Trace")
-          (h/div :id "guifier"))))
+   (h/br)
+
+   (h/div :id "guifier")))
 
 (defn mount-components! []
   (-> js/document
