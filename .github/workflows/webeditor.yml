@@ -45,6 +45,11 @@ jobs:
       - name: Build web editor app
         run: pnpm build:webeditor
 
+      - name: Upload web editor app artifact to Pages
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './public'
+
       # Runs a single command using the runners shell
       # - name: Run a one-line script
       #   run: echo Hello, world!
