@@ -33,32 +33,37 @@ DECIDE b of 0 and _ OTHERWISE")
 (def ^:private guifier-cdn-url
   "https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js")
 
-(defn query-and-trace! []
+(def guifier-constructor
+  (atom nil))
+
+(defn query-and-trace-and-guifier! []
   (prom/let
-   [program (-> @l4-program l4->prolog/l4-program->prolog-program-str)
-    goal (-> @l4-query l4->prolog/l4->prolog-str)
+   [l4-program @l4-program
+    l4-query @l4-query
 
-    guifier (dynamic-import guifier-cdn-url)
-    Guifier (jsi/get guifier :default)
+    program (-> l4-program l4->prolog/l4-program->prolog-program-str)
+    _ (jsi/call js/console :log "Transpiled program: " program)
 
-    stack-trace (swipl-wasm-query/query-and-trace-js! program goal)
+    query (-> l4-query l4->prolog/l4->prolog-str)
+    _ (jsi/call js/console :log "Transpiled query: " query)
 
-    guifier-div (jsi/call js/document :getElementById "guifier")]
+    stack-trace (swipl-wasm-query/query-and-trace-js! program query)
+
+    guifier-div (jsi/call js/document :getElementById "guifier")
+    Guifier @guifier-constructor]
 
     (jsi/assoc! guifier-div :innerHTML "")
-    
-    (Guifier.
-     #js {:data stack-trace
-          :dataType "js"
-          :elementSelector "#guifier"
-          :withoutContainer true
-          :readOnlyMode true})))
+    (Guifier. #js {:data stack-trace
+                   :dataType "js"
+                   :elementSelector "#guifier"
+                   :withoutContainer true
+                   :readOnlyMode true})))
 
 (h/defelem html [_attrs _children]
   (h/div
    (h/link :rel "stylesheet"
-           :href "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-           :integrity "sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+           :href "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+           :integrity "sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
            :crossorigin "anonymous")
 
    (h/title "L4 web editor")
@@ -84,7 +89,7 @@ DECIDE b of 0 and _ OTHERWISE")
                    :value l4-query
                    :change #(reset! l4-query @%))
           (h/button :class "btn btn-primary"
-                    :click #(query-and-trace!)
+                    :click #(query-and-trace-and-guifier!)
                     (h/text "Run query")))
 
    (h/div (h/b "Trace")
@@ -103,5 +108,7 @@ DECIDE b of 0 and _ OTHERWISE")
   (jsi/call js/console :log "Stopping..."))
 
 (defn init []
-  (js/console.log "Initializing...")
-  (start))
+  (prom/let [guifier-mod (dynamic-import guifier-cdn-url)
+             Guifier (jsi/get guifier-mod :default)]
+    (reset! guifier-constructor Guifier)
+    (start)))
