@@ -43,7 +43,7 @@ DECIDE b of 0 and _ OTHERWISE")
     l4-query @l4-query
 
     guifier-div (jsi/call js/document :getElementById "guifier")
-    _   (jsi/assoc! guifier-div :innerHTML "")
+    _ (jsi/assoc! guifier-div :innerHTML "")
 
     program (-> l4-program l4->prolog/l4-program->prolog-program-str)
     _ (jsi/call js/console :log "Transpiled program: " program)
