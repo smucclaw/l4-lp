@@ -11,6 +11,9 @@ OR x IS MAX 100 -20
 
 DECIDE (2023 - 1 - 10) is a date
 
-GIVEN x (xs IS A LIST OF Number)
-DECIDE x is the sum of xs
+GIVEN (xs IS A LIST OF Number)
+GIVETH x
+DECIDE b of x and xs
 WHERE x IS SUM xs
+
+DECIDE b of 0 and _ OTHERWISE

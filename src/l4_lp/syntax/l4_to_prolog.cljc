@@ -25,6 +25,7 @@
   (r/rewrite
    (m/with
     [%rule (m/and (m/or (m/seqable GIVEN . _ ..1 DECIDE _ & _)
+                        (m/seqable GIVETH . _ ..1 DECIDE _ & _)
                         (m/seqable DECIDE _ & _))
                   !rules)
      %rules (m/or (m/seqable & %rule & %rules)
@@ -52,6 +53,12 @@
       rewrite and transform each node."
   (r/top-down
    (r/rewrite
+    (. !xs ... GIVETH . !xs ...)
+    ((!xs ...))
+
+    (. !xs ... OTHERWISE)
+    ((!xs ...))
+
     (GIVEN
      . (m/with [%givens (m/symbol nil !givens)]
                (m/or %givens (m/seqable %givens & _))) ..1
