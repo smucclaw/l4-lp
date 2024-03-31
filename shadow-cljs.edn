@@ -9,7 +9,6 @@
    {:main {:js-options {:js-provider :import}
            :compiler-options {:output-feature-set :es2021
                               :externs ["datascript/externs.js"]}
-           :optimizations :advanced
 
            :exports
            {:l4_to_prolog_str
@@ -28,7 +27,7 @@
    :devtools {:before-load l4-lp.main/stop
               :after-load l4-lp.main/start}
    :compiler-options {:output-feature-set :es2021
-                      :optimizations :advanced}}
+                      :externs ["datascript/externs.js"]}}
 
   :py-node-lib
   {:target :node-library
