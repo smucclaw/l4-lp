@@ -37,11 +37,15 @@ DECIDE b of 0 and _ OTHERWISE")
   (prom/let
    [program (-> @l4-program l4->prolog/l4-program->prolog-program-str)
     goal (-> @l4-query l4->prolog/l4->prolog-str)
-    
+
     guifier (dynamic-import guifier-cdn-url)
     Guifier (jsi/get guifier :default)
-    
-    stack-trace (swipl-wasm-query/query-and-trace-js! program goal)]
+
+    stack-trace (swipl-wasm-query/query-and-trace-js! program goal)
+
+    guifier-div (jsi/call js/document :getElementById "guifier")]
+
+    (jsi/assoc! guifier-div :innerHTML "")
     
     (Guifier.
      #js {:data stack-trace
