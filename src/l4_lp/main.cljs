@@ -38,7 +38,6 @@ DECIDE b of 0 and _ OTHERWISE")
   (atom nil))
 
 (defn query-and-trace-and-guifier! []
-  
   (prom/let
    [l4-program @l4-program
     l4-query @l4-query
