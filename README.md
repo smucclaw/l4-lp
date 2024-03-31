@@ -17,6 +17,7 @@ to transpile L4 to Prolog and generate execution traces.
 ## Dependencies
 
 - Java
+- [Clojure](https://clojure.org/guides/install_clojure)
 - [pnpm](https://pnpm.io/installation)
 - [SWI-Prolog](https://www.swi-prolog.org/)
 
