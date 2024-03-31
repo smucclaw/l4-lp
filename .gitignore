@@ -27,5 +27,7 @@ pom.xml.asc
 .lsp/
 .calva/
 
+*.qlf
+
 **/__pycache__/
 **/_l4_lp_nodejs_lib/nodejs_lib.js
