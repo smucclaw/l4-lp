@@ -13,18 +13,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  setup-jvm-clojure:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-
       - name: Setup GraalVM
         uses: graalvm/setup-graalvm@v1
         with:
@@ -50,6 +42,9 @@ jobs:
           # key: cljdeps-${{ hashFiles('build.boot') }}
           restore-keys: cljdeps-
 
+  setup-nodejs-pnpm:
+    runs-on: ubuntu-latest
+    steps:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -59,6 +54,7 @@ jobs:
         uses: pnpm/action-setup@v3
         with:
           version: 8.15.5
+          run_install: false
 
       - name: Get pnpm store directory
         shell: bash
@@ -76,6 +72,18 @@ jobs:
       - name: Install pnpm dependencies
         run: pnpm install
 
+  build:
+    runs-on: ubuntu-latest
+    needs:
+      - setup-jvm-clojure
+      - setup-nodejs-pnpm
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+
+
       - name: Build web editor app
         run: pnpm build:webeditor
 
@@ -88,6 +96,7 @@ jobs:
           path: './public'
 
   deploy:
+    runs-on: ubuntu-latest
     needs: build
 
     # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
@@ -100,19 +109,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
-    # Specify runner + deployment step
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      # Runs a single command using the runners shell
-      # - name: Run a one-line script
-      #   run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      # - name: Run a multi-line script
-      #   run: |
-      #     echo Add other actions to build,
-      #     echo test, and deploy your project.
