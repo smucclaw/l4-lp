@@ -23,7 +23,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup GraalVM
         uses: graalvm/setup-graalvm@v1
@@ -45,8 +45,11 @@ jobs:
       - name: Build web editor app
         run: pnpm build:webeditor
 
-      - name: Upload web editor app artifact to Pages
-        uses: actions/upload-pages-artifact@v2
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload app artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: './public'
 
