@@ -7,6 +7,8 @@ Experiments with:
   and its interop with Javascript to evaluate the transpiled Prolog and
   generate execution traces.
 
+Try it out [here](https://smucclaw.github.io/l4-lp/)!
+
 For context, this evolved from an older pipeline involving
 [logical-english-client](https://github.com/smucclaw/logical-english-client)
 which utilised [Logical English](https://github.com/smucclaw/LogicalEnglish)
