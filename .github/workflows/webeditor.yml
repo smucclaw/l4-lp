@@ -29,12 +29,17 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           distribution: 'graalvm-community'
-          java-version: '21'
+          java-version: 21
+      
+      - name: Setup Clojure build tools
+        uses: DeLaGuardo/setup-clojure@12.5
+        with:
+          cli: 1.11.2.1446
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3.0.0
         with:
-          version: 'latest'
+          version: 8.15.5
           run_install: true
 
       - name: Build web editor app
