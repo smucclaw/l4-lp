@@ -21,11 +21,20 @@
             :query_and_trace
             l4-lp.swipl.js.wasm-query/query-and-trace-js!}}}}
 
+  :webeditor
+  {:target :esm
+   :output-dir "public/js"
+   :modules {:main {:init-fn l4-lp.main/init}}
+   :devtools {:before-load l4-lp.main/stop
+              :after-load l4-lp.main/start}
+   :compiler-options {:output-feature-set :es2021
+                      :optimizations :advanced}}
+
   :py-node-lib
   {:target :node-library
    :output-to "src/l4_lp_py/_l4_lp_nodejs_lib/nodejs_lib.js"
    ;; :js-options {:js-provider :import}
-   :compiler-options {:output-feature-set :es2020
+   :compiler-options {:output-feature-set :es2021
                       :externs ["datascript/externs.js"]}
    :optimizations :advanced
    :exports
@@ -41,7 +50,7 @@
   :node-lib
   {:target :node-library
    :output-to "public/js/l4_lp_nodejs_lib.js"
-   :compiler-options {:output-feature-set :es2020
+   :compiler-options {:output-feature-set :es2021
                       :externs ["datascript/externs.js"]}
    :optimizations :advanced
    :exports

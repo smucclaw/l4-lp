@@ -8,7 +8,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "shadow-cljs:release": "shadow-cljs release app",
-    "start": "shadow-cljs watch app",
+    "start": "shadow-cljs watch webeditor",
     "build:prod": "shadow-cljs release app",
     "build:dev": "shadow-cljs compile app",
     "build:py-node-lib": "shadow-cljs release py-node-lib",
