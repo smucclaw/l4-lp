@@ -69,9 +69,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Install pnpm dependencies
-        run: pnpm install
-
   build:
     runs-on: ubuntu-latest
     needs:
@@ -80,9 +77,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
+      - name: Install pnpm dependencies
+        run: pnpm install
 
       - name: Build web editor app
         run: pnpm build:webeditor
