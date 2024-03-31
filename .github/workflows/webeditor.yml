@@ -24,10 +24,10 @@ jobs:
           distribution: 'graalvm-community'
           java-version: 21
 
-      - name: Setup Clojure build tools
-        uses: DeLaGuardo/setup-clojure@12.5
-        with:
-          cli: 1.11.2.1446
+      # - name: Setup Clojure build tools
+      #   uses: DeLaGuardo/setup-clojure@12.5
+      #   with:
+      #     cli: 1.11.2.1446
 
       - name: Cache Clojure dependencies
         uses: actions/cache@v4
@@ -82,7 +82,7 @@ jobs:
           swipl -t "pack_install(date_time, [interactive(false), test(false)])" \
             && swipl -t "pack_install(clpBNR, [interactive(false), test(false)])"
 
-      - name: Precompile SWI-Prolog prelude files to qlf
+      - name: Precompile SWI-Prolog files to qlf
         run: pnpm build:swipl-public-qlf
 
       - name: Build web editor app

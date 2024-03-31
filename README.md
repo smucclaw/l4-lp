@@ -16,8 +16,9 @@ to transpile L4 to Prolog and generate execution traces.
 
 ## Dependencies
 
-- java
+- Java
 - [pnpm](https://pnpm.io/installation)
+- [SWI-Prolog](https://www.swi-prolog.org/)
 
 This project is developed with JDK LTS 21 and nodejs LTS 20.12.0.
 
@@ -25,6 +26,7 @@ This project is developed with JDK LTS 21 and nodejs LTS 20.12.0.
 ### Setup
 ```shell
   pnpm install
+  pnpm build:swipl-qlfs
 ```
 
 ### Running the demo
