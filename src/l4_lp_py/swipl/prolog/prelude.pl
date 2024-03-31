@@ -4,8 +4,8 @@
 :- dynamic py_stack_trace/1.
 
 log_stack_frame(StackFrame) =>
-  py_stack_trace(PyStackTrace),
   py_transform_compound_term(StackFrame, TransformedStackFrame),
+  py_stack_trace(PyStackTrace),
   py_call(PyStackTrace:log_stack_frame(TransformedStackFrame)).
 
 py_transform_compound_term(InString, OutTaggedDict), string(InString) =>

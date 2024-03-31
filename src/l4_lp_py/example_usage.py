@@ -3,46 +3,80 @@ import datetime
 
 import pout
 
-from syntax.dsl import And, Or, Var, Fact, Rule, Date, l4_to_edn_str
+from syntax.dsl import And, Or, Fact, Rule, Date, Var, l4_to_edn_str
 from syntax.l4_to_prolog import l4_to_prolog_str, l4_program_to_prolog_str
 from swipl.query import init_swipl_engine, query_and_trace
 
-program = [
-  Rule(
-    ('p of', Var('xs'), 'and', Var('x'), 'and', Var('z'), 'and', Var('date')),
-    And(
-      (Var('xs'), 'IS THE LIST OF ALL', Var('y'), 'SUCH THAT', 'q holds for', Var('y')),
+program = '''
+DECIDE p
+IF q AND r
 
-      (Var('ys'), 'IS THE LIST OF ALL', Var('y'), 'SUCH THAT', 'r holds for', Var('y')),
+DECIDE q
+WHEN 3 IS SUM 0 1 (MIN (SUM 0 3) 2)
 
-      ('r holds for', Var('z')),
+GIVEN (x IS A Number)
+DECIDE x is between 0 and 10 or is 100
+IF 0 <= x AND x <= 10
+OR x IS MAX 100 -20
 
-      (Var('x'), 'IS', ('SUM', Var('xs'))),
+DECIDE (2023 - 1 - 10) is a date
+
+GIVEN x (xs IS A LIST OF Number)
+DECIDE x is the sum of xs
+WHERE x IS SUM xs
+'''
+
+goal = 'q'
+
+program = l4_program_to_prolog_str(program)
+goal = l4_to_prolog_str(goal)
+
+pout.v(program)
+
+init_swipl_engine()
+
+stack_trace = asyncio.run(query_and_trace(program, goal))
+
+pout.v(stack_trace)
+
+# program = [
+#   Rule(
+#     ['x', 'xs', 'y', 'ys', 'z', 'date'],
+#     ('p of', 'xs', 'and', 'x', 'and', 'z', 'and', 'date'),
+#     And(
+#       ('xs', 'IS THE LIST OF ALL', 'y', 'SUCH THAT', 'q holds for', 'y'),
+
+#       ('ys', 'IS THE LIST OF ALL', 'y', 'SUCH THAT', 'r holds for', 'y'),
+
+#       ('r holds for', 'z'),
+
+#       ('x', 'IS', 'SUM', 'xs'),
       
-      (Var('y'), 'IS', ('SUM', Var('ys'))),
+#       ('y', 'IS', ('SUM', 'ys')),
 
-      (Var('y'), '>', 0),
+#       ('y', '>', 0),
 
-      (Var('date'), 'IS WITHIN', 3, 'DAYS', 'OF', datetime.date(2024, 1, 20))
-    )
-  ),
+#       ('date', 'IS WITHIN', 3, 'DAYS', 'OF', datetime.date(2024, 1, 20))
+#     )
+#   ),
 
-  Fact('q holds for', 0),
-  Fact('q holds for', 1),
+#   Fact('q holds for', 0),
+#   Fact('q holds for', 1),
 
-  Rule(
-    ('r holds for', Var('z')),
-    # ('member', Var('z'), [3, 4])
-    Or((Var('z'), 'IS', 3), (Var('z'), 'IS', 4))
-  ),
+#   Rule(
+#     ['z'],
+#     ('r holds for', 'z'),
+#     # ('member', Var('z'), [3, 4])
+#     Or(('z', 'IS', 3), ('z', 'IS', 4))
+#   ),
 
-  # Fact('test', ('p', [0, 1]))
-]
+#   # Fact('test', ('p', [0, 1]))
+# ]
 
-goal = Fact(
-  'p of', Var('xs'), 'and', Var('x'), 'and', 4, 'and',
-  datetime.date(2024, 1, 21)
-)
+# goal = Fact(
+#   'p of', Var('xs'), 'and', Var('x'), 'and', 4, 'and',
+#   datetime.date(2024, 1, 21)
+# )
 
 # goal = Fact(
 #   And(
@@ -50,12 +84,3 @@ goal = Fact(
 #     (datetime.date(2024, 1, 20), '+', 3, 'DAYS', 'IS', Var('date'))
 #   )
 # )
-
-program = l4_program_to_prolog_str(program)
-goal = l4_to_prolog_str(goal)
-
-init_swipl_engine()
-
-stack_trace = asyncio.run(query_and_trace(program, goal))
-
-pout.v(stack_trace)

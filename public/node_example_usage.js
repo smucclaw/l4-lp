@@ -4,23 +4,25 @@ const l4_lp = require('./js/l4_lp_nodejs_lib.js');
 
 async function main() {
   let program = `
-    [(DECIDE p of var/xs and var/x and var/z
-    IF (var/xs IS THE LIST OF ALL var/y SUCH THAT q holds for var/y)
-    AND (var/ys IS THE LIST OF ALL var/y SUCH THAT r holds for var/y)
-    AND (r holds for var/z)
-    AND (var/x IS THE SUM OF var/xs)
-    AND (var/y IS THE SUM OF var/ys)
-    AND (var/y > 0))
+DECIDE p
+IF q AND r
 
-    (DECIDE q holds for 0)
-    (DECIDE q holds for 1)
-  
-    (DECIDE r holds for var/z
-    IF (var/z IS 3)
-    OR (var/z IS 4))]
+DECIDE q
+WHEN 3 IS SUM 0 1 (MIN (SUM 0 3) 2)
+
+GIVEN (x IS A Number)
+DECIDE x is between 0 and 10 or is 100
+IF 0 <= x AND x <= 10
+OR x IS MAX 100 -20
+
+DECIDE (2023 - 1 - 10) is a date
+
+GIVEN x (xs IS A LIST OF Number)
+DECIDE x is the sum of xs
+WHERE x IS SUM xs
   `;
 
-  let goal = "(p of var/xs and var/x and 4)";
+  let goal = "q";
 
   program = l4_lp.l4_program_edn_str_to_prolog_program_str(program);
   goal = l4_lp.l4_edn_str_to_prolog_str(goal);

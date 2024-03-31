@@ -13,14 +13,17 @@ class Var:
 
 @dataclass
 class Rule:
+  givens: Sequence[Any]
   head: Any
   body: Optional[Any]
 
 @dataclass(init = False)
 class Fact:
+  givens: Sequence[Any]
   head: Any
 
-  def __init__(self, *head):
+  def __init__(self, givens, *head):
+    self.givens = givens
     self.head = head
 
 @dataclass
@@ -51,12 +54,13 @@ def l4_to_edn(l4_program):
     case Var(name):
       return l4_to_edn(f'var/{name}')
 
-    case Fact(head):
-      return l4_to_edn(Rule(head, None))
+    case Fact(givens, head):
+      return l4_to_edn(Rule(givens, head, None))
 
-    case Rule(head, body):
+    case Rule(givens, head, body):
+      givens = ('GIVEN', givens) if givens else ()
       body = ('IF', body) if body else ()
-      return l4_to_edn(('DECIDE', *head, *body))
+      return l4_to_edn((*givens, 'DECIDE', *head, *body))
 
     case Date(year, month, day):
       return l4_to_edn((year, '-', month, '-', day))
