@@ -23,7 +23,7 @@ jobs:
         with:
           distribution: 'graalvm-community'
           java-version: 21
-      
+
       - name: Setup Clojure build tools
         uses: DeLaGuardo/setup-clojure@12.5
         with:
