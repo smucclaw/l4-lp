@@ -38,7 +38,7 @@ jobs:
           run_install: true
 
       - name: Build web editor app
-        run: pnpm build:web-editor
+        run: pnpm build:webeditor
 
       # Runs a single command using the runners shell
       # - name: Run a one-line script
