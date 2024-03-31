@@ -10,6 +10,7 @@
     "shadow-cljs:release": "shadow-cljs release app",
     "start": "shadow-cljs watch webeditor",
     "build:prod": "shadow-cljs release app",
+    "build:webeditor": "shadow-cljs release webeditor",
     "build:dev": "shadow-cljs compile app",
     "build:py-node-lib": "shadow-cljs release py-node-lib",
     "build:node-lib": "shadow-cljs release node-lib",
