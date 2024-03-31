@@ -30,12 +30,6 @@ jobs:
         with:
           distribution: 'graalvm-community'
           java-version: 21
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3.0.0
-        with:
-          version: 8.15.5
-          run_install: true
       
       - name: Setup Clojure build tools
         uses: DeLaGuardo/setup-clojure@12.5
@@ -55,6 +49,33 @@ jobs:
           # key: cljdeps-${{ hashFiles('project.clj') }}
           # key: cljdeps-${{ hashFiles('build.boot') }}
           restore-keys: cljdeps-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8.15.5
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install pnpm dependencies
+        run: pnpm install
 
       - name: Build web editor app
         run: pnpm build:webeditor
