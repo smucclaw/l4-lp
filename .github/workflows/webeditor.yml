@@ -79,7 +79,7 @@ jobs:
 
       - name: Install SWI-Prolog dependencies
         run: |
-          swipl -t 'pack_install(date_time), pack_install(clpBNR,[url(\'https://github.com/ridgeworks/clpBNR.git\')])'
+          swipl -t "pack_install(date_time), pack_install(clpBNR,[url('https://github.com/ridgeworks/clpBNR.git')])"
 
       - name: Precompile SWI-Prolog prelude files to qlf
         run: pnpm build:swipl-public-qlf
