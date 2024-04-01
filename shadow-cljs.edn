@@ -2,7 +2,15 @@
 {:deps true
  :dev-http {8000 "public"}
  :builds
- {:app
+ {:webeditor
+  {:target :esm
+   :output-dir "public/js"
+   :modules {:main {:init-fn l4-lp.main/init}}
+   :devtools {:before-load l4-lp.main/stop
+              :after-load l4-lp.main/start}
+   :compiler-options {:output-feature-set :es2021
+                      :externs ["datascript/externs.js"]}}
+  :browser-esm-lib
   {:target :esm
    :output-dir "public/js"
    :modules
@@ -19,32 +27,6 @@
 
             :query_and_trace
             l4-lp.swipl.js.wasm-query/query-and-trace-js!}}}}
-
-  :webeditor
-  {:target :esm
-   :output-dir "public/js"
-   :modules {:main {:init-fn l4-lp.main/init}}
-   :devtools {:before-load l4-lp.main/stop
-              :after-load l4-lp.main/start}
-   :compiler-options {:output-feature-set :es2021
-                      :externs ["datascript/externs.js"]}}
-
-  :py-node-lib
-  {:target :node-library
-   :output-to "src/l4_lp_py/_l4_lp_nodejs_lib/nodejs_lib.js"
-   ;; :js-options {:js-provider :import}
-   :compiler-options {:output-feature-set :es2021
-                      :externs ["datascript/externs.js"]}
-   :optimizations :advanced
-   :exports
-   {:l4_edn_str_to_prolog_str
-    l4-lp.syntax.l4-to-prolog/l4->prolog-str
-
-    :l4_program_edn_str_to_prolog_program_str
-    l4-lp.syntax.l4-to-prolog/l4-program->prolog-program-str
-
-    :swipl_stack_trace_to_js
-    l4-lp.swipl.js.common.swipl-js-to-clj/swipl-stack-trace->js}}
 
   :node-lib
   {:target :node-library
@@ -66,4 +48,21 @@
     l4-lp.swipl.js.janus-py-nodejs-query/init-swipl-engine!
 
     :query_and_trace
-    l4-lp.swipl.js.janus-py-nodejs-query/query-and-trace-js!}}}}
+    l4-lp.swipl.js.janus-py-nodejs-query/query-and-trace-js!}}
+  
+  :py-node-lib
+  {:target :node-library
+   :output-to "src/l4_lp_py/_l4_lp_nodejs_lib/nodejs_lib.js"
+   ;; :js-options {:js-provider :import}
+   :compiler-options {:output-feature-set :es2021
+                      :externs ["datascript/externs.js"]}
+   :optimizations :advanced
+   :exports
+   {:l4_edn_str_to_prolog_str
+    l4-lp.syntax.l4-to-prolog/l4->prolog-str
+
+    :l4_program_edn_str_to_prolog_program_str
+    l4-lp.syntax.l4-to-prolog/l4-program->prolog-program-str
+
+    :swipl_stack_trace_to_js
+    l4-lp.swipl.js.common.swipl-js-to-clj/swipl-stack-trace->js}}}}
