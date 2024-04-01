@@ -28,7 +28,7 @@ WHERE x IS SUM xs
 
 DECIDE b of 0 and _ OTHERWISE")
 
-(h/defelem html [_attrs _children]
+(h/defelem ^:private html [_attrs _children]
   (h/div
    (h/link :rel "stylesheet"
            :href "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -44,11 +44,14 @@ DECIDE b of 0 and _ OTHERWISE")
    (h/br)
    (h/br)
 
-   (h/div :class "form-group"
-          (h/label :for "l4-program"
-                   :class "col-sm-1 control-label"
-                   (h/b "L4 Program"))
-          (h/div :id "editor"))
+  ;;  (h/div :class "form-group"
+  ;;         (h/label :for "l4-program"
+  ;;                  :class "col-sm-1 control-label"
+  ;;                  (h/b "L4 Program"))
+  ;;         (h/div :id "editor"))
+
+   (h/div :id "editor")
+
    (h/br)
 
    (h/div :id "guifier")))
