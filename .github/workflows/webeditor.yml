@@ -29,7 +29,7 @@ jobs:
         with:
           cli: 1.11.2.1446
 
-      - name: Cache Clojure dependencies
+      - name: Setup cache for Clojure dependencies
         uses: actions/cache@v4
         with:
           path: |
