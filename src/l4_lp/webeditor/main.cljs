@@ -9,7 +9,10 @@
 (def ^:private initial-editor-text
   ";; Enter an L4 program here, and then press M-Enter to evaluate the query.
 ;; When the evaluation completes, an execution trace will appear below the input window.
-;; Note that for simplicity, we currently assume that the query is given by a rule called \"query\".
+;; Note that:
+;; - For simplicity, we currently assume that the query is given by a rule called \"query\".
+;; - The whole pipeline, from parsing and transpilation to evaluation and processing of
+;;   traces, runs directly in the browser.
 
 DECIDE query
 WHEN 3 IS SUM 0 1 (MIN (SUM 0 3) 2)
