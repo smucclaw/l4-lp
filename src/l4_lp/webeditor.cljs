@@ -1,8 +1,7 @@
 (ns l4-lp.webeditor
-  (:require ["@nextjournal/clojure-mode"
-             :refer [default_extensions, complete_keymap]]
-            ["@codemirror/view" :refer [EditorView drawSelection keymap]]
-            ["@codemirror/state" :refer [EditorState]]
+  (:require ["@nextjournal/clojure-mode" :as cm-clj]
+            ["@codemirror/view" :as cm-view]
+            ["@codemirror/state" :as cm-state]
             [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]))
 
@@ -10,12 +9,12 @@
 ;; https://github.com/nextjournal/clojure-mode
 
 (def extensions
-  (->> default_extensions
-       (cons (jsi/call keymap :of complete_keymap))
+  (->> cm-clj/default_extensions
+       (cons (jsi/call cm-view/keymap :of cm-clj/complete_keymap))
        bean/->js))
 
 (def state
-  (jsi/call EditorState
+  (jsi/call cm-state/EditorState
             :create #js {:doc "some clojure code"
                          :extensions extensions}))
 
@@ -23,9 +22,10 @@
   (jsi/call js/document :querySelector "#editor"))
 
 (def editor
-  (EditorView. #js {:state state
-                    :parent editor-element
-                    :extensions extensions}))
+  (cm-view/EditorView.
+   #js {:state state
+        :parent editor-element
+        :extensions extensions}))
 
 (defn start []
   (jsi/call js/console :log "Starting..."))
