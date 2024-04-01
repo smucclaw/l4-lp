@@ -53,10 +53,8 @@
       rewrite and transform each node."
   (r/top-down
    (r/rewrite
-    (. !xs ... GIVETH . !xs ...)
-    ((!xs ...))
-
-    (. !xs ... OTHERWISE)
+    (m/or (!xs ... GIVETH . !xs ...)
+          (!xs ... OTHERWISE))
     ((!xs ...))
 
     (GIVEN
