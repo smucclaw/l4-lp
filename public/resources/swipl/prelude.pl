@@ -95,23 +95,23 @@ min_by(P, X, Y, Result) :-
   call(P, X, X0),
   call(P, Y, Y0),
   (
-    X0 leq Y0 -> Result eq X ; Result eq Y
+    X0 leq Y0 -> (Result eq X, !) ; Result eq Y
   ).
 
 max_by(P, X, Y, Result) :-
   call(P, X, X0),
   call(P, Y, Y0),
   (
-    X0 geq Y0 -> Result eq X ; Result eq Y
+    X0 geq Y0 -> (Result eq X, !) ; Result eq Y
   ).
 
-min_list_([], Result) => Result = inf ; Result eq inf.
+min_list_([], Result) => (Result = inf, !) ; Result eq inf.
 min_list_([X | Xs], Result) =>
   min_list_(Xs, Result0),
   min_(X, Result0, Result).
   % Result eq min(X, Result0).
 
-max_list_([], Result) => Result = -inf ; Result eq -inf.
+max_list_([], Result) => (Result = -inf, !) ; Result eq -inf.
 max_list_([X | Xs], Result) =>
   max_list_(Xs, Result0),
   max_(X, Result0, Result).
