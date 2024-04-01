@@ -1,6 +1,7 @@
 {:paths ["src"]
  :deps {thheller/shadow-cljs {:mvn/version "2.28.3"}
         binaryage/devtools {:mvn/version "1.0.7"}
+        io.github.nextjournal/clojure-mode {:git/sha "9a7729df9303fceab671b5b66837bb8332c43b62"}
         hoplon/hoplon {:mvn/version "7.5.0"}
         ;; com.github.SWI-Prolog/packages-jpl {:local/root "/usr/lib/swipl/lib/jpl.jar"}
         instaparse/instaparse {:mvn/version "1.4.14"}
