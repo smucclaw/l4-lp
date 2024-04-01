@@ -85,11 +85,11 @@
     (DECIDE . !head ..1 (m/pred #{'IF 'WHEN 'WHERE}) . !body ..1)
     ((~(symbol ":-") (!head ...) (!body ...)))
 
-    (m/pred #(and (seq? %) (some #{'AND 'OR} %)) ?xs)
+    (m/pred (every-pred seq? #(some #{'AND 'OR} %)) ?xs)
     ~(->> ?xs
           (eduction (partition-by #{'AND 'OR}))
           (eduction (map (r/match
-                          (m/seqable (m/and (m/or AND OR) ?and-or)) ?and-or
+                          (m/seqable (m/pred #{'AND 'OR} ?and-or)) ?and-or
                           ?x (sequence ?x))))
           sequence)
 
