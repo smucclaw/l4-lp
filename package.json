@@ -7,7 +7,6 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "shadow-cljs:release": "shadow-cljs release app",
     "start": "shadow-cljs watch webeditor",
     "build:webeditor": "shadow-cljs release webeditor",
     "build:browser-esm-lib": "shadow-cljs release browser-esm-lib",
