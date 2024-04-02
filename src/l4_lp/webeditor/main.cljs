@@ -64,14 +64,14 @@ DECIDE b of 0 and _ OTHERWISE")
       (jsi/call :getElementById "app")
       (jsi/call :replaceChildren (html))))
 
-(defn start []
+(defn start! []
   (jsi/call js/console :log "Starting..."))
 
-(defn stop []
+(defn stop! []
   (jsi/call js/console :log "Stopping..."))
 
-(defn init []
+(defn init! []
   (mount-components!)
   (prom/let [_ (guifier/init!)]
     (bind-editor! initial-editor-text)
-    (start)))
+    (start!)))
