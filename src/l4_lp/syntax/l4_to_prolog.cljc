@@ -80,8 +80,8 @@
     ;; --------------------------------------------------
     ;; ⟦(DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ)⟧ =
     ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
-    (DECIDE & ?head (m/pred #{'IF 'WHEN 'WHERE}) . !body ..1)
-    ((~(symbol ":-") ?head (!body ...)))
+    (DECIDE . !head ..1 (m/pred #{'IF 'WHEN 'WHERE}) . !body ..1)
+    ((~(symbol ":-") (!head ...) (!body ...)))
 
     (m/pred (every-pred seq? #(some #{'AND 'OR} %)) ?xs)
     ~(->> ?xs
@@ -237,7 +237,7 @@
 
     ;; ---------------------------------------
     ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
-    [!xs ... !x] [!xs ~(symbol ",") ... !x]
+    [!xs ... ?x] [!xs ~(symbol ",") ... ?x]
 
     ;; ?var-name = (symbol "var" ?var-name')
     ;; -----------------------------------------------------
