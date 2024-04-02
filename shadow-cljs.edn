@@ -5,9 +5,9 @@
  {:webeditor
   {:target :esm
    :output-dir "public/js"
-   :modules {:l4_webeditor {:init-fn l4-lp.webeditor.main/init}}
-   :devtools {:before-load l4-lp.webeditor.main/stop
-              :after-load l4-lp.webeditor.main/start}
+   :modules {:l4_webeditor {:init-fn l4-lp.webeditor.main/init!}}
+   :devtools {:before-load l4-lp.webeditor.main/stop!
+              :after-load l4-lp.webeditor.main/start!}
    :compiler-options {:output-feature-set :es2021
                       :externs ["datascript/externs.js"]}}
 
