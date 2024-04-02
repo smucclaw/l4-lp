@@ -83,13 +83,15 @@
     (DECIDE . !head ..1 (m/pred #{'IF 'WHEN 'WHERE}) . !body ..1)
     ((~(symbol ":-") (!head ...) (!body ...)))
 
-    (m/pred (every-pred seq? #(some #{'AND 'OR} %)) ?xs)
-    ~(->> ?xs
-          (eduction (partition-by #{'AND 'OR}))
-          (eduction (map (r/match
-                          (m/seqable (m/pred #{'AND 'OR} ?and-or)) ?and-or
-                          ?x (sequence ?x))))
-          sequence)
+    ;; -------------------------------------------------
+    ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
+    (DECIDE . !head ..1) ((!head ...))
+
+    (m/with
+     [%xs (m/seqable !xs ..1 (m/pred #{'AND 'OR} !bool-op) & %xs)]
+     (m/seqable & %xs . !x ..1))
+
+    ((!xs ...) !bool-op ... (!x ...))
 
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
     ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
@@ -106,41 +108,37 @@
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?lhs
     ;; --------------------------------------------------------------------------------------
     ;; ⟦(C[(?op ?arg)] ?comparison ?rhs⟧ = ((?var IS ?op OF ?arg) AND (?lhs ?comparison ?rhs))⟧
-    (m/with
-     [%nested-arithmetic-expr
-      (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
-               & (m/or
-                  (m/seqable
-                   (m/or (m/and (m/symbol _) ?arg)
-                         (m/and [& _]
-                                (m/pred #(every? (some-fn symbol? number?) %))
-                                ?arg)))
-                  (m/pred #(every? (some-fn symbol? number?) %)
-                          (m/app #(into [] %) ?arg)))))
-      %comparison
-      (m/pred #{'IS 'EQUALS '= '== '< '<= '=< '> '>=} ?comparison)]
+    (m/let [?seq-of-symbols-and-nums
+            #(every? (some-fn symbol? number?) %)
 
-     (m/and
-      (m/let [?var (gensym "var/var__")])
-      (m/or
-       (m/and (& ?lhs %comparison & %nested-arithmetic-expr)
-              (m/let [?rhs (?C ?var)]))
-       (m/and (& %nested-arithmetic-expr %comparison & ?rhs)
-              (m/let [?lhs (?C ?var)])))))
+            ?vec-of-symbols-and-nums
+            (every-pred vector? ?seq-of-symbols-and-nums)
 
-    ((?var IS ~(symbol "OP" ?op) ?arg) AND (?lhs ?comparison ?rhs))
+            ?var (gensym "var/var__")]
+      (m/with
+       [%has-nested-arithmetic-expr
+        (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
+                 & (m/or
+                    (m/seqable (m/or (m/and (m/symbol _) ?arg)
+                                     (m/pred ?vec-of-symbols-and-nums ?arg)))
+                    (m/pred ?seq-of-symbols-and-nums
+                            (m/app #(into [] %) ?arg)))))
+        %comparison
+        (m/pred #{'IS 'EQUALS '= '== '< '<= '=< '> '>=} ?comparison)]
 
-    ;; -------------------------------------------------
-    ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
-    (DECIDE . !head ..1) ((!head ...))
+       (m/or (m/and (& ?lhs %comparison & %has-nested-arithmetic-expr)
+                    (m/let [?rhs (?C ?var)]))
+             (m/and (& %has-nested-arithmetic-expr %comparison & ?rhs)
+                    (m/let [?lhs (?C ?var)])))))
+
+    ((?var IS ~(symbol "ARITHMETIC-OP" ?op) ?arg) AND (?lhs ?comparison ?rhs))
 
     ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
     ;;  ?op ∈ {MIN MAX PRODUCT SUM}
     ;; ---------------------------------------------------
     ;; ⟦(?lhs₀ ... ?lhsₘ IS ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
     ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
-    (. !lhs ..1 IS (m/symbol "OP" (m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op))
-       . !rhs ..1)
+    (. !lhs ..1 IS (m/symbol "ARITHMETIC-OP" ?op) . !rhs ..1)
     ((?op (!rhs ...) (!lhs ...)))
 
     ;;  ∀ 0 ≤ i ≤ n - 1, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ IN
