@@ -19,9 +19,9 @@
   (-> "query" l4->prolog/l4->prolog-str))
 
 (defn query-and-trace-and-guifier! [l4-program]
-  (let [guifier-element
-        (jsi/call js/document :getElementById (:element-id guifier))]
-    (jsi/assoc! guifier-element :innerHTML ""))
+  (-> js/document
+      (jsi/call :getElementById (:element-id guifier))
+      (jsi/assoc! :innerHTML ""))
 
   (prom/let
    [program (-> l4-program l4->prolog/l4-program->prolog-program-str)
