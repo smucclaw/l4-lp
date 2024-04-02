@@ -87,13 +87,11 @@
     ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
     (DECIDE . !head ..1) ((!head ...))
 
-    (m/pred (every-pred seq? #(some #{'AND 'OR} %)) ?xs)
-    ~(->> ?xs
-          (eduction (partition-by #{'AND 'OR}))
-          (eduction (map (r/match
-                          (m/seqable (m/pred #{'AND 'OR} ?and-or)) ?and-or
-                          ?x (sequence ?x))))
-          sequence)
+    (m/with
+     [%xs (m/seqable !xs ..1 (m/pred #{'AND 'OR} !bool-op) & %xs)]
+     (m/seqable & %xs . !x ..1))
+
+    ((!xs ...) !bool-op ... (!x ...))
 
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
     ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
