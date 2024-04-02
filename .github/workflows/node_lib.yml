@@ -86,4 +86,4 @@ jobs:
         run: pnpm build:swipl-public-qlf
 
       - name: Build NodeJS lib
-        run: pnpm build:browser-node-lib
+        run: pnpm build:node-lib
