@@ -83,6 +83,10 @@
     (DECIDE . !head ..1 (m/pred #{'IF 'WHEN 'WHERE}) . !body ..1)
     ((~(symbol ":-") (!head ...) (!body ...)))
 
+    ;; -------------------------------------------------
+    ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
+    (DECIDE . !head ..1) ((!head ...))
+
     (m/pred (every-pred seq? #(some #{'AND 'OR} %)) ?xs)
     ~(->> ?xs
           (eduction (partition-by #{'AND 'OR}))
@@ -130,10 +134,6 @@
                     (m/let [?lhs (?C ?var)])))))
 
     ((?var IS ~(symbol "ARITHMETIC-OP" ?op) ?arg) AND (?lhs ?comparison ?rhs))
-
-    ;; -------------------------------------------------
-    ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
-    (DECIDE . !head ..1) ((!head ...))
 
     ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
     ;;  ?op ∈ {MIN MAX PRODUCT SUM}
