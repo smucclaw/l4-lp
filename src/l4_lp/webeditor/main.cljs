@@ -15,7 +15,7 @@
 ;;   traces, runs directly in the browser.
 
 DECIDE query
-WHEN 3 IS SUM 0 1 (MIN (SUM 0 3) 2)
+WHEN MIN 0 (SUM 1 2) < PRODUCT (MAX 3 4) 5
 
 GIVEN (x IS A Number)
 DECIDE x is between 0 and 10 or is 100

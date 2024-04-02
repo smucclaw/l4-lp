@@ -29,7 +29,7 @@
     {:pred (symbol ?l4-symbol) :args ?args}
 
     {:non-args (m/some ?non-args) :args ?args}
-    {:pred (it-> ?non-args (str/join "_" it) (str "'" it "'") (symbol it))
+    {:pred (it-> ?non-args (str/join " " it) (str "'" it "'") (symbol it))
      :args ?args}))
 
 (def ^:private pred-atom+args->prolog-prefix-ast

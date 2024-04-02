@@ -91,28 +91,44 @@
                           ?x (sequence ?x))))
           sequence)
 
-    ;; WIP: Expand nested computations
-    ;;
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
+    ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
     ;; ⊢ symbol? ?arg ∨ ∀ x ∈ ?arg, symbol? x ∨ number? x
     ;; ?var is a fresh variable
-    ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?e
-    ;; -----------------------------------------------------------------------
-    ;; ⟦(?lhs IS C[(?op ?arg)]⟧ = ((?var IS ?op OF ?arg) AND (?lhs IS ?e))⟧
-    (m/and
-     (?lhs
-      IS & (m/$ ?C
-                ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
-                 & (m/or
-                    (m/seqable
-                     (m/or (m/and (m/symbol _) ?arg)
-                           (m/and [& _]
-                                  (m/pred #(every? (some-fn symbol? number?) %))
-                                  ?arg)))
-                    (m/pred #(every? (some-fn symbol? number?) %)
-                            (m/app #(into [] %) ?arg))))))
-     (m/let [?var (gensym "var/var__")]))
-    ((?var IS ~(symbol "OP" ?op) ?arg) AND (?lhs IS ~(?C ?var)))
+    ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?rhs
+    ;; --------------------------------------------------------------------------------------
+    ;; ⟦(?lhs ?comparison C[(?op ?arg)]⟧ = ((?var IS ?op OF ?arg) AND (?lhs ?comparison ?rhs))⟧
+
+    ;; ?op ∈ {MIN MAX PRODUCT SUM}
+    ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
+    ;; ⊢ symbol? ?arg ∨ ∀ x ∈ ?arg, symbol? x ∨ number? x
+    ;; ?var is a fresh variable
+    ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?lhs
+    ;; --------------------------------------------------------------------------------------
+    ;; ⟦(C[(?op ?arg)] ?comparison ?rhs⟧ = ((?var IS ?op OF ?arg) AND (?lhs ?comparison ?rhs))⟧
+    (m/with
+     [%nested-arithmetic-expr
+      (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
+               & (m/or
+                  (m/seqable
+                   (m/or (m/and (m/symbol _) ?arg)
+                         (m/and [& _]
+                                (m/pred #(every? (some-fn symbol? number?) %))
+                                ?arg)))
+                  (m/pred #(every? (some-fn symbol? number?) %)
+                          (m/app #(into [] %) ?arg)))))
+      %comparison
+      (m/pred #{'IS 'EQUALS '= '== '< '<= '=< '> '>=} ?comparison)]
+
+     (m/and
+      (m/let [?var (gensym "var/var__")])
+      (m/or
+       (m/and (& ?lhs %comparison & %nested-arithmetic-expr)
+              (m/let [?rhs (?C ?var)]))
+       (m/and (& %nested-arithmetic-expr %comparison & ?rhs)
+              (m/let [?lhs (?C ?var)])))))
+
+    ((?var IS ~(symbol "OP" ?op) ?arg) AND (?lhs ?comparison ?rhs))
 
     ;; -------------------------------------------------
     ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
@@ -221,7 +237,7 @@
 
     ;; ---------------------------------------
     ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
-    [!xs ... !x] [!xs ~(symbol ",") ... !x]
+    [!xs ... ?x] [!xs ~(symbol ",") ... ?x]
 
     ;; ?var-name = (symbol "var" ?var-name')
     ;; -----------------------------------------------------
