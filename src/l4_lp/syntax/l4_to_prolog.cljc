@@ -53,8 +53,11 @@
       rewrite and transform each node."
   (r/top-down
    (r/rewrite
-    (m/or (!xs ... GIVETH . !xs ...)
-          (!xs ... OTHERWISE))
+    (GIVETH !giveths ..1 DECIDE & ?horn-clause)
+    ((GIVEN & (!giveths ...) DECIDE & ?horn-clause))
+
+    (m/or (!xs ..1 GIVETH . !xs ..1)
+          (!xs ..1 OTHERWISE))
     ((!xs ...))
 
     (GIVEN
@@ -88,7 +91,9 @@
     (DECIDE . !head ..1) ((!head ...))
 
     (m/with
-     [%xs (m/seqable !xs ..1 (m/pred #{'AND 'OR} !bool-op) & %xs)]
+     [%bool-op (m/pred #{'AND 'OR} !bool-op)
+      %xs (m/or (m/seqable !xs ..1 %bool-op & %xs)
+                (m/seqable !xs ..1 %bool-op))]
      (m/seqable & %xs . !x ..1))
 
     ((!xs ...) !bool-op ... (!x ...))
