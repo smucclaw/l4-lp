@@ -14,8 +14,10 @@
 ;; - The whole pipeline, from parsing and transpilation to evaluation and processing of
 ;;   traces, runs directly in the browser.
 
+GIVETH x
 DECIDE query
-WHEN MIN 0 (SUM 1 2) < PRODUCT (MAX 3 4) 5
+WHEN x > 0
+AND MIN 0 (SUM 1 2) < PRODUCT (MAX 3 4) x
 
 GIVEN (x IS A Number)
 DECIDE x is between 0 and 10 or is 100
