@@ -119,7 +119,7 @@
             ?vec-of-symbols-and-nums
             (every-pred vector? ?seq-of-symbols-and-nums)
 
-            ?var (gensym "var/var__")]
+            ?fresh-var (delay (gensym "Var__"))]
       (m/with
        [%has-nested-arithmetic-expr
         (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
@@ -132,11 +132,12 @@
         (m/pred #{'IS 'EQUALS '= '== '< '<= '=< '> '>=} ?comparison)]
 
        (m/or (m/and (& ?lhs %comparison & %has-nested-arithmetic-expr)
-                    (m/let [?rhs (?C ?var)]))
+                    (m/let [?rhs (?C @?fresh-var)]))
              (m/and (& %has-nested-arithmetic-expr %comparison & ?rhs)
-                    (m/let [?lhs (?C ?var)])))))
+                    (m/let [?lhs (?C @?fresh-var)])))))
 
-    ((?var IS ~(symbol "ARITHMETIC-OP" ?op) ?arg) AND (?lhs ?comparison ?rhs))
+    ((~ @?fresh-var IS ~(symbol "ARITHMETIC-OP" ?op) ?arg)
+     AND (?lhs ?comparison ?rhs))
 
     ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
     ;;  ?op ∈ {MIN MAX PRODUCT SUM}
