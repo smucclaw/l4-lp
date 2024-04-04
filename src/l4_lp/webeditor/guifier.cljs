@@ -6,11 +6,14 @@
             [shadow.esm :refer [dynamic-import]]))
 
 (def ^:private guifier
-  {:cdn-url "https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js"
-   :element-id "guifier"
-   :constructor (atom nil)})
+  {:element-id "guifier"
+   :constructor
+   (prom/let
+    [cdn-url "https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js"
+     mod (dynamic-import cdn-url)]
+     (jsi/get mod :default))})
 
-(defn init! []
+#_(defn init! []
   (prom/let [guifier-mod (dynamic-import (:cdn-url guifier))
              Guifier (jsi/get guifier-mod :default)]
     (reset! (:constructor guifier) Guifier)))
@@ -31,7 +34,7 @@
 
     stack-trace (swipl-wasm-query/query-and-trace-js! program query)
 
-    Guifier @(:constructor guifier)]
+    Guifier (:constructor guifier)]
     (Guifier. #js {:data stack-trace
                    :dataType "js"
                    :elementSelector (str "#" (:element-id guifier))

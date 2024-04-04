@@ -74,6 +74,5 @@ DECIDE b of 0 and _ OTHERWISE")
 
 (defn init! []
   (mount-components!)
-  (prom/let [_ (guifier/init!)]
-    (bind-editor! initial-editor-text)
-    (start!)))
+  (bind-editor! initial-editor-text)
+  (start!))
