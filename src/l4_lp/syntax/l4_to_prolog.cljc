@@ -122,7 +122,7 @@
             ?fresh-var (delay (gensym "Var__"))]
       (m/with
        [%has-nested-arithmetic-expr
-        (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
+        (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM 'MINUS 'DIVIDE} ?op)
                  & (m/or
                     (m/seqable (m/or (m/and (m/symbol _) ?arg)
                                      (m/pred ?vec-of-symbols-and-nums ?arg)))

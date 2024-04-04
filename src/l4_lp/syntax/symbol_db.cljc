@@ -38,6 +38,8 @@
     ["IS IN" 'is_in]
     ['SUM ['sum_list_ 'sum_list]]
     ['PRODUCT 'product_list]
+    ['MINUS 'minus_list]
+    ['DIVIDE 'divide_list]
     ['MIN ['min_list_ 'min_list]]
     ['MAX ['max_list_ 'max_list]]})
 
