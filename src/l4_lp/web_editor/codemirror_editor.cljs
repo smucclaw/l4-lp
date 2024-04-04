@@ -1,4 +1,4 @@
-(ns l4-lp.webeditor.codemirror-editor
+(ns l4-lp.web-editor.codemirror-editor
   (:require ["@codemirror/commands" :as cm-cmds]
             ["@codemirror/language" :as cm-lang]
             ["@codemirror/state" :as cm-state]

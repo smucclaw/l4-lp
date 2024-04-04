@@ -1,4 +1,4 @@
-(ns l4-lp.webeditor.main
+(ns l4-lp.web-editor.main
   (:require [applied-science.js-interop :as jsi]
             [hoplon.core :as h]
             [hoplon.goog]
