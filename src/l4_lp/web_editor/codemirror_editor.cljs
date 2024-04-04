@@ -1,4 +1,4 @@
-(ns l4-lp.webeditor.codemirror-editor
+(ns l4-lp.web-editor.codemirror-editor
   (:require ["@codemirror/commands" :as cm-cmds]
             ["@codemirror/language" :as cm-lang]
             ["@codemirror/state" :as cm-state]
@@ -6,7 +6,7 @@
             ["@nextjournal/clojure-mode" :as cm-clj]
             ["@uiw/codemirror-theme-solarized" :as cm-solarized]
             [applied-science.js-interop :as jsi]
-            [l4-lp.webeditor.guifier :refer [query-and-trace-and-guifier!]]))
+            [l4-lp.web-editor.guifier :refer [query-and-trace-and-guifier!]]))
 
 ;; https://blog.jakubholy.net/2023/interactive-code-snippets-fulcro/
 ;; https://github.com/nextjournal/clojure-mode

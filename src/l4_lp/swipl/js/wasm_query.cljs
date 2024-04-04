@@ -5,8 +5,10 @@
             [promesa.core :as prom]
             [shadow.esm :refer [dynamic-import]]))
 
-(def ^:private swipl-wasm-cdn-url
-  "https://SWI-Prolog.github.io/npm-swipl-wasm/3/7/5/dynamic-import.js")
+(def ^:private swipl-constructor
+  (prom/let [cdn-url "https://SWI-Prolog.github.io/npm-swipl-wasm/3/7/5/dynamic-import.js"
+             mod (dynamic-import cdn-url)]
+    (jsi/get mod :SWIPL)))
 
 (def ^:private prelude-qlf-url
   "resources/swipl/prelude.qlf")
@@ -17,10 +19,8 @@
 ;; TODO: Document and clean up this function.
 (defn query-and-trace! [program goal]
   (prom/let
-   [^js swipl-mod (dynamic-import swipl-wasm-cdn-url)
-    swipl (-> swipl-mod
-              (jsi/get :SWIPL)
-              (new #js {:arguments #js ["-q"]}))
+   [Swipl swipl-constructor
+    swipl (Swipl. #js {:arguments #js ["-q"]})
 
     stack-trace (transient [])
 
