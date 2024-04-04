@@ -74,16 +74,29 @@ once_trace_all(Goal) =>
 is_in(X, [Y | _]) :- X eq Y.
 is_in(X, [_ | Xs]) :- is_in(X, Xs).
 
+sum_list_([], Result) => Result eq 0.
+sum_list_([X | Xs], Result) =>
+  sum_list_(Xs, Result0),
+  Result eq X + Result0.
+
 product_list([], Result) => Result eq 0.
 product_list([X], Result) => Result eq X.
 product_list([X | Xs], Result) =>
   product_list(Xs, Result0),
   Result eq X * Result0.
 
-sum_list_([], Result) => Result eq 0.
-sum_list_([X | Xs], Result) =>
-  sum_list_(Xs, Result0),
-  Result eq X + Result0.
+add_inverse(X, Add_inverse) => X + Add_inverse eq 0.
+
+minus_list([], Result) => Result eq 0.
+minus_list([X | Xs], Result) =>
+  maplist(add_inverse, Xs, Add_inverses),
+  sum_list_([X | Add_inverses], Result).
+
+mul_inverse(X, Mul_inverse) => X * Mul_inverse eq 1.
+
+divide_list([X | Xs], Result) =>
+  maplist(mul_inverse, Xs, Mul_inverses),
+  product_list([X | Mul_inverses], Result).
 
 min_(X, Y, Result), X leq Y => Result eq X.
 min_(_, Y, Result) => Result eq Y.

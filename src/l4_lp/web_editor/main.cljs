@@ -15,7 +15,7 @@
 GIVETH x
 DECIDE query
 WHEN x > 0
-AND MIN 0 (SUM 1 2) < PRODUCT (MAX 3 4) x
+AND MIN (MINUS 0 x) (SUM [1 2 3 -12]) 2 < PRODUCT (MAX (DIVIDE 12 3) 4 -1) 19 x
 
 GIVEN (x IS A Number)
 DECIDE x is between 0 and 10 or is 100
