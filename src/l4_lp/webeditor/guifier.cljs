@@ -13,11 +13,6 @@
      mod (dynamic-import cdn-url)]
      (jsi/get mod :default))})
 
-#_(defn init! []
-  (prom/let [guifier-mod (dynamic-import (:cdn-url guifier))
-             Guifier (jsi/get guifier-mod :default)]
-    (reset! (:constructor guifier) Guifier)))
-
 (def ^:private query
   (-> "query" l4->prolog/l4->prolog-str))
 
