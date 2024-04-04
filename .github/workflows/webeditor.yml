@@ -85,7 +85,7 @@ jobs:
       - name: Precompile SWI-Prolog files to qlf
         run: pnpm build:swipl-public-qlf
 
-      - name: Build Clojurescript web editor app
+      - name: Build web editor app
         run: pnpm build:webeditor
 
       - name: Setup Pages
