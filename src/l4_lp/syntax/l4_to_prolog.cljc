@@ -131,10 +131,10 @@
         %comparison
         (m/pred #{'IS 'EQUALS '= '== '< '<= '=< '> '>=} ?comparison)]
 
-       (m/or (m/and (& ?lhs %comparison & %has-nested-arithmetic-expr)
-                    (m/let [?rhs (?C @?fresh-var)]))
-             (m/and (& %has-nested-arithmetic-expr %comparison & ?rhs)
-                    (m/let [?lhs (?C @?fresh-var)])))))
+       (m/or  (m/and (& %has-nested-arithmetic-expr %comparison & ?rhs)
+                     (m/let [?lhs (?C @?fresh-var)]))
+              (m/and (& ?lhs %comparison & %has-nested-arithmetic-expr)
+                     (m/let [?rhs (?C @?fresh-var)])))))
 
     ((~ @?fresh-var IS ~(symbol "ARITHMETIC-OP" ?op) ?arg)
      AND (?lhs ?comparison ?rhs))
