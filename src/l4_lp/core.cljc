@@ -1,6 +1,5 @@
 (ns l4-lp.core
-  (:require
-            #?(:cljs [l4-lp.swipl.js.wasm-query :as swipl-wasm-js-query])
+  (:require #?(:cljs [l4-lp.swipl.js.wasm-query :as swipl-wasm-js-query])
             [l4-lp.syntax.l4-to-prolog :as l4->prolog]
             #?(:cljs [promesa.core :as prom])))
 
