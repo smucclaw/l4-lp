@@ -113,30 +113,31 @@
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?lhs
     ;; --------------------------------------------------------------------------------------
     ;; ⟦(C[(?op ?arg)] ?comparison ?rhs⟧ = ((?var IS ?op OF ?arg) AND (?lhs ?comparison ?rhs))⟧
-    (m/let [?seq-of-symbols-and-nums
+    (m/let [?coll-of-symbols-and-nums
             #(every? (some-fn symbol? number?) %)
 
             ?vec-of-symbols-and-nums
-            (every-pred vector? ?seq-of-symbols-and-nums)
+            (every-pred vector? ?coll-of-symbols-and-nums)
 
-            ?var (gensym "var/var__")]
+            ?fresh-var (delay (gensym "Var__"))]
       (m/with
        [%has-nested-arithmetic-expr
         (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM} ?op)
                  & (m/or
                     (m/seqable (m/or (m/and (m/symbol _) ?arg)
                                      (m/pred ?vec-of-symbols-and-nums ?arg)))
-                    (m/pred ?seq-of-symbols-and-nums
+                    (m/pred ?coll-of-symbols-and-nums
                             (m/app #(into [] %) ?arg)))))
         %comparison
         (m/pred #{'IS 'EQUALS '= '== '< '<= '=< '> '>=} ?comparison)]
 
-       (m/or (m/and (& ?lhs %comparison & %has-nested-arithmetic-expr)
-                    (m/let [?rhs (?C ?var)]))
-             (m/and (& %has-nested-arithmetic-expr %comparison & ?rhs)
-                    (m/let [?lhs (?C ?var)])))))
+       (m/or  (m/and (& %has-nested-arithmetic-expr %comparison & ?rhs)
+                     (m/let [?lhs (?C @?fresh-var)]))
+              (m/and (& ?lhs %comparison & %has-nested-arithmetic-expr)
+                     (m/let [?rhs (?C @?fresh-var)])))))
 
-    ((?var IS ~(symbol "ARITHMETIC-OP" ?op) ?arg) AND (?lhs ?comparison ?rhs))
+    ((~ @?fresh-var IS ~(symbol "ARITHMETIC-OP" ?op) ?arg)
+     AND (?lhs ?comparison ?rhs))
 
     ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
     ;;  ?op ∈ {MIN MAX PRODUCT SUM}
