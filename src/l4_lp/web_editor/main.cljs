@@ -2,9 +2,7 @@
   (:require [applied-science.js-interop :as jsi]
             [hoplon.core :as h]
             [hoplon.goog]
-            [l4-lp.webeditor.codemirror-editor :refer [bind-editor!]]
-            [l4-lp.webeditor.guifier :as guifier]
-            [promesa.core :as prom]))
+            [l4-lp.web-editor.codemirror-editor :refer [bind-editor!]]))
 
 (def ^:private initial-editor-text
   ";; Enter an L4 program here, and then press M-Enter to evaluate the query.
