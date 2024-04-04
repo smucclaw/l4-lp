@@ -113,11 +113,11 @@
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?lhs
     ;; --------------------------------------------------------------------------------------
     ;; ⟦(C[(?op ?arg)] ?comparison ?rhs⟧ = ((?var IS ?op OF ?arg) AND (?lhs ?comparison ?rhs))⟧
-    (m/let [?seq-of-symbols-and-nums
+    (m/let [?coll-of-symbols-and-nums
             #(every? (some-fn symbol? number?) %)
 
             ?vec-of-symbols-and-nums
-            (every-pred vector? ?seq-of-symbols-and-nums)
+            (every-pred vector? ?coll-of-symbols-and-nums)
 
             ?fresh-var (delay (gensym "Var__"))]
       (m/with
@@ -126,7 +126,7 @@
                  & (m/or
                     (m/seqable (m/or (m/and (m/symbol _) ?arg)
                                      (m/pred ?vec-of-symbols-and-nums ?arg)))
-                    (m/pred ?seq-of-symbols-and-nums
+                    (m/pred ?coll-of-symbols-and-nums
                             (m/app #(into [] %) ?arg)))))
         %comparison
         (m/pred #{'IS 'EQUALS '= '== '< '<= '=< '> '>=} ?comparison)]
