@@ -1,17 +1,14 @@
-(ns l4-lp.web-editor.guifier 
+(ns l4-lp.web-editor.guifier
   (:require [applied-science.js-interop :as jsi]
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]
             [l4-lp.syntax.l4-to-prolog :as l4->prolog]
             [promesa.core :as prom]
-            [shadow.esm :refer [dynamic-import]]))
+            ["https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js"
+             :as guifier-mod]))
 
 (def ^:private guifier
   {:element-id "guifier"
-   :constructor
-   (prom/let
-    [cdn-url "https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js"
-     mod (dynamic-import cdn-url)]
-     (jsi/get mod :default))})
+   :constructor (jsi/get guifier-mod :default)})
 
 (def ^:private query
   (-> "query" l4->prolog/l4->prolog-str))
