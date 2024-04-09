@@ -3,12 +3,11 @@
             [cljs-bean.core :as bean]
             [l4-lp.swipl.js.common.swipl-js-to-clj :as swipl-js->clj]
             [promesa.core :as prom]
-            [shadow.esm :refer [dynamic-import]]))
+            ["https://SWI-Prolog.github.io/npm-swipl-wasm/3/7/5/dynamic-import.js"
+             :as swipl-mod]))
 
 (def ^:private swipl-constructor
-  (prom/let [cdn-url "https://SWI-Prolog.github.io/npm-swipl-wasm/3/7/5/dynamic-import.js"
-             mod (dynamic-import cdn-url)]
-    (jsi/get mod :SWIPL)))
+  (jsi/get swipl-mod :SWIPL))
 
 (def ^:private prelude-qlf-url
   "resources/swipl/prelude.qlf")

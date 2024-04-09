@@ -23,8 +23,7 @@
 
 (def ^:private eval-query-extension
   (jsi/call cm-view/keymap :of
-            #js [#js {:key "Mod-Enter"
-                      :run eval-query!}]))
+            #js [#js {:key "Mod-Enter" :run eval-query!}]))
 
 (def ^:private theme
   (jsi/call cm-view/EditorView :theme
@@ -48,7 +47,6 @@
   (let [editor-elt (jsi/call js/document :getElementById editor-element-id)
         state (jsi/call cm-state/EditorState
                         :create
-                        #js {:doc code
-                             :extensions extensions})]
+                        #js {:doc code :extensions extensions})]
     (cm-view/EditorView.
      #js {:parent editor-elt :state state})))
