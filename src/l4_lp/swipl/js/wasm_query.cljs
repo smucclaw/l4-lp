@@ -4,10 +4,7 @@
             [l4-lp.swipl.js.common.swipl-js-to-clj :as swipl-js->clj]
             [promesa.core :as prom]
             ["https://SWI-Prolog.github.io/npm-swipl-wasm/3/7/5/dynamic-import.js"
-             :as swipl-mod]))
-
-(def ^:private swipl-constructor
-  (jsi/get swipl-mod :SWIPL))
+             :rename {SWIPL Swipl}]))
 
 (def ^:private prelude-qlf-url
   "resources/swipl/prelude.qlf")
@@ -18,8 +15,7 @@
 ;; TODO: Document and clean up this function.
 (defn query-and-trace! [program goal]
   (prom/let
-   [Swipl swipl-constructor
-    swipl (Swipl. #js {:arguments #js ["-q"]})
+   [swipl (Swipl. #js {:arguments #js ["-q"]})
 
     stack-trace (transient [])
 
