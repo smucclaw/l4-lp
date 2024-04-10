@@ -275,10 +275,10 @@
 
    The input can either be an EDN string or Clojure data."
   [l4-program]
-  (it-> l4-program
-        (->seq-of-rules it)
-        (eduction (map l4-rule->prolog-rule) it)
-        (eduction (interpose ".\n") it)
-        (apply str it)
-        (str it ".")
-        (remove-all-spaces it)))
+  (->> l4-program
+       ->seq-of-rules
+       (eduction (map l4-rule->prolog-rule))
+       (eduction (mapcat (fn [prolog-rule]
+                           [prolog-rule ".\n"])))
+       (apply str)
+       remove-all-spaces))
