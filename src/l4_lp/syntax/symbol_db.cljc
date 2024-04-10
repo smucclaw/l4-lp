@@ -48,20 +48,18 @@
 
 ;; Populate the database with the ordered pairs in l4-lp-symbol-pairs
 ;; so that they can be used to derive l4-lp-symbol.
-(->> l4-lp-symbol-pairs
-     (eduction
-      (xforms/for
-       [[l4-symbols prolog-symbols] %
-        :let [->coll-of-symbols
-              (r/match
-               (m/pred coll? ?coll) (mapv symbol ?coll)
-               ?x [(symbol ?x)])]
+(let [->coll-of-symbols
+      (r/match
+       (m/pred coll? ?coll) (mapv symbol ?coll)
+       ?x [(symbol ?x)])]
 
-        l4-symbol (->coll-of-symbols l4-symbols)
-        prolog-symbol (->coll-of-symbols prolog-symbols)]
-
-        {:l4-symbol l4-symbol :prolog-symbol prolog-symbol}))
-     (ds/transact! symbol-db-conn))
+  (->> l4-lp-symbol-pairs
+       (eduction
+        (xforms/for [[l4-symbols prolog-symbols] %
+                     l4-symbol (->coll-of-symbols l4-symbols)
+                     prolog-symbol (->coll-of-symbols prolog-symbols)]
+          {:l4-symbol l4-symbol :prolog-symbol prolog-symbol}))
+       (ds/transact! symbol-db-conn)))
 
 (def ^:private l4-lp-symbol-rule
   "Datalog rule encoding the l4-lp-symbol relation:
