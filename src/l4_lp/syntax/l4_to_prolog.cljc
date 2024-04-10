@@ -277,8 +277,8 @@
   [l4-program]
   (->> l4-program
        ->seq-of-rules
-       (eduction (map l4-rule->prolog-rule))
-       (eduction (mapcat (fn [prolog-rule]
-                           [prolog-rule ".\n"])))
+       (eduction
+        (mapcat (fn [l4-rule]
+                  [(-> l4-rule l4-rule->prolog-rule) ".\n"])))
        (apply str)
        remove-all-spaces))
