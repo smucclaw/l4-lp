@@ -31,6 +31,9 @@ WHERE x IS SUM xs
 
 DECIDE b of 0 and _ OTHERWISE")
 
+(def ^:private web-editor-app-id
+  "web-editor-app")
+
 (h/defelem ^:private html [_attrs _children]
   (h/div
    (h/link :rel "stylesheet"
@@ -61,7 +64,7 @@ DECIDE b of 0 and _ OTHERWISE")
 
 (defn mount-components! []
   (-> js/document
-      (jsi/call :getElementById "app")
+      (jsi/call :getElementById web-editor-app-id)
       (jsi/call :replaceChildren (html))))
 
 (defn start! []
