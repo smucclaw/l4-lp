@@ -70,4 +70,4 @@ jobs:
         run: pnpm build:swipl-public-qlf
 
       - name: Build JVM lib uberjar
-        run: bb uber
+        run: bb uber-github-workflow-ubuntu
