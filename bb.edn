@@ -15,19 +15,23 @@
   uber {:doc "Build uberjar"
         :task (clojure "-A:swipl-jpl -T:build uber")}
 
-  #_native-image #_{:doc "Builds native image"
-                :depends [uber]
-                :task
-                (shell {:extra-env
-                        {"LD_LIBRARY_PATH"
-                         "/usr/lib/swipl/lib/x86_64-linux/:$LD_LIBRARY_PATH"}}
+  uber-github-workflow-ubuntu
+  {:doc "Build uberjar on Ubuntu systems as part of a Github workflow"
+   :task (clojure "-A:swipl-jpl-github-workflow-ubuntu -T:build uber")}
 
-                       "native-image"
-                       "-jar" "target/l4-lp-0.0.1-standalone.jar"
-                       "--no-fallback"
-                       "-H:ReflectionConfigurationFiles=reflect-config.json"
-                       "-H:Name=l4-lp"
+  #_native-image #_{:doc "Builds native image"
+                    :depends [uber]
+                    :task
+                    (shell {:extra-env
+                            {"LD_LIBRARY_PATH"
+                             "/usr/lib/swipl/lib/x86_64-linux/:$LD_LIBRARY_PATH"}}
+
+                           "native-image"
+                           "-jar" "target/l4-lp-0.0.1-standalone.jar"
+                           "--no-fallback"
+                           "-H:ReflectionConfigurationFiles=reflect-config.json"
+                           "-H:Name=l4-lp"
                        ;; https://clojurians-log.clojureverse.org/graalvm/2022-05-19
-                       "--features=clj_easy.graal_build_time.InitClojureClasses"
-                       "--initialize-at-build-time=com.fasterxml.jackson"
-                       "target/l4_lp")}}}
+                           "--features=clj_easy.graal_build_time.InitClojureClasses"
+                           "--initialize-at-build-time=com.fasterxml.jackson"
+                           "target/l4_lp")}}}

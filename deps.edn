@@ -2,7 +2,7 @@
  :deps {thheller/shadow-cljs {:mvn/version "2.28.3"}
         binaryage/devtools {:mvn/version "1.0.7"}
         hoplon/hoplon {:mvn/version "7.5.0"}
-        ;; com.github.SWI-Prolog/packages-jpl {:local/root "/usr/lib/swipl/lib/jpl.jar"}
+        com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.3"}
         instaparse/instaparse {:mvn/version "1.4.14"}
         ;; com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}
         net.cgrand/xforms {:mvn/version "0.19.6"}
@@ -18,11 +18,14 @@
         ;; metosin/malli {:mvn/version "0.14.0"}
         }
 
- ;; :mvn/repos {"jitpack" {:url "https://jitpack.io"}}
+ :mvn/repos {"jitpack" {:url "https://jitpack.io"}}
 
  :aliases
  {:swipl-jpl
   {:jvm-opts ["-Djava.library.path=/usr/lib/swipl/lib/x86_64-linux/"]}
+  
+  :swipl-jpl-github-workflow-ubuntu
+  {:jvm-opts ["-Djava.library.path=/usr/lib/swi-prolog/lib/x86_64-linux/"]}
 
   :neil {:project {:name l4-lp/l4-lp
                    :version "0.0.1"}}
