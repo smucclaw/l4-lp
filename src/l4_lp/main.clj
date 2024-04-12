@@ -10,7 +10,7 @@
 ;; (def janus
 ;;   (py/import-module "janus_swi"))
 
-(defn -main [& args]
+(defn -main [& _args]
   (let [program
         (-> "[(DECIDE p of var/xs and var/x
               IF (var/xs IS THE LIST OF ALL var/y SUCH THAT q holds for var/y)
