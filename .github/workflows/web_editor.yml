@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
@@ -52,7 +52,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8.15.5
+          version: 8.15.6
           run_install: false
 
       - name: Get pnpm store directory
@@ -75,7 +75,7 @@ jobs:
         uses: smucclaw/setup-swi-prolog@master
         with:
           swi-prolog-branch: devel
-          swi-prolog-version: latest
+          swi-prolog-version: '9.3.3-2-gc2f390bcc-jammyppa2'
 
       - name: Install SWI-Prolog dependencies
         run: |
