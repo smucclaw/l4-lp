@@ -5,7 +5,7 @@ description = ""
 authors = ["CCLAW"]
 readme = "README.md"
 packages = [
-  {include = "src/l4_lp_py", to = "l4_lp_py"}
+  {include = "l4_lp_py", from = "src"}
 ]
 
 [tool.poetry.dependencies]
