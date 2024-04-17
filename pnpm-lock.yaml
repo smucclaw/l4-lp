@@ -9,8 +9,8 @@ dependencies:
     specifier: ^7.24.4
     version: 7.24.4
   '@nextjournal/clojure-mode':
-    specifier: ^0.3.1
-    version: 0.3.1
+    specifier: ^0.3.2
+    version: 0.3.2
   '@uiw/codemirror-theme-solarized':
     specifier: ^4.21.25
     version: 4.21.25(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
@@ -198,8 +198,8 @@ packages:
       '@lezer/highlight': 1.2.0
     dev: false
 
-  /@nextjournal/clojure-mode@0.3.1:
-    resolution: {integrity: sha512-jNPVbIiNsX6xd6+0VTZtccVRS9rqIJmvU5UdU0gUXzP9Jl3z9+ZM44aySgdlLZXXVCZa6/PsQ/iVbAu0PyB2aQ==}
+  /@nextjournal/clojure-mode@0.3.2:
+    resolution: {integrity: sha512-exLRa08g5N7YuEb7RYm3YEnsPU6pmB+w9mtbS5yZoLRw8QWk9WnWQ8ft8XQy5Su+8OetAwPzcIUHjqtO7x7c0g==}
     dependencies:
       '@codemirror/autocomplete': 6.16.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1)
       '@codemirror/commands': 6.3.3
@@ -214,7 +214,7 @@ packages:
       '@lezer/highlight': 1.2.0
       '@lezer/lr': 1.4.0
       '@nextjournal/lezer-clojure': 1.0.0
-      squint-cljs: 0.4.81
+      squint-cljs: 0.7.105
       w3c-keyname: 2.2.8
     dev: false
 
@@ -1010,8 +1010,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /squint-cljs@0.4.81:
-    resolution: {integrity: sha512-ffMxWbL901+xHMlaXeUavfrhK+uX7tsZYzF9/kxJYGZ6+KLOGy1Ke9+osbVNR+Vd/uszX6O/YcpNxCJzThgTUA==}
+  /squint-cljs@0.7.105:
+    resolution: {integrity: sha512-YtnPewo1ZM5p9kaC6j/rNw4F/FzsLaAS61Vhikw6z6dRJvns/Y/3rwGcb8BCoD6Abx23/frlk0B4/xhedgCbUw==}
     hasBin: true
     dependencies:
       chokidar: 3.6.0
