@@ -15,13 +15,13 @@ dependencies:
     specifier: ^4.21.25
     version: 4.21.25(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
   pythonia:
-    specifier: ^1.1.3
-    version: 1.1.3(ws@7.5.9)
+    specifier: ^1.2.0
+    version: 1.2.0(ws@7.5.9)
 
 devDependencies:
   shadow-cljs:
-    specifier: 2.28.3
-    version: 2.28.3
+    specifier: 2.28.4
+    version: 2.28.4
 
 packages:
 
@@ -90,7 +90,7 @@ packages:
       '@codemirror/state': 6.4.1
       '@codemirror/view': 6.26.3
       '@lezer/common': 1.2.1
-      '@lezer/javascript': 1.4.14
+      '@lezer/javascript': 1.4.15
     dev: false
 
   /@codemirror/lang-markdown@6.0.0:
@@ -177,8 +177,8 @@ packages:
       '@lezer/lr': 1.4.0
     dev: false
 
-  /@lezer/javascript@1.4.14:
-    resolution: {integrity: sha512-GEdUyspTRgc5dwIGebUk+f3BekvqEWVIYsIuAC3pA8e8wcikGwBZRWRa450L0s8noGWuULwnmi4yjxTnYz9PpA==}
+  /@lezer/javascript@1.4.15:
+    resolution: {integrity: sha512-B082ZdjI0vo2AgLqD834GlRTE9gwRX8NzHzKq5uDwEnQ9Dq+A/CEhd3nf68tiNA2f9O+8jS1NeSTUYT9IAqcTw==}
     dependencies:
       '@lezer/common': 1.2.1
       '@lezer/highlight': 1.2.0
@@ -858,8 +858,8 @@ packages:
     resolution: {integrity: sha512-jmYNElW7yvO7TV33CjSmvSiE2yco3bV2czu/OzDKdMNVZQWfxCblURLhf+47syQRBntjfLdd/H0egrzIG+oaFQ==}
     dev: true
 
-  /pythonia@1.1.3(ws@7.5.9):
-    resolution: {integrity: sha512-unPS/8oPJNf9PdsmzuzpX+M/EPAyDa1pwljyRDJEzPRyzzJ89iSok4rIyeudgFP5xEIgL0b5jIdJ22DOtRORMg==}
+  /pythonia@1.2.0(ws@7.5.9):
+    resolution: {integrity: sha512-Kj1cMOlbraJLu/4GVrINdOY4E64MLyEe8qc+VVR1XwlnWRVqlVxq0IaxFYQr3uMJxLYWS4nmmfTVhdAQYDLnug==}
     peerDependencies:
       ws: ^7.5.1
     dependencies:
@@ -973,8 +973,8 @@ packages:
     resolution: {integrity: sha512-cZB2pzVXBnhpJ6PQdsjO+j/MksR28mv4QD/hP/2y1fsIa9Z9RutYgh3N34FZ8Ktl4puAXaIGlct+gMCJ5BmwmA==}
     dev: true
 
-  /shadow-cljs@2.28.3:
-    resolution: {integrity: sha512-nHu6hDPp3sysa7vj8/b867XvpluEGS8tbUBz47KPgIVCOhcVExXrlKCCg+JRWUh9IY9VdrO1sLqr0dil8cJSDQ==}
+  /shadow-cljs@2.28.4:
+    resolution: {integrity: sha512-EQQ6gMcNl+Zma+9rdOTvgd7UfbatXKAYQNKqqkWicG2neg+O7eeq2H7lcIgbxAs5Blj6bFH3k06k7iKd2ihVLA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
