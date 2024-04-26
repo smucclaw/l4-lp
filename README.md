@@ -21,7 +21,7 @@ to transpile L4 to Prolog and generate execution traces.
 - [pnpm](https://pnpm.io/installation)
 - [SWI-Prolog](https://www.swi-prolog.org/)
 
-This project is developed with JDK LTS 21, nodejs LTS 20, and SWI-Prolog 9.3.3.
+This project is developed with JDK LTS 21, nodejs LTS 20, and SWI-Prolog 9.3.4.
 
 ## Usage
 ### Setup
