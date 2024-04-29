@@ -12,8 +12,8 @@ dependencies:
     specifier: ^0.3.2
     version: 0.3.2
   '@uiw/codemirror-theme-solarized':
-    specifier: ^4.21.25
-    version: 4.21.25(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
+    specifier: ^4.22.0
+    version: 4.22.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
   pythonia:
     specifier: ^1.2.0
     version: 1.2.0(ws@7.5.9)
@@ -224,18 +224,18 @@ packages:
       '@lezer/lr': 1.4.0
     dev: false
 
-  /@uiw/codemirror-theme-solarized@4.21.25(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3):
-    resolution: {integrity: sha512-tnbhHI58sDLHfU1HrotUlZ2QAZZCDjS15yD61VXxKi3Ga+jqxTIdUGJum13wIbmsXs3O6lO89AZOIaYLujVPBQ==}
+  /@uiw/codemirror-theme-solarized@4.22.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3):
+    resolution: {integrity: sha512-RzPhh9b44vHkyLHUC2pJ7Lj1pjeAYQYkzsK9VdnFl1YGW21Hovb35lrM9q9/S9ugRkZcHf/Dnd/mxj+egx5PCw==}
     dependencies:
-      '@uiw/codemirror-themes': 4.21.25(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
+      '@uiw/codemirror-themes': 4.22.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
     transitivePeerDependencies:
       - '@codemirror/language'
       - '@codemirror/state'
       - '@codemirror/view'
     dev: false
 
-  /@uiw/codemirror-themes@4.21.25(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3):
-    resolution: {integrity: sha512-C3t/voELxQj0eaVhrlgzaOnSALNf8bOcRbL5xN9r2+RkdsbFOmvNl3VVhlxEB7PSGc1jUZwVO4wQsB2AP178ag==}
+  /@uiw/codemirror-themes@4.22.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3):
+    resolution: {integrity: sha512-nn7K+lkfdLOSQN6NZx651ae24L5L2RiCuNOxIeP3/CcGm9tnic8i+9pq42IXZe+hEoxX64yUTZisoB5qtocvrQ==}
     peerDependencies:
       '@codemirror/language': '>=6.0.0'
       '@codemirror/state': '>=6.0.0'
