@@ -6,7 +6,7 @@
         instaparse/instaparse {:mvn/version "1.4.14"}
         ;; com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}
         net.cgrand/xforms {:mvn/version "0.19.6"}
-        datascript/datascript {:mvn/version "1.6.3"}
+        datascript/datascript {:mvn/version "1.6.4"}
         ;; vvvvalvalval/datalog-rules {:mvn/version "0.1.0"}
         io.github.noprompt/meander {:git/sha "74de6b1f651441092cc12d1c9012ef7086033040"}
         funcool/promesa {:mvn/version "11.0.678"}
