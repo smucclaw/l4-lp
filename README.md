@@ -33,7 +33,8 @@ More specifically, it contains:
   [Z3's CHC and Datalog support](https://microsoft.github.io/z3guide/docs/fixedpoints/intro/)
   can be also used to implement an executable runtime for the output of the L4
   &rarr; Prolog transpiler.
-  Of course, one can also implement their own Horn clause execution engine.
+  Of course, one can also implement their own Horn clause execution engine
+  from scratch for this purpose.
 
   Currently, other such backends are planned but not implemented yet.
 
