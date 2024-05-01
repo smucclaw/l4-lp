@@ -42,11 +42,11 @@ More specifically, it contains:
   that one can author and execute L4 from them:
   | Language | Status | Example usage |
   | -------- | ------ | ------------- |
-  | Clojure / Clojurescript | :heavy_check_mark: | |
+  | Clojure / Clojurescript | :heavy_check_mark: | [JVM main.clj](src/l4_lp/main.clj) |
   | Java / JVM | in progress | |
-  | Browser JS ESM | :heavy_check_mark: | [here](public/index.js) |
-  | CommonJS NodeJS | :heavy_check_mark: | [here](public/node_example_usage.js) |
-  | Python | :heavy_check_mark: | [here](src/l4_lp_py/example_usage.py) |
+  | Browser JS ESM | :heavy_check_mark: | [index.js](public/index.js) |
+  | CommonJS NodeJS | :heavy_check_mark: | [node_example_usage.js](public/node_example_usage.js) |
+  | Python | :heavy_check_mark: | [example_usage.py](src/l4_lp_py/example_usage.py) |
 
   Note that all these share the same Clojure + SWI-Prolog pipeline under
   the hood so that they have the _exact same_ functionality, execution

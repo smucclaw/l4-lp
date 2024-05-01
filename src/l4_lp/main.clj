@@ -12,15 +12,18 @@
 
 (defn -main [& _args]
   (let [program
-        (-> "[(DECIDE p of var/xs and var/x
-              IF (var/xs IS THE LIST OF ALL var/y SUCH THAT q holds for var/y)
-              AND (var/x IS THE SUM OF var/xs))
+        (-> "GIVEN (xs IS A LIST OF Number)
+                   (x IS A Number)
+                   y
+             DECIDE p of xs and x
+             IF xs IS THE LIST OF ALL y SUCH THAT q holds for y
+             AND x IS SUM xs
 
-              (DECIDE q holds for 1)
-              (DECIDE q holds for 2)]"
+             DECIDE q holds for 1
+             DECIDE q holds for 2"
             l4->prolog/l4-program->prolog-program-str)
 
-        goal (-> "(p of var/xs and var/x)"
+        goal (-> "p of var/xs and var/x"
                  l4->prolog/l4->prolog-str)]
 
     (println "Program: " program)
