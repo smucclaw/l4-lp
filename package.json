@@ -20,7 +20,7 @@
     "server": "shadow-cljs server"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.4",
+    "@babel/runtime": "^7.24.5",
     "@nextjournal/clojure-mode": "^0.3.2",
     "@uiw/codemirror-theme-solarized": "^4.22.0",
     "pythonia": "^1.2.0"
