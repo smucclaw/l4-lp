@@ -11,9 +11,9 @@ to transpile L4 to Prolog and generate execution traces.
 
 Try out the web IDE and interpreter [here](https://smucclaw.github.io/l4-lp/)!
 
-More specifically, it contains:
-- An equational theory equipping L4 constitutive rules with a denotational
-  semantics in terms of Horn clauses in the Prolog term algebra
+More precisely, this project contains:
+- A formalisations of an equational theory equipping L4 constitutive rules with
+  a denotational semantics in terms of Horn clauses in the Prolog term algebra
   (ie. Prolog's concrete syntax),
   implemented as a parser and transpiler in Clojure / Clojurescript.
   For more details, see
@@ -26,7 +26,7 @@ More specifically, it contains:
   Note that while SWI-Prolog was chosen for convenience
   (details on why that is [here](#swi-prolog-based-rule-engine-runtime)),
   Prolog's syntax is
-  commonly adopted for other related Horn clause based formalisms, like
+  widely adopted for other related Horn clause based formalisms, like
   Datalog (eg. Nemo), ASP (eg. Clingo and scasp) and SMT-based
   [Constrained Horn Clause (CHC)](https://chc-comp.github.io/)
   solvers, so that if one prefers say SMT solvers,
@@ -40,24 +40,23 @@ More specifically, it contains:
 
 - Wrapper libraries that integrate L4 with the following languages/runtimes so
   that one can author and execute L4 from them:
-  | Language | Status | Example usage |
+  | Language | Library status | Example usage |
   | -------- | ------ | ------------- |
-  | Clojure / Clojurescript | :heavy_check_mark: | [JVM main.clj](src/l4_lp/main.clj) |
-  | Java / JVM | in progress | |
-  | Browser JS ESM | :heavy_check_mark: | [index.js](public/index.js) |
-  | CommonJS NodeJS | :heavy_check_mark: | [node_example_usage.js](public/node_example_usage.js) |
+  | Clojure / JVM | In progress | [JVM main.clj](src/l4_lp/main.clj) |
+  | Clojurescript / ESM in browser | :heavy_check_mark: | [index.js](public/index.js) |
+  | Clojurescript / CommonJS on NodeJS | :heavy_check_mark: | [node_example_usage.js](public/node_example_usage.js) |
   | Python | :heavy_check_mark: | [example_usage.py](src/l4_lp_py/example_usage.py) |
 
   Note that all these share the same Clojure + SWI-Prolog pipeline under
   the hood so that they have the _exact same_ functionality, execution
   behaviour and semantics.
 
-- A web-based IDE and pipeline that uses the browser JS ESM library to
+- A web-based IDE and pipeline that uses the browser ESM library to
   parse, transpile and execute L4 completely in the browser
   (yes, the whole pipeline runs in the browser and does not involve any backend
   server).
 
-See [this section](#some-details-and-discussion) for more details about the
+See [this section](#details-and-discussion) for more details about the
 semantics and pipeline implemented in this project.
 
 # Dependencies
@@ -103,49 +102,46 @@ Run the following command:
   pnpm build:all
 ```
 
-# Some details and discussion
+# Details and discussion
 ## Denotational semantics and accompanying parser and transpiler
 
-  L4's denotational semantics is given as an equational theory from
-  term algebra (ie concrete syntax) of L4 to that of Prolog.
-  This is primarily documented and implemented by the
-  `l4-rule->prolog-rule` in
-  [l4_to_prolog.cljc](src/l4_lp/syntax/l4_to_prolog.cljc)
+L4's denotational semantics is given as an equational theory from
+the term algebra (ie concrete syntax) of L4 to that of Prolog.
+This is primarily documented and implemented by the
+`l4-rule->prolog-rule` in
+[l4_to_prolog.cljc](src/l4_lp/syntax/l4_to_prolog.cljc).
+This uses
+[Meander](https://github.com/noprompt/meander)
+to implement a term rewriting system which orients the equational theory
+from left to right, and
+each rewrite rule has an accompanying comment above it which describes
+the equation it implements.
 
-Points to note:
+Note here that we rewrite L4's concrete syntax directly into that of Prolog,
+so that Prolog's concrete syntax is essentially our intermediate representation.
+We _do not_ have any fancy data types or separate form of abstract
+syntax in our transpilation pipeline.
 
-1. The `l4-rule->prolog-rule` function uses
-   [Meander](https://github.com/noprompt/meander)
-   to implement a term rewriting system which orients the equational theory
-   from left to right.
-   Each rewrite rule has an accompanying comment above it which describes
-   the equation it implements.
+Prolog syntax makes for a great intermediate representation as it is extremely
+convenient to work with.
+This is in turn because:
+1. The concrete syntax of L4's constitutive rules is a variation of
+    Prolog-style Horn clauses, containing additional syntactic sugar.
 
-2. We rewrite L4's concrete syntax directly into that of Prolog, so that
-   Prolog's concrete syntax is essentially our intermediate representation.
-   We _do not_ have any fancy data types or separate form of abstract
-   syntax in our transpilation pipeline.
+2. Prolog is homoiconic, with a concrete syntax that is very close to
+   s-expressions.
 
-3. We chose to use Prolog as our intermediate reprensentation as it is
-   extremely convenient to manipulate and work with, which is the case because:
+3. The transpiler and most of the rest of the project is implemented in
+   Clojure / Clojurescript which is a lisp, and hence convenient for
+   manipulating s-expressions.
 
-   1. The concrete syntax of L4's constitutive rules is a variation of
-      Prolog-style Horn clauses, containing additional syntactic sugar.
-
-   2. Prolog is homoiconic, with a concrete syntax that is very close to
-      s-expressions.
-
-   3. The transpiler and most of the rest of the project is implemented in
-      Clojure / Clojurescript which is a lisp, and hence convenient for
-      manipulating s-expressions.
-
-   4. As mentioned in the [overview](#l4-lp-overview),
-      Prolog's concrete syntax is adopted and used by many formalisms and tools
-      based on Horn clauses, so that the output of such a transpiler can be
-      readily fed into any execution engine of one's choice
-      (provided it has runtime libraries supporting L4's syntactic constructs).
-      This improves L4's interoperability with various other downstream
-      formalisms and tools.
+4. As mentioned in the [overview](#l4-lp-overview),
+   Prolog's concrete syntax is adopted and used by many formalisms and tools
+   based on Horn clauses, so that the output of such a transpiler can be
+   readily fed into any execution engine of one's choice
+   (provided it has runtime libraries supporting L4's syntactic constructs).
+   This improves L4's interoperability with various other downstream
+   formalisms and tools.
 
 4. We transform nested function applications into predicative syntax, eg:
    ```
