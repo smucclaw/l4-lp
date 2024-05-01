@@ -1,8 +1,13 @@
-# l4-lp
+# l4-lp overview
 
 This project formalises and implements an execution pipeline for L4, a legal
 DSL for the law, along with an accompanying web-based IDE and libraries that
 integrate L4 with various general-purpose programming languages.
+
+For context, this evolved from an older pipeline involving
+[logical-english-client](https://github.com/smucclaw/logical-english-client)
+which utilised [Logical English](https://github.com/smucclaw/LogicalEnglish)
+to transpile L4 to Prolog and generate execution traces.
 
 Try out the web IDE and interpreter [here](https://smucclaw.github.io/l4-lp/)!
 
@@ -19,7 +24,7 @@ More specifically, it contains:
   for executing transpiled L4 specifications, and obtaining execution traces.
 
   Note that while SWI-Prolog was chosen for convenience
-  (details on why that is [here](#denotational-semantics-and-accompanying-parser-and-transpiler)),
+  (details on why that is [here](#swi-prolog-based-rule-engine-runtime)),
   Prolog's syntax is
   commonly adopted for other related Horn clause based formalisms, like
   Datalog (eg. Nemo), ASP (eg. Clingo and scasp) and SMT-based
@@ -51,15 +56,10 @@ More specifically, it contains:
   (yes, the whole pipeline runs in the browser and does not involve any backend
   server).
 
-See [this section](#project-details) for more details about the
+See [this section](#some-details-and-discussion) for more details about the
 semantics and pipeline implemented in this project.
 
-For context, this evolved from an older pipeline involving
-[logical-english-client](https://github.com/smucclaw/logical-english-client)
-which utilised [Logical English](https://github.com/smucclaw/LogicalEnglish)
-to transpile L4 to Prolog and generate execution traces.
-
-## Dependencies
+# Dependencies
 
 - Java
 - [Clojure](https://clojure.org/guides/install_clojure)
@@ -69,8 +69,8 @@ to transpile L4 to Prolog and generate execution traces.
 
 This project is developed with JDK LTS 21, nodejs LTS 20, and SWI-Prolog 9.3.5.
 
-## Usage
-### Setup
+# Usage
+## Setup
 ```shell
   # Install npm dependencies.
   pnpm install
@@ -79,7 +79,7 @@ This project is developed with JDK LTS 21, nodejs LTS 20, and SWI-Prolog 9.3.5.
   pnpm build:swipl-qlfs
 ```
 
-### Running the web IDE demo
+## Running the web IDE demo
 - Make sure to [setup](#setup) the project first.
 - Run the following command to start a local dev server in the `public` directory:
 
@@ -99,8 +99,8 @@ Run the following command:
   pnpm build:all
 ```
 
-## Project details
-### Denotational semantics and accompanying parser and transpiler
+# Some details and discussion
+## Denotational semantics and accompanying parser and transpiler
 
   L4's denotational semantics is given as an equational theory from
   term algebra (ie concrete syntax) of L4 to that of Prolog.
@@ -110,78 +110,77 @@ Run the following command:
 
 Points to note:
 
-- The `l4-rule->prolog-rule` function uses
-  [Meander](https://github.com/noprompt/meander)
-  to implement a term rewriting system which orients the equational theory
-  from left to right.
-  Each rewrite rule has an accompanying comment above it which describes
-  the equation it implements.
+1. The `l4-rule->prolog-rule` function uses
+   [Meander](https://github.com/noprompt/meander)
+   to implement a term rewriting system which orients the equational theory
+   from left to right.
+   Each rewrite rule has an accompanying comment above it which describes
+   the equation it implements.
 
-- We rewrite L4's concrete syntax directly into that of Prolog, so that
-  Prolog's concrete syntax is essentially our intermediate representation.
-  We _do not_ have any fancy data types or separate form of abstract
-  syntax in our transpilation pipeline.
+2. We rewrite L4's concrete syntax directly into that of Prolog, so that
+   Prolog's concrete syntax is essentially our intermediate representation.
+   We _do not_ have any fancy data types or separate form of abstract
+   syntax in our transpilation pipeline.
 
-- We chose to use Prolog as our intermediate reprensentation as it is
-  extremely convenient to manipulate and work with, which is the case because:
+3. We chose to use Prolog as our intermediate reprensentation as it is
+   extremely convenient to manipulate and work with, which is the case because:
 
-  1. The concrete syntax of L4's constitutive rules is a variation of
-     Prolog-style Horn clauses, containing additional syntactic sugar.
+   1. The concrete syntax of L4's constitutive rules is a variation of
+      Prolog-style Horn clauses, containing additional syntactic sugar.
 
-  2. Prolog is homoiconic, with a concrete syntax that is very close to
-     s-expressions.
+   2. Prolog is homoiconic, with a concrete syntax that is very close to
+      s-expressions.
 
-  3. The transpiler and most of the rest of the project is implemented in
-     Clojure / Clojurescript which is a lisp, and hence convenient for
-     manipulating s-expressions.
+   3. The transpiler and most of the rest of the project is implemented in
+      Clojure / Clojurescript which is a lisp, and hence convenient for
+      manipulating s-expressions.
 
-  4. As mentioned in the [overview](#l4-lp),
-     Prolog's concrete syntax is adopted and used by many semantics and tools
-     based on Horn clauses, so that the output of such a transpiler can be
-     readily fed into any execution engine of one's choice
-     (provided it has runtime libraries supporting L4's syntactic constructs).
+   4. As mentioned in the [overview](#l4-lp-overview),
+      Prolog's concrete syntax is adopted and used by many formalisms and tools
+      based on Horn clauses, so that the output of such a transpiler can be
+      readily fed into any execution engine of one's choice
+      (provided it has runtime libraries supporting L4's syntactic constructs).
+      This improves L4's interoperability with various other downstream
+      formalisms and tools.
 
-- We transform nested function applications into predicative syntax, eg:
-  ```
-  MIN (SUM 0 1 (PRODUCT 1 2)) 3 < MINUS 2 1
-  ```
-  gets expanded to something like:
-  ```
-  product_list([1, 2], Var__63),
-  sum_list(([0, 1, Var__63]), Var__64),
-  min_list(([Var__64, 3]), Var__65),
-  minus_list(([2, 1]), Var__66),
-  lt(Var__65, Var__66)
-  ```
- 
-  The idea is that during the recursive transformation of a term,
-  whenever we find a nested function application, we:
-  1. Capture its evaluation context in a continuation.
-  2. Generate a fresh variable of the form `Var__N`.
-  3. Throw the fresh variable to the continuation.
-  4. Lift the function application from its nested context up to the top
-     most term.
-  5. Convert the function application into a predicate application, using
-     the fresh variable as the output variable.
-
-  See
-  [here](https://github.com/smucclaw/l4-lp/blob/aba0a7c15fe9b2e57fc9992a97c73f9dbea48b98/src/l4_lp/syntax/l4_to_prolog.cljc#L101)
-  for the precise semantics and implementation.
+4. We transform nested function applications into predicative syntax, eg:
+   ```
+   MIN (SUM 0 1 (PRODUCT 1 2)) 3 < MINUS 2 1
+   ```
+   gets expanded to something like:
+   ```
+   product_list([1, 2], Var__63),
+   sum_list(([0, 1, Var__63]), Var__64),
+   min_list(([Var__64, 3]), Var__65),
+   minus_list(([2, 1]), Var__66),
+   lt(Var__65, Var__66)
+   ```
   
-  Note that we rely heavily on Meander's context-sensitive rewriting
-  features
-  (like the [$ macro](https://cljdoc.org/d/meander/epsilon/0.0.421/doc/operator-overview#subtree-search-))
-  to conveniently manipulate nested terms and their evaluation contexts.
+   The idea is that during the recursive transformation of a term,
+   whenever we find a nested function application, we:
+   1. Capture its evaluation context in a continuation.
+   2. Generate a fresh variable of the form `Var__N`.
+   3. Throw the fresh variable to the continuation.
+   4. Lift the function application from its nested context up to the top
+      most term.
+   5. Convert the function application into a predicate application, using
+      the fresh variable as the output variable.
+    
+   Note that we rely heavily on Meander's context-sensitive rewriting
+   features
+   (like the [$ macro](https://cljdoc.org/d/meander/epsilon/0.0.421/doc/operator-overview#subtree-search-))
+   to conveniently manipulate nested terms and their evaluation contexts.
 
-### SWI-Prolog based rule engine runtime
+## SWI-Prolog based rule engine runtime
 We implement a rule engine runtime in SWI-Prolog,
 along with some custom Prolog predicates,
 in order to execute L4 specifications that have been transpiled to our
 intermediate representation, ie the concrete syntax of Prolog.
 
-As mentioned in the [overview](#l4-lp), we could have chosen any other Horn
-Clause based formalism like Z3 for that matter, but we chose Prolog, and
-SWI-Prolog in particular, because:
+As mentioned [previously](#l4-lp-overview), we could have built a runtime
+using any other Horn clause based formalism,
+but for now, we chose Prolog, and SWI-Prolog in particular, as it is
+extremely convenient for the following reasons:
 
 1. Prolog is a backward-chaining rule engine for Horn clauses
    (or at least it can be used as one, because it uses SLD-resolution),
@@ -211,7 +210,7 @@ SWI-Prolog in particular, because:
 3. SWI-Prolog has language bindings to various languages like
    JS (including browser JS via WASM), Python and Java.
 
-   This lets us easily, without much additional effort, recycle the same
+   This lets us, without much additional effort, recycle the same
    codebase and runtime to implement JS, Python and Java libraries that
    integrate L4 with them, and even execute in the browser.
    In addition, this ensures that the execution behaviour and semantics across
