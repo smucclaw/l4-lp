@@ -136,7 +136,7 @@
               (m/and (& ?lhs %comparison & %has-nested-arithmetic-expr)
                      (m/let [?rhs (?C @?fresh-var)])))))
 
-    ((~ @?fresh-var IS ~(symbol "ARITHMETIC-OP" ?op) ?arg)
+    ((~ @?fresh-var IS ~(symbol "ARITHMETIC-OP" (str ?op)) ?arg)
      AND (?lhs ?comparison ?rhs))
 
     ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
@@ -145,7 +145,7 @@
     ;; ⟦(?lhs₀ ... ?lhsₘ IS ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
     ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
     (. !lhs ..1 IS (m/symbol "ARITHMETIC-OP" ?op) . !rhs ..1)
-    ((?op (!rhs ...) (!lhs ...)))
+    ((~(symbol ?op) (!rhs ...) (!lhs ...)))
 
     ;;  ∀ 0 ≤ i ≤ n - 1, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ IN
     ;; ---------------------------------------------------------------------
@@ -279,6 +279,9 @@
        ->seq-of-rules
        (eduction
         (mapcat (fn [l4-rule]
-                  [(-> l4-rule l4-rule->prolog-rule) ".\n"])))
+                  [(->> l4-rule
+                        l4-rule->prolog-rule
+                        (into '()))
+                   ".\n"])))
        (apply str)
        remove-all-spaces))
