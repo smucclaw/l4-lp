@@ -201,7 +201,7 @@ extremely convenient for the following reasons:
    Without meta-programming, we would have to implement a whole new interpreter
    ourselves just to get such functionality.
 
-2. Prolog has good library support, including constraint solving and
+2. SWI-Prolog has good library support, including constraint solving and
    date libraries.
    
    This lets us easily solve planning problems on top of just executing
