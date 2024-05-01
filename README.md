@@ -68,7 +68,10 @@ semantics and pipeline implemented in this project.
 - [pnpm](https://pnpm.io/installation)
 - [SWI-Prolog](https://www.swi-prolog.org/)
 
-This project is developed with JDK LTS 21, nodejs LTS 20, and SWI-Prolog 9.3.5.
+This project is developed with:
+- JDK LTS 21
+- Nodejs LTS 20
+- SWI-Prolog 9.3.5
 
 # Usage
 ## Setup
