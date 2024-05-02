@@ -43,7 +43,6 @@
 (def l4-mixfix->prolog-prefix
   "Parses and transforms L4 mixfix predicate application into prefix form in
    Prolog."
-  (r/pipe
-   partition-args-non-args
-   non-args+args->pred-atom+args
-   pred-atom+args->prolog-prefix-ast))
+  (r/pipe partition-args-non-args
+          non-args+args->pred-atom+args
+          pred-atom+args->prolog-prefix-ast))
