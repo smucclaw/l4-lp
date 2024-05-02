@@ -17,7 +17,7 @@
    ((m/or (m/and (m/or (m/pred symbol-db/is-wildcard-symbol?)
                        (m/symbol "var" _)
                        (m/pred number?)
-                       (m/pred seqable?))
+                       (m/pred coll?))
                  !args)
           !non-args)
     ..1)
