@@ -8,20 +8,19 @@
 (def ^:private partition-args-non-args
   "Partition all the elements into args and non-args.
    Non-args will be mashed together into an atom representing the predicate."
-  (r/rewrite
-   (m/app #(group-by symbol-db/is-l4-symbol? %)
-          {true (m/some [?l4-symbol])
-           false (m/some ?args)})
-   {:l4-symbol ?l4-symbol :args ?args}
+  (let [is-var-symbol? (r/match
+                        (m/symbol "var" _) true
+                        _ false)
+        is-arg? (some-fn number? coll? is-var-symbol?
+                         symbol-db/is-wildcard-symbol?)]
+    (r/rewrite
+     (m/app #(group-by symbol-db/is-l4-symbol? %)
+            {true (m/some [?l4-symbol])
+             false (m/some ?args)})
+     {:l4-symbol ?l4-symbol :args ?args}
 
-   ((m/or (m/and (m/or (m/pred symbol-db/is-wildcard-symbol?)
-                       (m/symbol "var" _)
-                       (m/pred number?)
-                       (m/pred coll?))
-                 !args)
-          !non-args)
-    ..1)
-   {:non-args [!non-args ...] :args [!args ...]}))
+     ((m/or (m/pred is-arg? !args) !non-args) ..1)
+     {:non-args [!non-args ...] :args [!args ...]})))
 
 (def ^:private non-args+args->pred-atom+args
    "Convert the non-args into a valid atom representing the predicate."
