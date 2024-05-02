@@ -60,7 +60,7 @@ More precisely, this project contains:
     and
     [Java](https://jpl7.org/).
 
-- A in-browser IDE powered by [CodeMirror](https://codemirror.net/)
+- An in-browser IDE powered by [CodeMirror](https://codemirror.net/)
   and the browser ESM library to parse, transpile, execute L4 and visualise
   execution traces (via [guifier](https://github.com/maliknajjar/guifier))
   completely in the browser.
