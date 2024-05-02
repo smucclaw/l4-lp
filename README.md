@@ -155,6 +155,12 @@ This is primarily documented and implemented by the
       such an intermediate representation is highly interoperable with other
       downstream formalisms and tools, like Z3 and others that support
       Horn clauses.
+    
+    In other words, our intermediate representation (namely Prolog)
+    is very close to the L4's concrete syntax, and that can be directly
+    executed by a wide variety of tools that are based on Horn clauses.
+    This keeps our transpilation pipeline extremely lean, with the whole
+    parser and transpiler occupying under 300 lines of code.
 
 3. We transform nested function applications into predicative syntax, eg:
    ```
