@@ -9,7 +9,7 @@
 (def ^:private prelude-qlf-url
   "resources/swipl/prelude.qlf")
 
-(defn- wrap-fn [f]
+(defn- fn->non-plain-obj [f]
   (new #(this-as this (jsi/assoc! this :apply f))))
 
 ;; TODO: Document and clean up this function.
@@ -37,7 +37,7 @@
     ;; treats them both as plain objects and tries to recursively convert it to
     ;; a Prolog dictionary, which fails.
     log-stack-frame-callback
-    (wrap-fn #(conj! stack-trace %))
+    (fn->non-plain-obj #(conj! stack-trace %))
 
     assert-callback-fn-query
     (jsi/call-in swipl [:prolog :query]
@@ -62,9 +62,6 @@
                        (str "once_trace_all(" goal ")"))
 
     query-result (jsi/call query :once)]
-
-    ;; (jsi/call js/console :log "Loaded Swipl Mod: " swipl-mod)
-    ;; (jsi/call js/console :log "SWIPL: " swipl)
 
     {:trace (-> stack-trace
                 persistent!
