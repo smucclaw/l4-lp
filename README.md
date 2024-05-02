@@ -38,8 +38,8 @@ More precisely, this project contains:
 
   Currently, other such backends are planned but not implemented yet.
 
-- Libraries that integrate L4 with the following languages so
-  that one can author and execute L4 from them:
+- Libraries that allow one to parse, transpile, execute and interop with L4
+  from the following languages:
   | Language | Library status | Example usage |
   | -------- | ------ | ------------- |
   | Clojure / JVM | In progress | [JVM main.clj](src/l4_lp/main.clj) |
