@@ -60,13 +60,10 @@ More precisely, this project contains:
     and
     [Java](https://jpl7.org/).
 
-- A [CodeMirror](https://codemirror.net/)
-  based IDE and pipeline that uses the browser ESM library to
-  parse, transpile, execute L4 and visualise execution traces
-  (via [guifier](https://github.com/maliknajjar/guifier))
-  completely in the browser
-  (yes, the whole pipeline runs in the browser and does not involve any backend
-  server).
+- A in-browser IDE powered by [CodeMirror](https://codemirror.net/)
+  and the browser ESM library to parse, transpile, execute L4 and visualise
+  execution traces (via [guifier](https://github.com/maliknajjar/guifier))
+  completely in the browser.
 
 See [this section](#details-and-discussion) for more details about the
 semantics and pipeline implemented in this project.
