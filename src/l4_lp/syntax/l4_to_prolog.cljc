@@ -2,10 +2,8 @@
   (:require [clojure.edn :as edn]
             [l4-lp.syntax.mixfix-parser :refer [l4-mixfix->prolog-prefix]]
             [l4-lp.syntax.symbol-db :as symbol-db]
-            [l4-lp.syntax.arithmetic :as arithmetic]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
-            [tupelo.core :refer [it->]]
             [tupelo.string :as str]))
 
 (def ^:private ->l4-ast
@@ -229,14 +227,10 @@
     ;; Auxiliary stuff for parsing predicate applications that are presented
     ;; in mixfix form.
     ;; TODO: Formalise the semantics of this operation.
-    (m/and
-     ;; Restrict mixfix parsing to seqs where there is > 1 item present,
-     ;; because otherwise there is no need for this.
-     (_ _ & _)
-     ;; The next 2 clauses restrict mixfix parsing to ignore BoolStructs,
-     ;; ie things like (... AND ... AND ...).
-     ;; (m/gather (m/pred #{'AND 'OR}) ?count) (m/guard (zero? ?count))
-     ?predicate-application)
+    ;;
+    ;; We restrict mixfix parsing to seqs where there is > 1 item present,
+    ;; because otherwise there is no need for this.
+    (_ _ & _ :as ?predicate-application)
     ~(l4-mixfix->prolog-prefix ?predicate-application)
 
     ;; ---------------------------------------
