@@ -279,9 +279,7 @@
        ->seq-of-rules
        (eduction
         (mapcat (fn [l4-rule]
-                  [(->> l4-rule
-                        l4-rule->prolog-rule
-                        (into '()))
+                  [(->> l4-rule l4-rule->prolog-rule (into ()))
                    ".\n"])))
        (apply str)
        remove-all-spaces))
