@@ -2,7 +2,8 @@
   (:require [datascript.core :as ds]
             [meander.epsilon :as m]
             [meander.strategy.epsilon :as r]
-            [net.cgrand.xforms :as xforms]))
+            [net.cgrand.xforms :as xforms]
+            [tupelo.string :as str]))
 
 (def l4-lp-symbol-pairs
   "Ordered pairs defining a binary relation between L4 and Prolog symbols,
@@ -72,15 +73,17 @@
      [?entity :l4-symbol ?l4-symbol]
      [?entity :prolog-symbol ?prolog-symbol]]])
 
+(defn- is-wildcard? [x]
+  (-> x str (str/starts-with? "_")))
+
 (defn is-l4-symbol?
   "Given an input x, check if x is a valid L4 symbol."
   [x]
-  (->> x
-       (ds/q '[:find ?l4-symbol .
-               :in $ ?l4-symbol
-               :where [_ :l4-symbol ?l4-symbol]]
-             @symbol-db-conn)
-       some?))
+  (and (not (is-wildcard? x))
+       (some? (ds/q '[:find ?l4-symbol .
+                      :in $ ?l4-symbol
+                      :where [_ :l4-symbol ?l4-symbol]]
+                    @symbol-db-conn x))))
 
 (defn l4-symbol->prolog-symbol
   "Given a L4 symbol, returns an appropriate symbol representing a Prolog
@@ -92,12 +95,14 @@
    succeeds:
      ⊢ ∃ ?l4-symbol, l4-lp-symbol(?l4-symbol, ?prolog-symbol)."
   [l4-symbol]
-  (ds/q '[:find ?prolog-symbol .
-          :in $ % ?l4-symbol
-          :where (l4-lp-symbol ?l4-symbol ?prolog-symbol)]
-        @symbol-db-conn
-        l4-lp-symbol-rule
-        l4-symbol))
+  (if (is-wildcard? l4-symbol)
+    l4-symbol
+    (ds/q '[:find ?prolog-symbol .
+            :in $ % ?l4-symbol
+            :where (l4-lp-symbol ?l4-symbol ?prolog-symbol)]
+          @symbol-db-conn
+          l4-lp-symbol-rule
+          l4-symbol)))
 
 (defn prolog-symbol->l4-symbol
   "Given a symbol representing a Prolog functor, returns an appropriate L4
