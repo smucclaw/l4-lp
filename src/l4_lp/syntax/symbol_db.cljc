@@ -73,13 +73,14 @@
      [?entity :l4-symbol ?l4-symbol]
      [?entity :prolog-symbol ?prolog-symbol]]])
 
-(defn- symbol-is-wildcard? [sym]
-  (and (symbol? sym) (str/starts-with? "_" (str sym))))
+(defn is-wildcard-symbol? [sym]
+  (and (symbol? sym)
+       (str/starts-with? "_" (str sym))))
 
 (defn is-l4-symbol?
   "Given a symbol, check if x is a valid L4 symbol."
   [sym]
-  (and (not (symbol-is-wildcard? sym))
+  (and (not (is-wildcard-symbol? sym))
        (some? (ds/q '[:find ?l4-symbol .
                       :in $ ?l4-symbol
                       :where [_ :l4-symbol ?l4-symbol]]
@@ -96,7 +97,7 @@
    succeeds:
      ⊢ ∃ ?l4-symbol, l4-lp-symbol(?l4-symbol, ?prolog-symbol)."
   [l4-symbol]
-  (if (symbol-is-wildcard? l4-symbol)
+  (if (is-wildcard-symbol? l4-symbol)
     l4-symbol
     (ds/q '[:find ?prolog-symbol .
             :in $ % ?l4-symbol
