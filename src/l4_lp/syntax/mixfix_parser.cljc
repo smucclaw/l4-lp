@@ -14,7 +14,8 @@
            false (m/some ?args)})
    {:l4-symbol ?l4-symbol :args ?args}
 
-   ((m/or (m/and (m/or '_ (m/symbol "var" _)
+   ((m/or (m/and (m/or (m/pred symbol-db/is-wildcard-symbol?)
+                       (m/symbol "var" _)
                        (m/pred number?)
                        (m/pred seqable?))
                  !args)
