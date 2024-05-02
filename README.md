@@ -38,8 +38,8 @@ More precisely, this project contains:
 
   Currently, other such backends are planned but not implemented yet.
 
-- Libraries that integrate L4 with the following languages so
-  that one can author and execute L4 from them:
+- Libraries that allow one to parse, transpile, execute and interop with L4
+  from the following languages:
   | Language | Library status | Example usage |
   | -------- | ------ | ------------- |
   | Clojure / JVM | In progress | [JVM main.clj](src/l4_lp/main.clj) |
@@ -60,13 +60,10 @@ More precisely, this project contains:
     and
     [Java](https://jpl7.org/).
 
-- A [CodeMirror](https://codemirror.net/)
-  based IDE and pipeline that uses the browser ESM library to
-  parse, transpile, execute L4 and visualise execution traces
-  (via [guifier](https://github.com/maliknajjar/guifier))
-  completely in the browser
-  (yes, the whole pipeline runs in the browser and does not involve any backend
-  server).
+- An in-browser IDE powered by [CodeMirror](https://codemirror.net/)
+  and the browser ESM library to parse, transpile, execute L4 and visualise
+  execution traces (via [guifier](https://github.com/maliknajjar/guifier))
+  completely in the browser.
 
 See [this section](#details-and-discussion) for more details about the
 semantics and pipeline implemented in this project.
