@@ -100,7 +100,7 @@ This project is developed with:
 
   The webpage contains some instructions on how to use the IDE.
 
-### Compiling optimised versions of the libraries and web IDE
+## Compiling optimised versions of the language binding libraries and web IDE
 
 Run the following command:
 
