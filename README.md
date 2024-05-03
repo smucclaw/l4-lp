@@ -2,11 +2,12 @@
 
 This project formalises a semantics for L4, a legal DSL for the law, and
 implements a rule engine execution pipeline, along with various language
-binding libraries for the pipeline.
+binding libraries for interacting with L4 and the pipeline.
 Among these is a browser JS ESM library which is used to implement an
 IDE that parses, transpiles and executes L4, as well as visualise execution
 traces _completely in the browser_.
-Try out the IDE [here](https://smucclaw.github.io/l4-lp/)!
+
+Try out our IDE and rule engine [here](https://smucclaw.github.io/l4-lp/)!
 
 For context, this evolved from an older pipeline involving
 [logical-english-client](https://github.com/smucclaw/logical-english-client)
