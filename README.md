@@ -1,45 +1,49 @@
 # l4-lp overview
 
-This project formalises and implements an execution pipeline for L4, a legal
-DSL for the law, along with an accompanying web-based IDE and libraries that
-integrate L4 with various general-purpose programming languages.
+This project formalises a semantics for L4, a legal DSL for the law, and
+implements a rule engine execution pipeline, along with various language
+binding libraries for the pipeline.
+Among these is a browser JS ESM library which is used to implement an
+IDE that parses, transpiles and executes L4, as well as visualise execution
+traces _completely in the browser_.
+Try out the IDE [here](https://smucclaw.github.io/l4-lp/)!
 
 For context, this evolved from an older pipeline involving
 [logical-english-client](https://github.com/smucclaw/logical-english-client)
 which utilised [Logical English](https://github.com/smucclaw/LogicalEnglish)
 to transpile L4 to Prolog and generate execution traces.
 
-Try out the web-based IDE [here](https://smucclaw.github.io/l4-lp/)!
-
 More precisely, this project contains:
-- A formalisation of an equational theory equipping L4 constitutive rules with
-  a denotational semantics in terms of Horn clauses in the Prolog term algebra
+- A denotational semantics for L4 constitutive rules,
+  formalised as an equational theory
+  mapping L4 rules into Horn clauses in the Prolog term algebra
   (ie. Prolog's concrete syntax),
   implemented as a parser and transpiler in Clojure / Clojurescript.
-  For more details, see
-  [this section](#denotational-semantics-and-accompanying-parser-and-transpiler).
+  
+  Note that we use such Horn clauses as our intermediate representation
+  because for one, they are syntactically close to L4, and are convenient to
+  work with.
+  Moreover, Prolog / Datalog Horn clauses have well-understood
+  semantics, and are widely adopted as the standard format for
+  (and hence highly interoperable with) many rule engines and static analysis 
+  tools
+  (including SMT based solvers like
+  [Z3](https://microsoft.github.io/z3guide/docs/fixedpoints/intro/)).
+  See [this section](#denotational-semantics-and-accompanying-parser-and-transpiler)
+  for more details.
 
-- A SWI-Prolog based rule engine runtime and
+- A SWI-Prolog based rule engine runtime, accompanied by
   [custom Prolog predicates](public/resources/swipl/prelude.pl)
   for executing transpiled L4 specifications, and obtaining execution traces.
 
-  Note that while SWI-Prolog was chosen for convenience
+  Note that SWI-Prolog was chosen for convenience
   (details on why that is [here](#swi-prolog-based-rule-engine-runtime)),
-  Prolog's syntax is
-  widely adopted for other related Horn clause based formalisms, like
-  Datalog (eg. Nemo), ASP (eg. Clingo and scasp) and SMT-based
-  [Constrained Horn Clause (CHC)](https://chc-comp.github.io/)
-  solvers, so that if one prefers say SMT solvers,
-  [Z3's CHC and Datalog support](https://microsoft.github.io/z3guide/docs/fixedpoints/intro/)
-  can be also used to implement an executable runtime for the output of the L4
-  &rarr; Prolog transpiler.
-  Of course, one can also implement their own Horn clause execution engine
-  from scratch for this purpose.
+  and that one can easily build a runtime for our Prolog intermediate
+  representation using Z3 for instance.
+  Currently, integrating other such backends is planned but not worked on yet.
 
-  Currently, other such backends are planned but not implemented yet.
-
-- Libraries that allow one to parse, transpile, execute and interop with L4
-  from the following languages:
+- Language binding libraries that allow other languages to interact with L4 and
+  its execution pipeline:
   | Language | Library status | Example usage |
   | -------- | ------ | ------------- |
   | Clojure / JVM | In progress | [JVM main.clj](src/l4_lp/main.clj) |
@@ -47,18 +51,10 @@ More precisely, this project contains:
   | Clojurescript / CommonJS on NodeJS | :heavy_check_mark: | [node_example_usage.js](public/node_example_usage.js) |
   | Python | :heavy_check_mark: | [example_usage.py](src/l4_lp_py/example_usage.py) |
 
-  Note that all these are implemented as thin wrappers over the same Clojure +
-  SWI-Prolog code base under the hood so that they have the _exact same_
-  functionality, execution behaviour and semantics.
-  This is possible because:
-  - Clojure compiles to _both_ JVM bytecode and JS.
-  - [JsPyBridge](https://github.com/extremeheat/JSPyBridge) offers convenient,
-    almost seamless 2-way interop between JS and Python.
-  - SWI-Prolog has good bindings and 2-way interop with
-    [JS via WASM](https://github.com/SWI-Prolog/npm-swipl-wasm),
-    [Python](https://github.com/SWI-Prolog/packages-swipy)
-    and
-    [Java](https://jpl7.org/).
+  Note that all these bind to the same Clojure + SWI-Prolog code base under the
+  hood so that they have the _exact same_ functionality, behaviour and
+  semantics.
+  See [here](_) for more details.
 
 - An in-browser IDE powered by [CodeMirror](https://codemirror.net/)
   and the browser ESM library to parse, transpile, execute L4 and visualise
@@ -149,15 +145,45 @@ This is primarily documented and implemented by the
       manipulating s-expressions.
 
    4. As mentioned in the [overview](#l4-lp-overview),
-      such an intermediate representation is highly interoperable with other
-      downstream formalisms and tools, like Z3 and others that support
-      Horn clauses.
-    
-    In other words, our intermediate representation (namely Prolog)
-    is very close to the L4's concrete syntax, and that can be directly
-    executed by a wide variety of tools that are based on Horn clauses.
-    This keeps our transpilation pipeline extremely lean, with the whole
-    parser and transpiler occupying under 300 lines of code.
+      such an intermediate representation is a rather standard one adopted by
+      many other downstream formalisms and tools that are
+      based on Horn clauses.
+      These tools utilise relatively similar semantics
+      (which as mentioned, are well-understood),
+      and can readily consume our intermediate representation.
+
+      They include:
+      - Prolog engines, like
+        [SWI](https://www.swi-prolog.org/),
+        [Ciao](https://ciao-lang.org/)
+        and
+        [Scryer](https://www.scryer.pl/).
+
+      - Datalog, like
+        [Souffle](https://souffle-lang.github.io/index.html)
+        (popular tool for static analysis)
+        and
+        [Nemo](https://github.com/knowsys/nemo)
+        (high performance rule engine which can run in the browser)
+  
+      - ASP, like
+        [sCASP](https://github.com/SWI-Prolog/sCASP)
+        and
+        [Clingo](https://github.com/potassco/clingo)
+        (these are good for counterfactual explanations and abduction)
+  
+      - SMT-based Constrained Horn Clause (CHC) solvers, like
+        [Z3](https://microsoft.github.io/z3guide/docs/fixedpoints/intro/)
+        and
+        [Eldarica](https://github.com/uuverifiers/eldarica)
+
+    In other words, adopting Prolog syntax as our intermediate representation
+    keeps our parser and transpiler really lean (ie. under 300 lines of code),
+    and also
+    allows us to equip L4 with standard, well-understood Horn clause based
+    semantics, and
+    facilitates the integration of a wide variety of tools and their
+    functionality (which we hope to achieve eventually).
 
 3. We transform nested function applications into predicative syntax, eg:
    ```
@@ -232,3 +258,37 @@ extremely convenient for the following reasons:
    integrate L4 with them, and even execute in the browser.
    In addition, this ensures that the execution behaviour and semantics across
    all these libraries is exactly the same.
+
+## Language binding libraries for L4
+We provide libraries for Clojure, Java, JS and Python with language bindings
+to L4, which expose programmatic APIs for these languages to interop with
+L4 and call various
+parts of the
+Clojure parser &rarr;
+Clojure transpiler &rarr;
+SWI Prolog rule engine
+pipeline, and interop with L4.
+
+This is easy because:
+- Our parser and transpiler are written entirely in Clojure, which compiles to
+  and interops bidirectionally with _both_ JVM bytecode and JS.
+  
+  This means that just by writing our parser &rarr; transpiler pipeline in
+  Clojure, we get to integrate it with Java and JS for free.
+
+- [JsPyBridge](https://github.com/extremeheat/JSPyBridge)
+  offers almost seamless bidirectional interop between JS and Python.
+
+  This lets us integrate our Clojure parser &rarr; Clojure transpiler with
+  Python as well, for free, because we can interop
+  Clojure &harr; JS &harr; Python
+
+- SWI-Prolog has good bindings and bidirectional interop with
+  [JS via WASM](https://github.com/SWI-Prolog/npm-swipl-wasm),
+  [Python](https://github.com/SWI-Prolog/packages-swipy)
+  and
+  [Java](https://jpl7.org/).
+
+  Using this, we wrote some glue code in Clojure and Python to connect the
+  output of the Clojure transpiler to the SWI Prolog rule engine
+  to complete the whole pipeline.

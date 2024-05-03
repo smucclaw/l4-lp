@@ -88,6 +88,7 @@
     ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
     (DECIDE . !head ..1) ((!head ...))
 
+    ;; TODO: Formalise BoolStruct parser + transpiler.
     (m/with
      [%bool-op (m/pred #{'AND 'OR} !bool-op)
       %xs (m/or (m/seqable !xs ..1 %bool-op & %xs)
@@ -247,7 +248,7 @@
     (m/app symbol-db/l4-symbol->prolog-symbol (m/some ?prolog-symbol))
     ?prolog-symbol
 
-    ;; ?x ∈ atom ∪ ℝ ∪ string
+    ;; ?x ∈ Symbol ∪ ℝ ∪ String
     ;; -----------------------
     ;;       ⟦?x⟧ = ?x
     ?x ?x)))
