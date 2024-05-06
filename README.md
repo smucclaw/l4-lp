@@ -1,4 +1,4 @@
-# l4-lp overview
+# l4-lp (L4 Logic Program) overview
 
 This project formalises a semantics for L4, a legal DSL for the law, and
 implements a rule engine execution pipeline, along with various language
