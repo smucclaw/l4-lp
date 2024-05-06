@@ -20,8 +20,8 @@ dependencies:
 
 devDependencies:
   shadow-cljs:
-    specifier: 2.28.4
-    version: 2.28.4
+    specifier: 2.28.5
+    version: 2.28.5
 
 packages:
 
@@ -973,8 +973,8 @@ packages:
     resolution: {integrity: sha512-cZB2pzVXBnhpJ6PQdsjO+j/MksR28mv4QD/hP/2y1fsIa9Z9RutYgh3N34FZ8Ktl4puAXaIGlct+gMCJ5BmwmA==}
     dev: true
 
-  /shadow-cljs@2.28.4:
-    resolution: {integrity: sha512-EQQ6gMcNl+Zma+9rdOTvgd7UfbatXKAYQNKqqkWicG2neg+O7eeq2H7lcIgbxAs5Blj6bFH3k06k7iKd2ihVLA==}
+  /shadow-cljs@2.28.5:
+    resolution: {integrity: sha512-EjMSiWtZSBDPKguvdBuKYgUoU3YxuVj7Fqx3OD3gQtGfWpBFYFM8EgwvG5cTTMipK/CSJ28svWBpi/NkGD3mSA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
