@@ -225,23 +225,26 @@
     (_ _ & _ :as ?predicate-application)
     ~(l4-mixfix->prolog-prefix ?predicate-application)
 
-    ;; ---------------------------------------
+    ;; --------------------------------------
     ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
     [!xs ... ?x] [!xs ~(symbol ",") ... ?x]
 
-    ;; ?var-name = (symbol "var" ?var-name')
-    ;; -----------------------------------------------------
-    ;;   ⟦?var-name⟧ = (symbol (str/capitalize ?var-name'))
+    ;; ⊢ (symbol "var" ?var-name') ⇓ ?var-name
+    ;; ⊢ (symbol (capitalize ?var-name')) ⇓ ?var-name''
+    ;; ---------------------------------------------------
+    ;;  ⟦?var-name⟧ = ?var-name''
     (m/symbol "var" ?var-name) ~(-> ?var-name str/capitalize symbol)
 
-    ;; --------------------------------------------------------
-    ;;   ⟦?l4-symbol⟧ = l4-symbol->prolog-symbol(?prolog-symbol)
+    ;;  ⊢ is_l4_symbol? ?x
+    ;;  ⊢ (l4-symbol->prolog-symbol ?x) ⇓ ?prolog-symbol
+    ;; --------------------------------------------------
+    ;;  ⟦?x⟧ = ?prolog-symbol
     (m/app symbol-db/l4-symbol->prolog-symbol (m/some ?prolog-symbol))
     ?prolog-symbol
 
-    ;; ?x ∈ Symbol ∪ ℝ ∪ String
-    ;; -----------------------
-    ;;       ⟦?x⟧ = ?x
+    ;;  ⊢ atomic ?x ∧ ¬ is_l4_symbol? ?x
+    ;; ----------------------------------
+    ;;           ⟦?x⟧ = ?x
     ?x ?x)))
 
 (defn- remove-all-spaces [s]
