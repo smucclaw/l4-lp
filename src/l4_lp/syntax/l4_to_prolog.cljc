@@ -103,7 +103,7 @@
     ;; ?var is a fresh variable
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?rhs
     ;; -------------------------------------------------------------------------------
-    ;; ⟦(?lhs ?comparison C[(?op ?arg)]⟧ = ⟦(?op ?arg ?var AND ?lhs ?comparison ?rhs)⟧
+    ;; ⟦(?lhs ?comparison C[(?op ?arg)]⟧ = ⟦(?op ?arg ?var AND ?comparison ?lhs ?rhs)⟧
 
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
     ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
@@ -111,7 +111,7 @@
     ;; ?var is a fresh variable
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?lhs
     ;; -------------------------------------------------------------------------------
-    ;; ⟦(C[(?op ?arg)] ?comparison ?rhs⟧ = ⟦(?op ?arg ?var AND ?lhs ?comparison ?rhs)⟧
+    ;; ⟦(C[(?op ?arg)] ?comparison ?rhs⟧ = ⟦(?op ?arg ?var AND ?comparison ?lhs ?rhs)⟧
     (m/let [?coll-of-symbols-and-nums
             #(every? (some-fn symbol? number?) %)
 
@@ -135,7 +135,7 @@
               (m/and (& ?lhs %comparison & %has-nested-arithmetic-expr)
                      (m/let [?rhs (?C @?fresh-var)])))))
 
-    (?op ?arg @?fresh-var AND ?lhs ?comparison ?rhs)
+    (?op ?arg @?fresh-var AND ?comparison ?lhs ?rhs)
 
     ;;  ∀ 0 ≤ i ≤ n - 1, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ IN
     ;; ---------------------------------------------------------------------
