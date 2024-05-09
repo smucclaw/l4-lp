@@ -8,9 +8,7 @@
 (def ^:private partition-args-non-args
   "Partition all the elements into args and non-args.
    Non-args will be mashed together into an atom representing the predicate."
-  (let [is-var-symbol? (r/match
-                        (m/symbol "var" _) true
-                        _ false)
+  (let [is-var-symbol? #(and (symbol? %) (= (namespace %) "var"))
         is-arg? (some-fn number? coll? is-var-symbol?
                          symbol-db/is-wildcard-symbol?)]
     (r/rewrite
