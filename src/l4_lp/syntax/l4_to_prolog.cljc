@@ -102,16 +102,16 @@
     ;; ⊢ symbol? ?arg ∨ ∀ x ∈ ?arg, symbol? x ∨ number? x
     ;; ?var is a fresh variable
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?rhs
-    ;; --------------------------------------------------------------------------------------
-    ;; ⟦(?lhs ?comparison C[(?op ?arg)]⟧ = ((?var IS ?op OF ?arg) AND (?lhs ?comparison ?rhs))⟧
+    ;; -------------------------------------------------------------------------------
+    ;; ⟦(?lhs ?comparison C[(?op ?arg)]⟧ = ⟦(?op ?arg ?var AND ?comparison ?lhs ?rhs)⟧
 
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
     ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
     ;; ⊢ symbol? ?arg ∨ ∀ x ∈ ?arg, symbol? x ∨ number? x
     ;; ?var is a fresh variable
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?lhs
-    ;; --------------------------------------------------------------------------------------
-    ;; ⟦(C[(?op ?arg)] ?comparison ?rhs⟧ = ((?var IS ?op OF ?arg) AND (?lhs ?comparison ?rhs))⟧
+    ;; -------------------------------------------------------------------------------
+    ;; ⟦(C[(?op ?arg)] ?comparison ?rhs⟧ = ⟦(?op ?arg ?var AND ?comparison ?lhs ?rhs)⟧
     (m/let [?coll-of-symbols-and-nums
             #(every? (some-fn symbol? number?) %)
 
@@ -135,16 +135,7 @@
               (m/and (& ?lhs %comparison & %has-nested-arithmetic-expr)
                      (m/let [?rhs (?C @?fresh-var)])))))
 
-    ((~ @?fresh-var IS ~(symbol "ARITHMETIC-OP" (str ?op)) ?arg)
-     AND (?lhs ?comparison ?rhs))
-
-    ;;  ∀ 0 ≤ i ≤ n, ?lhsᵢ ∉ {MIN MAX PRODUCT SUM}
-    ;;  ?op ∈ {MIN MAX PRODUCT SUM}
-    ;; ---------------------------------------------------
-    ;; ⟦(?lhs₀ ... ?lhsₘ IS ?op OF ?rhs₀ ... ?rhsₙ)⟧ =
-    ;;   ⟦(?op (?rhs₀ ... ?rhsₘ) (?lhs₀ ... ?lhsₙ))⟧
-    (. !lhs ..1 IS (m/symbol "ARITHMETIC-OP" ?op) . !rhs ..1)
-    ((~(symbol ?op) (!rhs ...) (!lhs ...)))
+    (?op ?arg @?fresh-var AND ?comparison ?lhs ?rhs)
 
     ;;  ∀ 0 ≤ i ≤ n - 1, ?elementᵢ ≠ IS ∧ ?elementᵢ₊₁ ≠ IN
     ;; ---------------------------------------------------------------------
