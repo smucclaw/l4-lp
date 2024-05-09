@@ -75,7 +75,7 @@
      [?entity :prolog-symbol ?prolog-symbol]]])
 
 (defn is-wildcard-symbol? [sym]
-  (and (symbol? sym)
+  (and (simple-symbol? sym)
        (str/starts-with? "_" (str sym))))
 
 (defn is-l4-symbol?
