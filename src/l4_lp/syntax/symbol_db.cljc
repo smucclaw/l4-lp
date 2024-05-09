@@ -15,8 +15,9 @@
    each element of the right item.
 
    Internally, each pair is represented as a Datascript datom, and we
-   axiomatise a binary relation called l4-prolog-symbol via a Datalog rule in terms
-   of these datoms to lookup and translate from L4 to Prolog and vice versa."
+   axiomatise a binary relation called l4-prolog-symbol via a Datalog rule in
+   terms of these datoms to lookup and translate from L4 to Prolog and vice
+   versa."
   #{[['IS 'EQUALS '= '==] ['eq 'is]]
     ['AND ","]
     ['OR ";"]
@@ -78,7 +79,7 @@
        (str/starts-with? "_" (str sym))))
 
 (defn is-l4-symbol?
-  "Given a symbol, check if x is a valid L4 symbol."
+  "Checks if a symbol is a valid L4 symbol."
   [sym]
   (and (not (is-wildcard-symbol? sym))
        (some? (ds/q '[:find ?l4-symbol .
