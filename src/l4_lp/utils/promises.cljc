@@ -1,4 +1,4 @@
-(ns l4-lp.utils 
+(ns l4-lp.utils.promises 
   (:require [meander.epsilon :as m]
             [promesa.core :as prom]))
 

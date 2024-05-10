@@ -4,7 +4,7 @@
             [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
             [l4-lp.swipl.js.common.swipl-js-to-clj :as swipl-js->clj]
-            [l4-lp.utils :as utils]
+            [l4-lp.utils.promises :as utils]
             [promesa.core :as prom]
             [tupelo.core :refer [it->]]))
 
