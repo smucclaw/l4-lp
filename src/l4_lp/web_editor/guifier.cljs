@@ -15,14 +15,13 @@
       (jsi/assoc! :innerHTML ""))
 
   (prom/let
-   [{program :program-str
-     query :query-str}
-    (-> l4-program l4->prolog/l4-program->prolog-query+program-str)
+   [{program :program query :query :as prolog-program+query}
+    (-> l4-program l4->prolog/l4->prolog-program+query)
 
     _ (jsi/call js/console :log "Transpiled program: " program)
     _ (jsi/call js/console :log "Transpiled query: " query)
 
-    stack-trace (swipl-wasm-query/query-and-trace-js! program query)]
+    stack-trace (swipl-wasm-query/query-and-trace-js! prolog-program+query)]
     (Guifier. #js {:data stack-trace
                    :dataType "js"
                    :elementSelector (str "#" guifier-element-id)

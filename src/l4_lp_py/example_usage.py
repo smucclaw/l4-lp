@@ -4,12 +4,14 @@ import datetime
 import pout
 
 from syntax.dsl import And, Or, Fact, Rule, Date, Var, l4_to_edn_str
-from syntax.l4_to_prolog import l4_to_prolog_str, l4_program_to_prolog_str
+from syntax.l4_to_prolog import l4_to_prolog_program_and_query
 from swipl.query import init_swipl_engine, query_and_trace
 
-program = '''
+l4_program = '''
 DECIDE p
 IF q AND r
+
+QUERY q
 
 DECIDE q
 WHEN 3 IS SUM 0 1 (MIN (SUM 0 3) 2)
@@ -26,16 +28,16 @@ DECIDE x is the sum of xs
 WHERE x IS SUM xs
 '''
 
-goal = 'q'
-
-program = l4_program_to_prolog_str(program)
-goal = l4_to_prolog_str(goal)
+prolog_program_and_query = l4_to_prolog_program_and_query(l4_program)
+program = prolog_program_and_query['program']
+query = prolog_program_and_query['query']
 
 pout.v(program)
+pout.v(query)
 
 init_swipl_engine()
 
-stack_trace = asyncio.run(query_and_trace(program, goal))
+stack_trace = asyncio.run(query_and_trace(prolog_program_and_query))
 
 pout.v(stack_trace)
 

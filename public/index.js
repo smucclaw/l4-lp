@@ -1,21 +1,17 @@
 import {
-  l4_to_prolog_str,
-  l4_program_to_prolog_program_str,
+  l4_to_prolog_program_and_query,
   query_and_trace
-}
-from "./js/main.js";
+} from "./js/main.js";
 
-let program = await fetch("program.edn").then(resp => resp.text());
+const program_edn = await fetch("program.edn").then(resp => resp.text());
 
-let goal = "q";
-
-program = l4_program_to_prolog_program_str(program);
-goal = l4_to_prolog_str(goal);
+const prolog_program_and_query = l4_to_prolog_program_and_query(program_edn);
+const { program, query } = prolog_program_and_query;
 
 console.log("Transpiled program: ", program);
-console.log("Transpiled goal: ", goal);
+console.log("Transpiled goal: ", query);
 
-const stack_trace = await query_and_trace(program, goal); 
+const stack_trace = await query_and_trace(prolog_program_and_query); 
 
 const { default: Guifier } = await import(
   "https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js"

@@ -13,7 +13,7 @@
   (new #(this-as this (jsi/assoc! this :apply f))))
 
 ;; TODO: Document and clean up this function.
-(defn query-and-trace! [program goal]
+(defn query-and-trace! [{program :program query :query}]
   (prom/let
    [swipl (Swipl. #js {:arguments #js ["-q"]})
 
@@ -59,7 +59,7 @@
 
     query (jsi/call-in swipl [:prolog :query]
                        ;; "once_trace_all(Goal)" #js {:Goal goal}
-                       (str "once_trace_all(" goal ")"))
+                       (str "once_trace_all(" query ")"))
 
     query-result (jsi/call query :once)]
 
@@ -69,6 +69,8 @@
      :bindings (-> query-result
                    swipl-js->clj/swipl-query-result->bindings)}))
 
-(defn query-and-trace-js! [program goal]
-  (->> (query-and-trace! program goal)
+(defn query-and-trace-js! [prolog-program+query]
+  (->> prolog-program+query
+       bean/->clj
+       query-and-trace!
        (prom/map bean/->js)))

@@ -3,9 +3,11 @@ const path = require('node:path');
 const l4_lp = require('./js/l4_lp_nodejs_lib.js');
 
 async function main() {
-  let program = `
+  const l4_program = `
 DECIDE p
 IF q AND r
+
+QUERY q
 
 DECIDE q
 WHEN 3 IS SUM 0 1 (MIN (SUM 0 3) 2)
@@ -22,18 +24,16 @@ DECIDE x is the sum of xs
 WHERE x IS SUM xs
   `;
 
-  let goal = "q";
+  const prolog_program_and_query = l4_lp.l4_to_prolog_program_and_query(l4_program);
+  const { program, query } = prolog_program_and_query;
 
-  program = l4_lp.l4_program_edn_str_to_prolog_program_str(program);
-  goal = l4_lp.l4_edn_str_to_prolog_str(goal);
-
-  console.log([program, goal]);
+  console.log([program, query]);
 
   await l4_lp.init_swipl_engine(
     path.join('..', '..', 'src', 'l4_lp_py', 'swipl', '_query.py')
   );
 
-  stack_trace = await l4_lp.query_and_trace(program, goal);
+  stack_trace = await l4_lp.query_and_trace(prolog_program_and_query);
   console.log(`Stack trace: ${JSON.stringify(stack_trace, null, 2)}`);
 }
 

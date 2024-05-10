@@ -23,20 +23,20 @@
         (Query. it)
         (.oneSolution it)))
 
-(defn query! [program goal]
+(defn query! [{program :program query :query}]
   (let [;; Query to load the Prolog program.
         load-program-query
         (->> ["program" program "user"]
              (eduction (map #(Atom. %)))
              into-array
              (Query. "load_from_string"))
-        goal-query (-> goal str (Query.))]
+        query (-> query str (Query.))]
 
     (promx/submit!
      @swipl-query-executor
      (fn []
        (Prolog/create_engine)
        (.oneSolution load-program-query)
-       (let [bindings (.oneSolution goal-query)]
+       (let [bindings (.oneSolution query)]
          (Prolog/destroy_engine)
          bindings)))))

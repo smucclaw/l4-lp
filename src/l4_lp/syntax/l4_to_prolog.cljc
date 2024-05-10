@@ -1,5 +1,5 @@
 (ns l4-lp.syntax.l4-to-prolog
-  (:require [cljs.spec.alpha :refer [&]]
+  (:require #?(:cljs [cljs-bean.core :as bean])
             [clojure.edn :as edn]
             [l4-lp.syntax.mixfix-parser :refer [l4-mixfix->prolog-prefix]]
             [l4-lp.syntax.symbol-db :as symbol-db]
@@ -52,18 +52,15 @@
       rewrite and transform each node."
   (r/top-down
    (r/rewrite
-    (GIVETH !giveths ..1 (m/pred #{'DECIDE 'QUERY} ?x) & ?horn-clause)
-    ((GIVEN & (!giveths ...) ?x & ?horn-clause))
-
-    (m/or (!xs ..1 GIVETH . !xs ..1)
-          (!xs ..1 OTHERWISE))
-    ((!xs ...))
+    (GIVETH ?x & ?xs) ((GIVEN ?x & ?xs))
+    (!xs ..1 OTHERWISE) ((!xs ...))
 
     (GIVEN
-     . (m/with [%givens (m/symbol nil !givens)]
-               (m/or %givens (m/seqable %givens & _))) ..1
-     (m/pred #{'DECIDE 'QUERY} ?x) & ?horn-clause)
-    ((GIVEN #{^& (!givens ...)} ?x & ?horn-clause))
+     . (m/with [%var (m/symbol nil !vars)]
+               (m/or (m/pred #{'GIVEN 'GIVETH}) %var (m/seqable %var & _)))
+     ..1
+     (m/pred #{'DECIDE 'QUERY} ?decide-query) & ?horn-clause)
+    ((GIVEN #{^& (!vars ...)} ?decide-query & ?horn-clause))
 
     ;; ?symbol ∈ ?givens
     ;; ⊢ (symbol nil ?symbol) ⇓ ?symbol'
@@ -261,37 +258,47 @@
   [l4-goal]
   (-> l4-goal ->l4-ast l4-rule->prolog-rule list str remove-all-spaces))
 
-(defn l4-program->prolog-query+program-str
+(defn l4->prolog-program+query
   "Given an L4 program, transpiles it into a map where:
    - :query-str is a string denoting the Prolog query.
    - :program-str is a string denoting the Prolog program.
 
    The input can either be an EDN string or Clojure data."
   [l4-program]
-  (let [prolog-rule->query-or-program-rule
-        (r/match
-         (m/$ (QUERY & ?query)) {:queries [?query]}
-         ?rule {:rules [?rule]})
+  (let [prolog-rules->prolog-query+program-rules
+        (r/rewrite
+         (m/seqable (m/or (m/$ (QUERY & !queries)) !rules) ...)
+         {:query (!queries)
+          :program-rules (!rules ...)})
 
-        l4-rule->prolog-query-or-program-rule
-        #(->> %
-              l4-rule->prolog-rule
-              (into ())
-              prolog-rule->query-or-program-rule)
+        prolog-rules->prolog-str
+        (fn [prolog-rules ending-str]
+          (->> prolog-rules
+               (eduction (mapcat (fn [prolog-rule]
+                                   [(into () prolog-rule) ending-str])))
+               (apply str)
+               remove-all-spaces))
 
-        prolog-rules->prolog-prog-str
-        #(->> %
-              (eduction (mapcat (fn [prolog-rule] [prolog-rule ".\n"])))
-              (apply str)
-              remove-all-spaces)
-        
-        prolog-queries+rules->prolog-query-str+program-str
+        prolog-program-rules+query->prolog-program+query-str
         (r/match
-         {:queries [?query & _] :rules ?rules}
-          {:query-str (-> ?query str remove-all-spaces)
-           :program-str (-> ?rules prolog-rules->prolog-prog-str)})]
+         {:query ?query :program-rules ?program-rules}
+          {:query (-> ?query (prolog-rules->prolog-str ""))
+           :program (-> ?program-rules (prolog-rules->prolog-str ".\n"))})]
+
     (->> l4-program
          ->seq-of-rules
-         (eduction (map l4-rule->prolog-query-or-program-rule))
-         (apply merge-with into)
-         prolog-queries+rules->prolog-query-str+program-str)))
+         (eduction (map l4-rule->prolog-rule))
+         (#(do (println %) %))
+         prolog-rules->prolog-query+program-rules
+         prolog-program-rules+query->prolog-program+query-str)))
+
+#?(:cljs
+   (defn l4->prolog-program+query-js [l4-program]
+     (-> l4-program
+         l4->prolog-program+query
+         bean/->js))
+   :clj
+   (defn l4->prolog-program+query-java [l4-program]
+     (-> l4-program
+         l4->prolog-program+query
+         java.util.Collections/unmodifiableMap)))

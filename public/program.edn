@@ -1,6 +1,8 @@
 DECIDE p
 IF q AND r
 
+QUERY q
+
 DECIDE q
 WHEN 3 IS SUM 0 1 (MIN (SUM 0 3) 2)
 
