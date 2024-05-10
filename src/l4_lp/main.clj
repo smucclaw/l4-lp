@@ -11,8 +11,11 @@
 ;;   (py/import-module "janus_swi"))
 
 (defn -main [& _args]
-  (let [program
-        (-> "GIVEN (xs IS A LIST OF Number)
+  (let [{program :program query :query :as prolog-program+query}
+        (-> "GIVETH xs x
+             QUERY p of xs and x
+
+             GIVEN (xs IS A LIST OF Number)
                    (x IS A Number)
                    y
              DECIDE p of xs and x
@@ -21,16 +24,13 @@
 
              DECIDE q holds for 1
              DECIDE q holds for 2"
-            l4->prolog/l4-program->prolog-program-str)
-
-        goal (-> "p of var/xs and var/x"
-                 l4->prolog/l4->prolog-str)]
+            l4->prolog/l4->prolog-program+query)]
 
     (println "Program: " program)
-    (println "Goal: " goal)
+    (println "Query: " query)
 
     (l4-lp-jpl-query/init-swipl-engine!)
-    @(->> (l4-lp-jpl-query/query! program goal) (prom/map prn))
+    @(->> (l4-lp-jpl-query/query! prolog-program+query) (prom/map prn))
 
     ;; (py/get-attr janus :attach_engine)
     ;; (py/call-attr janus :consult "public/resources/swipl/prelude.qlf")

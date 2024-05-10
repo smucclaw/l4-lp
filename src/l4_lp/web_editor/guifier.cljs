@@ -9,21 +9,19 @@
 (def ^:private guifier-element-id
   "guifier")
 
-(def ^:private query
-  (-> "query" l4->prolog/l4->prolog-str))
-
 (defn query-and-trace-and-guifier! [l4-program]
   (-> js/document
       (jsi/call :getElementById guifier-element-id)
       (jsi/assoc! :innerHTML ""))
 
   (prom/let
-   [program (-> l4-program l4->prolog/l4-program->prolog-program-str)
+   [{program :program query :query :as prolog-program+query}
+    (-> l4-program l4->prolog/l4->prolog-program+query)
 
     _ (jsi/call js/console :log "Transpiled program: " program)
     _ (jsi/call js/console :log "Transpiled query: " query)
 
-    stack-trace (swipl-wasm-query/query-and-trace-js! program query)]
+    stack-trace (swipl-wasm-query/query-and-trace-js! prolog-program+query)]
     (Guifier. #js {:data stack-trace
                    :dataType "js"
                    :elementSelector (str "#" guifier-element-id)

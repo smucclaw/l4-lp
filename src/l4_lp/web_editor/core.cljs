@@ -7,15 +7,11 @@
 (def ^:private initial-editor-text
   ";; Enter an L4 program here, and then press M-Enter to evaluate the query.
 ;; When the evaluation completes, an execution trace will appear below the input window.
-;; Note that:
-;; - For simplicity, we currently assume that the query is given by a rule called \"query\".
-;; - The whole pipeline, from parsing and transpilation to evaluation and processing of
-;;   traces, runs directly in the browser.
+;; Note that the whole pipeline, from parsing and transpilation to evaluation and
+;; processing of traces, runs directly in the browser.
 
 GIVETH x
-DECIDE query
-WHEN x > 0
-AND MIN (MINUS 0 x) (SUM [1 2 3 -12]) 2 < PRODUCT (MAX (DIVIDE 12 3) 4 -1) 19 x
+QUERY MIN (MINUS 0 x) (SUM [1 2 3 -12]) 2 < PRODUCT (MAX (DIVIDE 12 3) 4 -1) 19 x
 
 GIVEN (x IS A Number)
 DECIDE x is between 0 and 10 or is 100
