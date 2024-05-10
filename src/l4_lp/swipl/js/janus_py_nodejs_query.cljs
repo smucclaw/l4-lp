@@ -8,6 +8,10 @@
 (def ^:private py-query-mod
   (atom nil))
 
+;; Note that all ^js hints below are needed.
+;; Otherwise, the Closure compiler mangles up the objects' field names, leading
+;; to property access errors.
+
 (defn init-swipl-engine! [l4-lp-py-dir]
   (when-not @py-query-mod
     (let [^js py-query-mod' (python l4-lp-py-dir)]
@@ -15,23 +19,23 @@
            (prom/map #(jsi/call ^js % .-init_swipl_engine))
            (prom/map (fn [_] (reset! py-query-mod py-query-mod')))))))
 
-(defn query-and-trace! [prolog-program+query]
+(defn query-and-trace! [prolog-program+queries]
   (prom/let [^js py-query-mod @py-query-mod]
     (when py-query-mod
       (prom/let
-       [program+query (-> prolog-program+query bean/->js)
-        ^js stack-trace-py-ref
-        (jsi/call py-query-mod .-query_and_trace_sync program+query)
+       [program+queries (-> prolog-program+queries bean/->js)
 
-        ^js stack-trace
-        (jsi/call stack-trace-py-ref .-valueOf)]
-        (swipl-js->clj/swipl-stack-trace->clj stack-trace)
-        #_(->> stack-trace
-               seq
-               (eduction (map swipl-js->clj/swipl-stack-frame->clj))
-               (into []))))))
+        query-results-py-ref
+        (jsi/call py-query-mod .-query_and_trace_sync program+queries)
+        query-results
+        (jsi/call query-results-py-ref .-valueOf)]
 
-(defn query-and-trace-js! [prolog-program+query]
-  (->> prolog-program+query
+        (->> query-results
+             (mapv
+              #(-> % bean/bean
+                   (update :stack_trace swipl-js->clj/swipl-stack-trace->clj))))))))
+
+(defn query-and-trace-js! [prolog-program+queries]
+  (->> prolog-program+queries
        query-and-trace!
        (prom/map bean/->js)))

@@ -21,33 +21,40 @@ def init_swipl_engine():
 # https://www.swi-prolog.org/pldoc/man?section=janus-threads
 # https://swi-prolog.discourse.group/t/janus-and-swish/7142/7
 
-def _query_and_trace(prolog_program_and_query):
-  program = prolog_program_and_query ['program']
-  query = prolog_program_and_query['query']
+def _query_and_trace(prolog_program_and_queries):
+  query_results = []
+  match prolog_program_and_queries:
+    case {'program': program, 'queries': queries}:
+      janus.attach_engine()
+      janus.consult('program', program)
 
-  janus.attach_engine()
-  janus.consult('program', program)
+      for query in queries:
+        prolog_query = f'once_trace_all({query})'
+        stack_trace = _StackTrace()
 
-  stack_trace = _StackTrace()
+        janus.query_once(
+          'asserta(py_stack_trace(PyStackTrace))',
+          {'PyStackTrace': stack_trace}
+        )
 
-  janus.query_once(
-    'asserta(py_stack_trace(PyStackTrace))',
-    {'PyStackTrace': stack_trace}
-  )
+        try:
+          janus.query_once(prolog_query)
+        except Exception as _domain_error:
+          # print(f'Error: {domain_error}')
+          pass
+        
+        query_results.append(
+          {'query': query, 'stack_trace': stack_trace.stack_trace}
+        ) 
 
-  query = f'once_trace_all({query})'
+        janus.query_once('retractall(py_stack_trace(_))')
 
-  try:
-    janus.query_once(query)
-  except Exception as _domain_error:
-    # print(f'Error: {domain_error}')
-    pass
-  
-  janus.detach_engine()
-  return stack_trace.stack_trace
+      janus.detach_engine()
+    case _: pass
+  return query_results
 
-async def query_and_trace(prolog_program_and_query):
-  return await asyncio.to_thread(_query_and_trace, prolog_program_and_query)
+async def query_and_trace(prolog_program_and_queries):
+  return await asyncio.to_thread(_query_and_trace, prolog_program_and_queries)
 
-def query_and_trace_sync(prolog_program_and_query):
-  return asyncio.run(query_and_trace(prolog_program_and_query))
+def query_and_trace_sync(prolog_program_and_queries):
+  return asyncio.run(query_and_trace(prolog_program_and_queries))

@@ -24,7 +24,7 @@
    "Convert the non-args into a valid atom representing the predicate."
   (r/match
    {:l4-symbol (m/some ?l4-symbol) :args ?args}
-    {:pred (symbol ?l4-symbol) :args ?args}
+    {:pred ?l4-symbol :args ?args}
 
     {:non-args (m/some ?non-args) :args ?args}
     {:pred (it-> ?non-args (str/join "_" it) (str "'" it "'") (symbol it))

@@ -13,6 +13,10 @@
 GIVETH x
 QUERY MIN (MINUS 0 x) (SUM [1 2 3 -12]) 2 < PRODUCT (MAX (DIVIDE 12 3) 4 -1) 19 x
 
+GIVEN x y
+QUERY SUM x y IS 0
+AND MINUS x y IS 0
+
 GIVEN (x IS A Number)
 DECIDE x is between 0 and 10 or is 100
 IF 0 <= x AND x <= 10
