@@ -15,23 +15,28 @@
            (prom/map #(jsi/call ^js % .-init_swipl_engine))
            (prom/map (fn [_] (reset! py-query-mod py-query-mod')))))))
 
-(defn query-and-trace! [prolog-program+query]
+(defn query-and-trace! [prolog-program+queries]
   (prom/let [^js py-query-mod @py-query-mod]
     (when py-query-mod
       (prom/let
-       [program+query (-> prolog-program+query bean/->js)
-        ^js stack-trace-py-ref
-        (jsi/call py-query-mod .-query_and_trace_sync program+query)
+       [program+queries (-> prolog-program+queries bean/->js)
+        ^js query-results-py-ref
+        (jsi/call py-query-mod .-query_and_trace_sync program+queries)
 
-        ^js stack-trace
-        (jsi/call stack-trace-py-ref .-valueOf)]
-        (swipl-js->clj/swipl-stack-trace->clj stack-trace)
+        ^js query-results
+        (jsi/call query-results-py-ref .-valueOf)]
+
+        (->> query-results
+             (mapv
+              #(-> % bean/bean
+                   (update :stack_trace swipl-js->clj/swipl-stack-trace->clj))))
+
         #_(->> stack-trace
                seq
                (eduction (map swipl-js->clj/swipl-stack-frame->clj))
                (into []))))))
 
-(defn query-and-trace-js! [prolog-program+query]
-  (->> prolog-program+query
+(defn query-and-trace-js! [prolog-program+queries]
+  (->> prolog-program+queries
        query-and-trace!
        (prom/map bean/->js)))

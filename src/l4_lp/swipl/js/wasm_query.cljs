@@ -1,10 +1,11 @@
 (ns l4-lp.swipl.js.wasm-query 
-  (:require [applied-science.js-interop :as jsi]
+  (:require ["https://SWI-Prolog.github.io/npm-swipl-wasm/3/7/11/dynamic-import.js"
+             :rename {SWIPL Swipl}]
+            [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
             [l4-lp.swipl.js.common.swipl-js-to-clj :as swipl-js->clj]
             [promesa.core :as prom]
-            ["https://SWI-Prolog.github.io/npm-swipl-wasm/3/7/11/dynamic-import.js"
-             :rename {SWIPL Swipl}]))
+            [tupelo.core :refer [it->]]))
 
 (def ^:private prelude-qlf-url
   "resources/swipl/prelude.qlf")
@@ -13,11 +14,11 @@
   (new #(this-as this (jsi/assoc! this :apply f))))
 
 ;; TODO: Document and clean up this function.
-(defn query-and-trace! [{program :program query :query}]
+(defn query-and-trace! [{program :program queries :queries}]
   (prom/let
    [swipl (Swipl. #js {:arguments #js ["-q"]})
 
-    stack-trace (transient [])
+    stack-trace (atom nil)
 
    ;; Ugly hack to get swipl wasm working on nodejs.
    ;; The issue is that it fails to load prolog and qlf files on nodejs via Prolog.consult
@@ -37,7 +38,7 @@
     ;; treats them both as plain objects and tries to recursively convert it to
     ;; a Prolog dictionary, which fails.
     log-stack-frame-callback
-    (fn->non-plain-obj #(conj! stack-trace %))
+    (fn->non-plain-obj #(conj! @stack-trace %))
 
     assert-callback-fn-query
     (jsi/call-in swipl [:prolog :query]
@@ -57,17 +58,19 @@
 
     _ (jsi/call-in swipl [:prolog :load_string] program)
 
-    query (jsi/call-in swipl [:prolog :query]
-                       ;; "once_trace_all(Goal)" #js {:Goal goal}
-                       (str "once_trace_all(" query ")"))
+    run-query! (fn [query]
+                 (reset! stack-trace (transient []))
+                 (let [swipl-query (jsi/call-in swipl [:prolog :query]
+                                                (str "once_trace_all(" query ")"))
+                       query-result (jsi/call swipl-query :once)]
+                   {:query query
+                    :trace (-> @stack-trace
+                               persistent!
+                               swipl-js->clj/swipl-stack-trace->clj)
+                    :bindings (-> query-result
+                                  swipl-js->clj/swipl-query-result->bindings)}))]
 
-    query-result (jsi/call query :once)]
-
-    {:trace (-> stack-trace
-                persistent!
-                swipl-js->clj/swipl-stack-trace->clj)
-     :bindings (-> query-result
-                   swipl-js->clj/swipl-query-result->bindings)}))
+    (->> queries (eduction (map run-query!)) prom/all)))
 
 (defn query-and-trace-js! [prolog-program+query]
   (->> prolog-program+query

@@ -24,8 +24,8 @@ DECIDE x is the sum of xs
 WHERE x IS SUM xs
   `;
 
-  const prolog_program_and_query = l4_lp.l4_to_prolog_program_and_query(l4_program);
-  const { program, query } = prolog_program_and_query;
+  const prolog_program_and_queries = l4_lp.l4_to_prolog_program_and_queries(l4_program);
+  const { program, query } = prolog_program_and_queries;
 
   console.log([program, query]);
 
@@ -33,8 +33,8 @@ WHERE x IS SUM xs
     path.join('..', '..', 'src', 'l4_lp_py', 'swipl', '_query.py')
   );
 
-  stack_trace = await l4_lp.query_and_trace(prolog_program_and_query);
-  console.log(`Stack trace: ${JSON.stringify(stack_trace, null, 2)}`);
+  query_results = await l4_lp.query_and_trace(prolog_program_and_queries);
+  console.log(`Query results: ${JSON.stringify(query_results, null, 2)}`);
 }
 
 main();

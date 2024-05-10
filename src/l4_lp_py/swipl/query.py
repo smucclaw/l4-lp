@@ -8,12 +8,14 @@ def init_swipl_engine():
   return _query.init_swipl_engine()
 
 async def query_and_trace(prolog_program_and_query):
-  stack_trace = await _query.query_and_trace(prolog_program_and_query)
-  return ft.pipe(
-    stack_trace,
-    _l4_lp.swipl_stack_trace_to_js,
-    lambda x: x.valueOf()
-  )
+  query_results = await _query.query_and_trace(prolog_program_and_query)
+  for result in query_results:
+    result['stack_trace'] = ft.pipe(
+      result['stack_trace'],
+      _l4_lp.swipl_stack_trace_to_js,
+      lambda x: x.valueOf()
+    )
+  return query_results
 
   # for index, stack_frame in enumerate(stack_trace):
   #   stack_trace[index] = ft.pipe(

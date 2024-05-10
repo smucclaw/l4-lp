@@ -92,7 +92,7 @@
     ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
     (DECIDE . !head ..1) ((!head ...))
 
-    (QUERY . !query ..1) (QUERY (!query ...))
+    (QUERY . !query ..1) (QUERY ((!query ...)))
 
     ;; TODO: Formalise BoolStruct parser + transpiler.
     (m/with
@@ -264,17 +264,17 @@
   [l4-goal]
   (-> l4-goal ->l4-ast l4-rule->prolog-rule list str remove-all-spaces))
 
-(defn l4->prolog-program+query
+(defn l4->prolog-program+queries
   "Given an L4 program, transpiles it into a map where:
-   - :query-str is a string denoting the Prolog query.
-   - :program-str is a string denoting the Prolog program.
+   - :queries is a vector of Prolog queries (as strings).
+   - :program is the Prolog program (as a string).
 
    The input can either be an EDN string or Clojure data."
   [l4-program]
-  (let [prolog-rules->prolog-query+program-rules
+  (let [prolog-rules->prolog-program-rules+queries
         (r/rewrite
          (m/seqable (m/or (m/$ (QUERY & !queries)) !rules) ...)
-         {:query (!queries)
+         {:queries (!queries ...)
           :program-rules (!rules ...)})
 
         prolog-rules->prolog-str
@@ -285,25 +285,25 @@
                (apply str)
                remove-all-spaces))
 
-        prolog-program-rules+query->prolog-program+query-str
+        prolog-program-rules+queries->prolog-program+queries-str
         (r/match
-         {:query ?query :program-rules ?program-rules}
-          {:query (-> ?query (prolog-rules->prolog-str ""))
+         {:queries ?query :program-rules ?program-rules}
+          {:queries (->> ?query (mapv #(prolog-rules->prolog-str % "")))
            :program (-> ?program-rules (prolog-rules->prolog-str ".\n"))})]
 
     (->> l4-program
          ->seq-of-rules
          (eduction (map l4-rule->prolog-rule))
-         prolog-rules->prolog-query+program-rules
-         prolog-program-rules+query->prolog-program+query-str)))
+         prolog-rules->prolog-program-rules+queries
+         prolog-program-rules+queries->prolog-program+queries-str)))
 
 #?(:cljs
-   (defn l4->prolog-program+query-js [l4-program]
+   (defn l4->prolog-program+queries-js [l4-program]
      (-> l4-program
-         l4->prolog-program+query
+         l4->prolog-program+queries
          bean/->js))
    :clj
-   (defn l4->prolog-program+query-java [l4-program]
+   (defn l4->prolog-program+queries-java [l4-program]
      (-> l4-program
-         l4->prolog-program+query
+         l4->prolog-program+queries
          java.util.Collections/unmodifiableMap)))

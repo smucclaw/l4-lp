@@ -4,7 +4,7 @@ import datetime
 import pout
 
 from syntax.dsl import And, Or, Fact, Rule, Date, Var, l4_to_edn_str
-from syntax.l4_to_prolog import l4_to_prolog_program_and_query
+from syntax.l4_to_prolog import l4_to_prolog_program_and_queries
 from swipl.query import init_swipl_engine, query_and_trace
 
 l4_program = '''
@@ -28,18 +28,18 @@ DECIDE x is the sum of xs
 WHERE x IS SUM xs
 '''
 
-prolog_program_and_query = l4_to_prolog_program_and_query(l4_program)
-program = prolog_program_and_query['program']
-query = prolog_program_and_query['query']
+prolog_program_and_queries = l4_to_prolog_program_and_queries(l4_program)
+program = prolog_program_and_queries['program']
+queries = prolog_program_and_queries['queries']
 
 pout.v(program)
-pout.v(query)
+pout.v(queries)
 
 init_swipl_engine()
 
-stack_trace = asyncio.run(query_and_trace(prolog_program_and_query))
+query_results = asyncio.run(query_and_trace(prolog_program_and_queries))
 
-pout.v(stack_trace)
+pout.v(query_results)
 
 # program = [
 #   Rule(

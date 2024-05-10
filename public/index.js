@@ -1,5 +1,5 @@
 import {
-  l4_to_prolog_program_and_query,
+  l4_to_prolog_program_and_queries,
   query_and_trace
 } from "./js/main.js";
 
@@ -9,9 +9,9 @@ const prolog_program_and_query = l4_to_prolog_program_and_query(program_edn);
 const { program, query } = prolog_program_and_query;
 
 console.log("Transpiled program: ", program);
-console.log("Transpiled goal: ", query);
+console.log("Transpiled queries: ", queries);
 
-const stack_trace = await query_and_trace(prolog_program_and_query); 
+const query_results = await query_and_trace(prolog_program_and_queries); 
 
 const { default: Guifier } = await import(
   "https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js"
@@ -20,7 +20,7 @@ const { default: Guifier } = await import(
 // console.log("Stack trace: ", stack_trace);
 
 const _guifier = new Guifier({
-  data: stack_trace,
+  data: query_results,
   dataType: "js",
   elementSelector: "#guifier",
   withoutContainer: true,
