@@ -3,7 +3,7 @@
             [promesa.core :as prom]))
 
 (defn traverse-promises
-  "Traverse a seqable of promise monads."
+  "Traverse a seqable of promise monads (in an eager, tail-recursive manner)."
   [f promises]
   (prom/loop [promises promises
               results (transient [])]
