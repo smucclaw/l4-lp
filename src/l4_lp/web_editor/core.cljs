@@ -11,9 +11,9 @@
 ;; processing of traces, runs directly in the browser.
 
 GIVETH x
-QUERY MIN (MINUS 0 x) (SUM [1 2 3 -12]) 2 < PRODUCT (MAX (DIVIDE 12 3) 4 -1) 19 x
+QUERY MIN (MINUS 0 x) (SUM [1, 2, 3, -12]) 2 < PRODUCT (MAX (DIVIDE 12 3) 4 -1) 19 x
 
-GIVEN x y
+GIVETH x y
 QUERY SUM x y IS 0
 AND MINUS x y IS 0
 
@@ -68,10 +68,10 @@ DECIDE b of 0 and _ OTHERWISE")
       (jsi/call :replaceChildren (html))))
 
 (defn start! []
-  (jsi/call js/console :log "Starting..."))
+  (println "Starting..."))
 
 (defn stop! []
-  (jsi/call js/console :log "Stopping..."))
+  (println "Stopping..."))
 
 (defn init! []
   (mount-components!)
