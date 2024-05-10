@@ -20,10 +20,10 @@
     (when py-query-mod
       (prom/let
        [program+queries (-> prolog-program+queries bean/->js)
-        ^js query-results-py-ref
-        (jsi/call py-query-mod .-query_and_trace_sync program+queries)
 
-        ^js query-results
+        query-results-py-ref
+        (jsi/call py-query-mod .-query_and_trace_sync program+queries)
+        query-results
         (jsi/call query-results-py-ref .-valueOf)]
 
         (->> query-results

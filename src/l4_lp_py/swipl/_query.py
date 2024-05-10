@@ -22,34 +22,36 @@ def init_swipl_engine():
 # https://swi-prolog.discourse.group/t/janus-and-swish/7142/7
 
 def _query_and_trace(prolog_program_and_queries):
-  program = prolog_program_and_queries['program']
-  queries = prolog_program_and_queries['queries']
+  query_results = []
+  match prolog_program_and_queries:
+    case {'program': program, 'queries': queries}:
+      janus.attach_engine()
+      janus.consult('program', program)
 
-  janus.attach_engine()
-  janus.consult('program', program)
+      for query in queries:
+        prolog_query = f'once_trace_all({query})'
+        stack_trace = _StackTrace()
 
-  stack_trace = _StackTrace()
+        janus.query_once(
+          'asserta(py_stack_trace(PyStackTrace))',
+          {'PyStackTrace': stack_trace}
+        )
 
-  janus.query_once(
-    'asserta(py_stack_trace(PyStackTrace))',
-    {'PyStackTrace': stack_trace}
-  )
+        try:
+          janus.query_once(prolog_query)
+        except Exception as _domain_error:
+          # print(f'Error: {domain_error}')
+          pass
+        
+        query_results.append(
+          {'query': query, 'stack_trace': stack_trace.stack_trace}
+        ) 
 
-  results = []
-  for query in queries:
-    prolog_query = f'once_trace_all({query})'
+        janus.query_once('retractall(py_stack_trace(_))')
 
-    try:
-      janus.query_once(prolog_query)
-    except Exception as _domain_error:
-      # print(f'Error: {domain_error}')
-      pass
-    
-    results.append({'query': query, 'stack_trace': stack_trace.stack_trace}) 
-    stack_trace = _StackTrace()
-
-  janus.detach_engine()
-  return results
+      janus.detach_engine()
+    case _: pass
+  return query_results
 
 async def query_and_trace(prolog_program_and_queries):
   return await asyncio.to_thread(_query_and_trace, prolog_program_and_queries)
