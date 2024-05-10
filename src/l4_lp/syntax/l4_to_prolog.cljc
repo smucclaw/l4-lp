@@ -1,5 +1,6 @@
 (ns l4-lp.syntax.l4-to-prolog
-  (:require [clojure.edn :as edn]
+  (:require [cljs.spec.alpha :refer [&]]
+            [clojure.edn :as edn]
             [l4-lp.syntax.mixfix-parser :refer [l4-mixfix->prolog-prefix]]
             [l4-lp.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
@@ -22,9 +23,9 @@
 (def ^:private l4-ast->seq-of-rules
   (r/rewrite
    (m/with
-    [%rule (m/and (m/or (m/seqable GIVEN . _ ..1 DECIDE _ & _)
-                        (m/seqable GIVETH . _ ..1 DECIDE _ & _)
-                        (m/seqable DECIDE _ & _))
+    [%rule (m/and (m/or (m/seqable GIVEN . _ ..1 (m/pred #{'DECIDE 'QUERY}) _ & _)
+                        (m/seqable GIVETH . _ ..1 (m/pred #{'DECIDE 'QUERY}) _ & _)
+                        (m/seqable (m/pred #{'DECIDE 'QUERY}) _ & _))
                   !rules)
      %rules (m/or (m/seqable & %rule & %rules)
                   (m/seqable %rule & %rules)
@@ -51,8 +52,8 @@
       rewrite and transform each node."
   (r/top-down
    (r/rewrite
-    (GIVETH !giveths ..1 DECIDE & ?horn-clause)
-    ((GIVEN & (!giveths ...) DECIDE & ?horn-clause))
+    (GIVETH !giveths ..1 (m/pred #{'DECIDE 'QUERY} ?x) & ?horn-clause)
+    ((GIVEN & (!giveths ...) ?x & ?horn-clause))
 
     (m/or (!xs ..1 GIVETH . !xs ..1)
           (!xs ..1 OTHERWISE))
@@ -61,8 +62,8 @@
     (GIVEN
      . (m/with [%givens (m/symbol nil !givens)]
                (m/or %givens (m/seqable %givens & _))) ..1
-     DECIDE & ?horn-clause)
-    ((GIVEN #{^& (!givens ...)} DECIDE & ?horn-clause))
+     (m/pred #{'DECIDE 'QUERY} ?x) & ?horn-clause)
+    ((GIVEN #{^& (!givens ...)} ?x & ?horn-clause))
 
     ;; ?symbol ∈ ?givens
     ;; ⊢ (symbol nil ?symbol) ⇓ ?symbol'
@@ -87,6 +88,8 @@
     ;; -------------------------------------------------
     ;; ⟦(DECIDE ?head₀ ... ?headₙ)⟧ = ⟦(?head₀ ... ?headₙ)⟧
     (DECIDE . !head ..1) ((!head ...))
+
+    (QUERY . !query ..1) (QUERY (!query ...))
 
     ;; TODO: Formalise BoolStruct parser + transpiler.
     (m/with
@@ -250,7 +253,7 @@
 (defn- remove-all-spaces [s]
   (str/replace s #" " ""))
 
-(defn l4->prolog-str
+#_(defn l4->prolog-str
   "Given an L4 rule/fact/goal, transpiles it into a string representing a Prolog
    rule/fact/goal.
 
@@ -258,17 +261,37 @@
   [l4-goal]
   (-> l4-goal ->l4-ast l4-rule->prolog-rule list str remove-all-spaces))
 
-(defn l4-program->prolog-program-str
-  "Given an L4 program, transpiles it into a string representing a Prolog
-   program.
+(defn l4-program->prolog-query+program-str
+  "Given an L4 program, transpiles it into a map where:
+   - :query-str is a string denoting the Prolog query.
+   - :program-str is a string denoting the Prolog program.
 
    The input can either be an EDN string or Clojure data."
   [l4-program]
-  (->> l4-program
-       ->seq-of-rules
-       (eduction
-        (mapcat (fn [l4-rule]
-                  [(->> l4-rule l4-rule->prolog-rule (into ()))
-                   ".\n"])))
-       (apply str)
-       remove-all-spaces))
+  (let [prolog-rule->query-or-program-rule
+        (r/match
+         (m/$ (QUERY & ?query)) {:queries [?query]}
+         ?rule {:rules [?rule]})
+
+        l4-rule->prolog-query-or-program-rule
+        #(->> %
+              l4-rule->prolog-rule
+              (into ())
+              prolog-rule->query-or-program-rule)
+
+        prolog-rules->prolog-prog-str
+        #(->> %
+              (eduction (mapcat (fn [prolog-rule] [prolog-rule ".\n"])))
+              (apply str)
+              remove-all-spaces)
+        
+        prolog-queries+rules->prolog-query-str+program-str
+        (r/match
+         {:queries [?query & _] :rules ?rules}
+          {:query-str (-> ?query str remove-all-spaces)
+           :program-str (-> ?rules prolog-rules->prolog-prog-str)})]
+    (->> l4-program
+         ->seq-of-rules
+         (eduction (map l4-rule->prolog-query-or-program-rule))
+         (apply merge-with into)
+         prolog-queries+rules->prolog-query-str+program-str)))

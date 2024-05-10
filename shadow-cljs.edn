@@ -19,11 +19,8 @@
     {:compiler-options {:output-feature-set :es2021
                         :externs ["datascript/externs.js"]}
      :exports
-     {:l4_to_prolog_str
-      l4-lp.syntax.l4-to-prolog/l4->prolog-str
-
-      :l4_program_to_prolog_program_str
-      l4-lp.syntax.l4-to-prolog/l4-program->prolog-program-str
+     {:l4_program_edn_str_to_prolog_query_and_program_strs
+      l4-lp.syntax.l4-to-prolog/l4-program->prolog-query+program-str
 
       :query_and_trace
       l4-lp.swipl.js.wasm-query/query-and-trace-js!}}}}
@@ -34,11 +31,8 @@
    :compiler-options {:output-feature-set :es2021
                       :externs ["datascript/externs.js"]}
    :exports
-   {:l4_edn_str_to_prolog_str
-    l4-lp.syntax.l4-to-prolog/l4->prolog-str
-
-    :l4_program_edn_str_to_prolog_program_str
-    l4-lp.syntax.l4-to-prolog/l4-program->prolog-program-str
+   {:l4_program_edn_str_to_prolog_query_and_program_strs
+    l4-lp.syntax.l4-to-prolog/l4-program->prolog-query+program-str
 
     :init_swipl_engine
     l4-lp.swipl.js.janus-py-nodejs-query/init-swipl-engine!

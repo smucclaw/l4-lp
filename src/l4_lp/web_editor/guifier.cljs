@@ -9,16 +9,15 @@
 (def ^:private guifier-element-id
   "guifier")
 
-(def ^:private query
-  (-> "query" l4->prolog/l4->prolog-str))
-
 (defn query-and-trace-and-guifier! [l4-program]
   (-> js/document
       (jsi/call :getElementById guifier-element-id)
       (jsi/assoc! :innerHTML ""))
 
   (prom/let
-   [program (-> l4-program l4->prolog/l4-program->prolog-program-str)
+   [{program :program-str
+     query :query-str}
+    (-> l4-program l4->prolog/l4-program->prolog-query+program-str)
 
     _ (jsi/call js/console :log "Transpiled program: " program)
     _ (jsi/call js/console :log "Transpiled query: " query)
