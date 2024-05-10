@@ -52,9 +52,15 @@
       rewrite and transform each node."
   (r/top-down
    (r/rewrite
-    (GIVETH ?x & ?xs) ((GIVEN ?x & ?xs))
+    ;; -----------------------------------------------
+    ;; ⟦(GIVETH ?x₀ ... ?xₙ)⟧ = ⟦((GIVEN ?x₀ ... ?xₙ))⟧
+    (GIVETH . !xs ..1) ((GIVEN & (!xs ...)))
+
+    ;; --------------------------------------------
+    ;; ⟦(?x₀ ... ?xₙ OTHERWISE)⟧ = ⟦((?x₀ ... ?xₙ))⟧
     (!xs ..1 OTHERWISE) ((!xs ...))
 
+    ;; TODO: Document semantics.
     (GIVEN
      . (m/with [%var (m/symbol nil !vars)]
                (m/or (m/pred #{'GIVEN 'GIVETH}) %var (m/seqable %var & _)))
