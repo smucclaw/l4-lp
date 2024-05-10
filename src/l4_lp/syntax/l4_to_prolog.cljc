@@ -288,7 +288,6 @@
     (->> l4-program
          ->seq-of-rules
          (eduction (map l4-rule->prolog-rule))
-         (#(do (println %) %))
          prolog-rules->prolog-query+program-rules
          prolog-program-rules+query->prolog-program+query-str)))
 
