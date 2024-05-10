@@ -8,6 +8,10 @@
 (def ^:private py-query-mod
   (atom nil))
 
+;; Note that all ^js hints below are needed.
+;; Otherwise, the Closure compiler mangles up the objects' field names, leading
+;; to property access errors.
+
 (defn init-swipl-engine! [l4-lp-py-dir]
   (when-not @py-query-mod
     (let [^js py-query-mod' (python l4-lp-py-dir)]
@@ -29,12 +33,7 @@
         (->> query-results
              (mapv
               #(-> % bean/bean
-                   (update :stack_trace swipl-js->clj/swipl-stack-trace->clj))))
-
-        #_(->> stack-trace
-               seq
-               (eduction (map swipl-js->clj/swipl-stack-frame->clj))
-               (into []))))))
+                   (update :stack_trace swipl-js->clj/swipl-stack-trace->clj))))))))
 
 (defn query-and-trace-js! [prolog-program+queries]
   (->> prolog-program+queries
