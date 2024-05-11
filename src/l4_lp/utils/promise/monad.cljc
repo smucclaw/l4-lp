@@ -25,22 +25,19 @@
      such a traversal even over a finite input."
   ([f coll]
    (traverse
-    (r/match
-     (m/seqable ?item & ?rest)
-      {:next ?item :rest ?rest}
-      _ {:done? true})
+    (r/match (m/seqable ?item & ?rest) {:item ?item :rest ?rest}
+             _ {:done? true})
     f coll))
 
   ([next-fn f coll]
-   (prom/loop [coll coll
+   (prom/loop [next (next-fn coll)
                results (transient [])]
-     (prom/let [next (next-fn coll)]
-       (m/match next
-         {:done? (m/some true)} (persistent! results)
+     (m/match next
+       {:done? (m/some true)} (persistent! results)
 
-         {:next (m/some ?item) :rest (m/some ?rest)}
-         (prom/let [result (f ?item)]
-           (prom/recur ?rest (conj! results result))))))))
+       {:item (m/some ?item) :rest (m/some ?rest)}
+       (prom/let [result (f ?item)]
+         (prom/recur (next-fn ?rest) (conj! results result)))))))
 
 (defn sequence
   "Traverse a collection of promises using the identity function, ie:

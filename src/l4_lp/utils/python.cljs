@@ -9,7 +9,7 @@
   (prom-m/traverse
    #(->> (prom/do (jsi/call py-iter .-__next__))
          (prom/mapcat (fn [^js item-proxy] (jsi/call item-proxy .-valueOf)))
-         (prom/map (fn [item] {:next item :rest true}))
+         (prom/map (fn [item] {:item item :rest true}))
          (prom/merr (constantly (prom/resolved {:done? true}))))
    f true))
 
