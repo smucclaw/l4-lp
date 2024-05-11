@@ -4,6 +4,7 @@
             [cljs-bean.core :as bean]
             [l4-lp.swipl.js.common.swipl-js-to-clj :as swipl-js->clj]
             [l4-lp.utils.promise :as prom-utils]
+            [l4-lp.utils.python :as python-utils]
             [promesa.core :as prom]))
 
 (def ^:private py-query-mod
@@ -34,7 +35,7 @@
          (jsi/call ^js py-query-mod .-query_and_trace_sync program+queries)]
 
          (->> query-results-py-iter
-              (prom-utils/traverse-py-iter
+              (python-utils/traverse-py-iter
                (prom-utils/>=>
                 #(prom/let [^js result-js %
                             result-js (jsi/call result-js .-valueOf)
