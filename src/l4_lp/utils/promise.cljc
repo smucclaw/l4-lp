@@ -59,6 +59,4 @@
 (defn >=>
   "Variadic Kleisli composition of promise monadic functions."
   ([] identity)
-  ([f] f)
-  ([f g] #(prom/let [x (f %)] (g x)))
-  ([& args] (reduce >=> args)))
+  ([f & args] #(apply prom/chain % f args)))
