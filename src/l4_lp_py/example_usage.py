@@ -37,9 +37,10 @@ pout.v(queries)
 
 init_swipl_engine()
 
-query_results = asyncio.run(query_and_trace(prolog_program_and_queries))
+query_results = query_and_trace(prolog_program_and_queries)
 
-pout.v(query_results)
+for result in query_results:
+  pout.v(result)
 
 # program = [
 #   Rule(

@@ -60,6 +60,7 @@ DECIDE b of 0 and _ OTHERWISE")
 
    (h/br)
 
+   (h/h2 "Query results")
    (h/div :id "guifier")))
 
 (defn mount-components! []

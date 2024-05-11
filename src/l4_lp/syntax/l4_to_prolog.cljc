@@ -256,14 +256,6 @@
 (defn- remove-all-spaces [s]
   (str/replace s #" " ""))
 
-#_(defn l4->prolog-str
-  "Given an L4 rule/fact/goal, transpiles it into a string representing a Prolog
-   rule/fact/goal.
-
-   The input can either be an EDN string or Clojure data."
-  [l4-goal]
-  (-> l4-goal ->l4-ast l4-rule->prolog-rule list str remove-all-spaces))
-
 (defn l4->prolog-program+queries
   "Given an L4 program, transpiles it into a map where:
    - :queries is a vector of Prolog queries (as strings).

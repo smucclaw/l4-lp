@@ -81,9 +81,7 @@
        seq
        (eduction (map swipl-stack-frame->clj))
        (eduction (xforms/by-key :recursion-depth (xforms/into [])))
-       (into (avl/sorted-map))
-       #_(eduction xforms/vals)
-       #_(into [])))
+       (into (avl/sorted-map))))
 
 (defn swipl-stack-trace->js [swipl-stack-trace]
   (-> swipl-stack-trace

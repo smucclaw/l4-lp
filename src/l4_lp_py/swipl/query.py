@@ -7,8 +7,8 @@ from _l4_lp_nodejs_lib import _l4_lp
 def init_swipl_engine():
   return _query.init_swipl_engine()
 
-async def query_and_trace(prolog_program_and_queries):
-  query_results = await _query.query_and_trace(prolog_program_and_queries)
+def query_and_trace(prolog_program_and_queries):
+  query_results = _query.query_and_trace_sync(prolog_program_and_queries)
 
   for result in query_results:
     result['stack_trace'] = ft.pipe(
@@ -16,8 +16,7 @@ async def query_and_trace(prolog_program_and_queries):
       _l4_lp.swipl_stack_trace_to_js,
       lambda x: x.valueOf()
     )
-
-  return query_results
+    yield result
 
   # for index, stack_frame in enumerate(stack_trace):
   #   stack_trace[index] = ft.pipe(

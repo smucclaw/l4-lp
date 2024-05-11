@@ -4,7 +4,7 @@
             [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
             [l4-lp.swipl.js.common.swipl-js-to-clj :as swipl-js->clj]
-            [l4-lp.utils.promises :as utils]
+            [l4-lp.utils.promise :as prom-utils]
             [promesa.core :as prom]
             [tupelo.core :refer [it->]]))
 
@@ -39,31 +39,38 @@
     _ (swipl-call-once "retractall(js_log_stack_frame_callback(_))")]
 
     {:query query
+     :bindings (-> query-result
+                   swipl-js->clj/swipl-query-result->bindings)
      :trace (-> stack-trace
                 persistent!
-                swipl-js->clj/swipl-stack-trace->clj)
-     :bindings (-> query-result
-                   swipl-js->clj/swipl-query-result->bindings)}))
+                swipl-js->clj/swipl-stack-trace->clj)}))
 
 ;; TODO: Document and clean up this function.
-(defn query-and-trace! [{program :program queries :queries}]
-  (prom/let
-   [swipl (Swipl. #js {:arguments #js ["-q"]})
+(defn query-and-trace!
+  ([prolog-program+queries]
+   (query-and-trace! prolog-program+queries identity))
+
+  ([{program :program queries :queries} query-result-callback]
+   (prom/let
+    [swipl (Swipl. #js {:arguments #js ["-q"]})
 
     ;; This rule invokes the callback function (wrapped as an opaque object)
     ;; from SWI Prolog running in wasm.
     ;; Note that any rule containing the special _ := _ assignment operator
     ;; CANNOT be pre-compiled and loaded in a qlf or buried under an "assert".
     ;; Doing so results in a runtime error.
-    _ (jsi/call-in swipl [:prolog :load_string]
-                   "log_stack_frame(StackFrame) =>
+     _ (jsi/call-in swipl [:prolog :load_string]
+                    "log_stack_frame(StackFrame) =>
                       js_log_stack_frame_callback(Func),
                       _ := Func.apply(StackFrame).")
 
-    _ (jsi/call-in swipl [:prolog :consult] prelude-qlf-url)
-    _ (jsi/call-in swipl [:prolog :load_string] program)]
+     _ (jsi/call-in swipl [:prolog :consult] prelude-qlf-url)
+     _ (jsi/call-in swipl [:prolog :load_string] program)]
 
-    (->> queries (utils/traverse-promises #(run-swipl-query! swipl %)))))
+     (->> queries
+          (prom-utils/traverse
+           (prom-utils/>=> #(run-swipl-query! swipl %)
+                           query-result-callback))))))
 
 (defn query-and-trace-js! [prolog-program+queries]
   (->> prolog-program+queries

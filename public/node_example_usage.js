@@ -33,8 +33,11 @@ WHERE x IS SUM xs
     path.join('..', '..', 'src', 'l4_lp_py', 'swipl', '_query.py')
   );
 
-  query_results = await l4_lp.query_and_trace(prolog_program_and_queries);
-  console.log(`Query results: ${JSON.stringify(query_results, null, 2)}`);
+  query_results = await l4_lp.query_and_trace(prolog_program_and_queries); 
+
+  for await (const result of query_results) {
+    console.log(`Query result: ${JSON.stringify(result, null, 2)}`);
+  }
 }
 
 main();
