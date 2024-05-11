@@ -4,7 +4,7 @@
             [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
             [l4-lp.swipl.js.common.swipl-js-to-clj :as swipl-js->clj]
-            [l4-lp.utils.promise :as prom-utils]
+            [l4-lp.utils.promise.monad :as prom-m]
             [promesa.core :as prom]
             [tupelo.core :refer [it->]]))
 
@@ -68,9 +68,9 @@
      _ (jsi/call-in swipl [:prolog :load_string] program)]
 
      (->> queries
-          (prom-utils/traverse
-           (prom-utils/>=> #(run-swipl-query! swipl %)
-                           query-result-callback))))))
+          (prom-m/traverse
+           (prom-m/>=> #(run-swipl-query! swipl %)
+                       query-result-callback))))))
 
 (defn query-and-trace-js! [prolog-program+queries]
   (->> prolog-program+queries

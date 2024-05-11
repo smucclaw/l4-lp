@@ -1,6 +1,7 @@
-(ns l4-lp.utils.promise
+(ns l4-lp.utils.promise.monad
   (:refer-clojure :exclude [sequence])
   (:require [meander.epsilon :as m]
+            [meander.strategy.epsilon :as r]
             [promesa.core :as prom]))
 
 (defn traverse
@@ -22,15 +23,24 @@
      collᵢ₊₁ to Nothing, so that our traversal violates traversable laws).
      The same argument shows that that one cannot lazily stream the results of
      such a traversal even over a finite input."
-  [f coll]
-  (prom/loop [coll coll
-              results (transient [])]
-    (m/match coll
-      (m/seqable ?item & ?coll)
-      (prom/let [result (f ?item)]
-        (prom/recur ?coll (conj! results result)))
+  ([f coll]
+   (traverse
+    (r/match
+     (m/seqable ?item & ?rest)
+      {:next ?item :rest ?rest}
+      _ {:done? true})
+    f coll))
 
-      _ (persistent! results))))
+  ([next-fn f coll]
+   (prom/loop [coll coll
+               results (transient [])]
+     (prom/let [next (next-fn coll)]
+       (m/match next
+         {:done? (m/some true)} (persistent! results)
+
+         {:next (m/some ?item) :rest (m/some ?rest)}
+         (prom/let [result (f ?item)]
+           (prom/recur ?rest (conj! results result))))))))
 
 (defn sequence
   "Traverse a collection of promises using the identity function, ie:
