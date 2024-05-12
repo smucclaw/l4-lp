@@ -33,13 +33,13 @@
            return-coll []}}]
 
   (prom/loop [next (next-fn coll)
-                return-coll (transient return-coll)]
-      (m/match next
-        {:done? (m/some true)} (persistent! return-coll)
+              return-coll (transient return-coll)]
+    (m/match next
+      {:done? (m/some true)} (persistent! return-coll)
 
-        {:item (m/some ?item) :rest (m/some ?rest)}
-        (prom/let [result (f ?item)]
-          (prom/recur (next-fn ?rest) (conj! return-coll result))))))
+      {:item (m/some ?item) :rest (m/some ?rest)}
+      (prom/let [result (f ?item)]
+        (prom/recur (next-fn ?rest) (conj! return-coll result))))))
 
 #_(defn sequence
   "Traverse a collection of promises using the identity function, ie:
