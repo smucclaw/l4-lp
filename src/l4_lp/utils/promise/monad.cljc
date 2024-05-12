@@ -5,8 +5,9 @@
             [promesa.core :as prom]))
 
 (def ^:private default-traverse-next-fn
-  (r/match (m/seqable ?item & ?rest) {:item ?item :rest ?rest}
-           _ {:done? true}))
+  (r/match
+   (m/seqable ?item & ?rest) {:item ?item :rest ?rest}
+   _ {:done? true}))
 
 (defn traverse
   "Traverse a collection using a promise returning function, ie:
