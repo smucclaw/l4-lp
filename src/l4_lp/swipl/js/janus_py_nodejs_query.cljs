@@ -37,10 +37,8 @@
          (->> query-results-py-iter
               (python-utils/traverse-py-iter
                (prom-m/>=>
-                #(prom/let [^js result-js %
-                            result (bean/bean result-js)]
-                   (update result
-                           :stack_trace swipl-js->clj/swipl-stack-trace->clj))
+                bean/bean
+                #(update % :stack_trace swipl-js->clj/swipl-stack-trace->clj)
                 query-result-callback))))))))
 
 (defn query-and-trace-js! [prolog-program+queries]

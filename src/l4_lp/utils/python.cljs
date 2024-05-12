@@ -6,12 +6,13 @@
 (defn traverse-py-iter
   "Asynchronously traverses a Python iterator."
   [f ^js py-iter]
-  (prom-m/traverse
-   #(->> (prom/do (jsi/call py-iter .-__next__))
-         (prom/mapcat (fn [^js item-proxy] (jsi/call item-proxy .-valueOf)))
-         (prom/map (fn [item] {:item item :rest true}))
-         (prom/merr (constantly (prom/resolved {:done? true}))))
-   f true))
+  (let [next-fn
+        #(->> (prom/do (jsi/call py-iter .-__next__))
+              (prom/mapcat (fn [^js item-proxy] 
+                             (jsi/call item-proxy .-valueOf)))
+              (prom/map (fn [item] {:item item :rest true}))
+              (prom/merr (constantly (prom/resolved {:done? true}))))]
+    (prom-m/traverse f true :next-fn next-fn)))
 
 (defn py-iter->vec [py-iter]
   (traverse-py-iter identity py-iter))

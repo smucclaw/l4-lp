@@ -4,6 +4,10 @@
             [meander.strategy.epsilon :as r]
             [promesa.core :as prom]))
 
+(def ^:private default-traverse-next-fn
+  (r/match (m/seqable ?item & ?rest) {:item ?item :rest ?rest}
+           _ {:done? true}))
+
 (defn traverse
   "Traverse a collection using a promise returning function, ie:
    traverse :: (a -> PromiseT m b) -> [b] -> PromiseT m [b]
@@ -23,23 +27,21 @@
      collᵢ₊₁ to Nothing, so that our traversal violates traversable laws).
      The same argument shows that that one cannot lazily stream the results of
      such a traversal even over a finite input."
-  ([f coll]
-   (traverse
-    (r/match (m/seqable ?item & ?rest) {:item ?item :rest ?rest}
-             _ {:done? true})
-    f coll))
+  [f coll
+   & {:keys [next-fn return-coll]
+      :or {next-fn default-traverse-next-fn
+           return-coll []}}]
 
-  ([next-fn f coll]
-   (prom/loop [next (next-fn coll)
-               results (transient [])]
-     (m/match next
-       {:done? (m/some true)} (persistent! results)
+  (prom/loop [next (next-fn coll)
+                return-coll (transient return-coll)]
+      (m/match next
+        {:done? (m/some true)} (persistent! return-coll)
 
-       {:item (m/some ?item) :rest (m/some ?rest)}
-       (prom/let [result (f ?item)]
-         (prom/recur (next-fn ?rest) (conj! results result)))))))
+        {:item (m/some ?item) :rest (m/some ?rest)}
+        (prom/let [result (f ?item)]
+          (prom/recur (next-fn ?rest) (conj! return-coll result))))))
 
-(defn sequence
+#_(defn sequence
   "Traverse a collection of promises using the identity function, ie:
    sequence :: [PromiseT m a] -> PromiseT m [a]"
   [promises]
