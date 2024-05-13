@@ -45,7 +45,6 @@
                 persistent!
                 swipl-js->clj/swipl-stack-trace->clj)}))
 
-;; TODO: Document and clean up this function.
 (defn query-and-trace!
   ([prolog-program+queries]
    (query-and-trace! prolog-program+queries identity))
