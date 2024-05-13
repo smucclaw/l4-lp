@@ -11,6 +11,9 @@ class _StackTrace:
   def log_stack_frame(self, stack_frame):
     self.stack_trace.append(stack_frame)
 
+  def get(self):
+    return self.stack_trace
+
 def init_swipl_engine():
   path = ft.pipe(
     Path(__file__).parent / 'prolog' / 'prelude.qlf',
@@ -28,7 +31,6 @@ def _query_and_trace(prolog_program_and_queries):
       janus.consult('program', program)
 
       for query in queries:
-        prolog_query = f'once_trace_all({query})'
         stack_trace = _StackTrace()
 
         janus.query_once(
@@ -36,15 +38,11 @@ def _query_and_trace(prolog_program_and_queries):
           {'PyStackTrace': stack_trace}
         )
 
-        try:
-          janus.query_once(prolog_query)
-        except Exception as _domain_error:
-          # print(f'Error: {domain_error}')
-          pass
+        janus.query_once(f'once_trace_all({query})')
 
         janus.query_once('retractall(py_stack_trace(_))')
 
-        yield {'query': query, 'stack_trace': stack_trace.stack_trace}
+        yield {'query': query, 'stack_trace': stack_trace.get()}
 
       janus.detach_engine()
 
