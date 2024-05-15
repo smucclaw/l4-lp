@@ -5,7 +5,7 @@
             [l4-lp.web-editor.codemirror-editor :refer [bind-editor!]]))
 
 (def ^:private initial-editor-text
-  ";; Enter an L4 program here, and then press M-Enter to evaluate the query.
+  ";; Enter an L4 program here, and then press M-Enter to evaluate all queries.
 ;; When the evaluation completes, an execution trace will appear below the input window.
 ;; Note that the whole pipeline, from parsing and transpilation to evaluation and
 ;; processing of traces, runs directly in the browser.
