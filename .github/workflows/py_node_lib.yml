@@ -13,7 +13,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -75,7 +75,7 @@ jobs:
         uses: smucclaw/setup-swi-prolog@master
         with:
           swi-prolog-branch: devel
-          swi-prolog-version: '9.3.6-2-g8a0a65d87-jammyppa2'
+          swi-prolog-version: '9.3.6-4-gb42d8a568-nobleppa2'
 
       - name: Install SWI-Prolog dependencies
         run: |
