@@ -63,10 +63,7 @@ jobs:
           swi-prolog-version: '9.3.6-4-gb42d8a568-nobleppa2'
 
       - name: Install SWI-Prolog dependencies
-        run: |
-          swipl -t "
-            pack_install(date_time, [interactive(false), test(false)]),
-            pack_install(clpBNR, [interactive(false), test(false)])"
+        run: swipl -t "pack_install(date_time, [interactive(false), test(false)]), pack_install(clpBNR, [interactive(false), test(false)])"
 
       - name: Precompile SWI-Prolog files to qlf
         run: pnpm build:swipl-public-qlf
