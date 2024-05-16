@@ -15,8 +15,8 @@ importers:
         specifier: ^0.3.2
         version: 0.3.2
       '@uiw/codemirror-theme-solarized':
-        specifier: ^4.22.0
-        version: 4.22.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
+        specifier: ^4.22.1
+        version: 4.22.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
       pythonia:
         specifier: ^1.2.0
         version: 1.2.0(ws@7.5.9)
@@ -100,11 +100,11 @@ packages:
   '@nextjournal/lezer-clojure@1.0.0':
     resolution: {integrity: sha512-VZyuGu4zw5mkTOwQBTaGVNWmsOZAPw5ZRxu1/Knk/Xfs7EDBIogwIs5UXTYkuECX5ZQB8eOB+wKA2pc7VyqaZQ==}
 
-  '@uiw/codemirror-theme-solarized@4.22.0':
-    resolution: {integrity: sha512-RzPhh9b44vHkyLHUC2pJ7Lj1pjeAYQYkzsK9VdnFl1YGW21Hovb35lrM9q9/S9ugRkZcHf/Dnd/mxj+egx5PCw==}
+  '@uiw/codemirror-theme-solarized@4.22.1':
+    resolution: {integrity: sha512-2h1M0MCSRTdfZ6L4QtnRxYRlixQycZdJ/YyvvC26OeMxy6QBCCyo2ls/Z/EAh1qFTLeYBetq9vQMGyfPznmmXw==}
 
-  '@uiw/codemirror-themes@4.22.0':
-    resolution: {integrity: sha512-nn7K+lkfdLOSQN6NZx651ae24L5L2RiCuNOxIeP3/CcGm9tnic8i+9pq42IXZe+hEoxX64yUTZisoB5qtocvrQ==}
+  '@uiw/codemirror-themes@4.22.1':
+    resolution: {integrity: sha512-5TeB8wCc0aNd3YEhzOvgekpAFQfEm4fCTUcGmEIQqaRNgKAM83HYNpE1JF2j7x2oDFugdiO0yJynS6bo1zVOuw==}
     peerDependencies:
       '@codemirror/language': '>=6.0.0'
       '@codemirror/state': '>=6.0.0'
@@ -713,15 +713,15 @@ snapshots:
     dependencies:
       '@lezer/lr': 1.4.0
 
-  '@uiw/codemirror-theme-solarized@4.22.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)':
+  '@uiw/codemirror-theme-solarized@4.22.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)':
     dependencies:
-      '@uiw/codemirror-themes': 4.22.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
+      '@uiw/codemirror-themes': 4.22.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
     transitivePeerDependencies:
       - '@codemirror/language'
       - '@codemirror/state'
       - '@codemirror/view'
 
-  '@uiw/codemirror-themes@4.22.0(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)':
+  '@uiw/codemirror-themes@4.22.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)':
     dependencies:
       '@codemirror/language': 6.10.1
       '@codemirror/state': 6.4.1
