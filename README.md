@@ -84,6 +84,9 @@ This project is developed with:
   # Install npm dependencies.
   pnpm install
 
+  # Install SWI-Prolog runtime dependencies.
+  pnpm install:swipl-deps
+
   # Pre-compile our SWI-Prolog runtime library to qlf files.
   pnpm build:swipl-qlfs
 ```
