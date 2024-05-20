@@ -34,7 +34,7 @@ def _query_and_trace(prolog_program_and_queries):
         stack_trace = _StackTrace()
 
         janus.query_once(
-          f'run_query(StackTrace, {query})',
+          f'query_and_trace(StackTrace, {query})',
           {'StackTrace': stack_trace}
         )
 

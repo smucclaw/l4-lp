@@ -29,7 +29,7 @@
                                     (partial jsi/call stack-trace :push))))
     query-result
     (swipl-query-once swipl
-                      (str "run_query(StackTrace," query ")")
+                      (str "query_and_trace(StackTrace," query ")")
                       #js {:StackTrace stack-trace-obj})]
     {:query query
      :bindings (-> query-result swipl-js->clj/swipl-query-result->bindings)

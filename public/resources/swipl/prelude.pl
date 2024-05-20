@@ -52,7 +52,7 @@ prolog_trace_interception(Port, Frame, _Choice, continue) :-
 
   log_stack_frame(StackFrame).
 
-run_query(StackTrace, Query) =>
+query_and_trace(StackTrace, Query) =>
   setup_call_cleanup(
     asserta(stack_trace(StackTrace)),
 
