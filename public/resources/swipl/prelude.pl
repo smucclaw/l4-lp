@@ -7,8 +7,6 @@
 :- use_module(library(macros)).
 :- use_module(library(dicts)).
 
-% :- use_module(library(clpq)).
-
 :- [library(clpBNR)].
 :- [library(date_time)].
 
@@ -33,33 +31,35 @@ load_from_string(File, Data, Module) =>
 % - Maybe we don't need the recursion level.
 
 :- leash(-all).
-:- visible(-all), visible([+exit, +fail]).
+:- visible(-all).
+:- visible([+exit, +fail]).
 
 :- dynamic log_stack_frame/1.
 
 prolog_trace_interception(Port, Frame, _Choice, continue) :-
-  prolog_frame_attribute(Frame, goal, Current_goal),
-  prolog_frame_attribute(Frame, level, Recursion_level),
+  prolog_frame_attribute(Frame, goal, CurrentGoal),
+  prolog_frame_attribute(Frame, level, RecursionLevel),
 
-  prolog_frame_attribute(Frame, parent_goal(Parent_frame), Current_goal),
-  prolog_frame_attribute(Parent_frame, goal, Parent_goal),
+  prolog_frame_attribute(Frame, parent_goal(ParentFrame), CurrentGoal),
+  prolog_frame_attribute(ParentFrame, goal, ParentGoal),
 
   StackFrame = stack_frame{
-    current_goal:Current_goal,
-    parent_goal:Parent_goal,
+    current_goal:CurrentGoal,
+    parent_goal:ParentGoal,
     port:Port,
-    recursion_depth:Recursion_level
+    recursion_depth:RecursionLevel
   },
 
   log_stack_frame(StackFrame).
 
-% #define(
-%   toggle_tracing(Toggle0, Goal, Toggle1),
-%   (Toggle0, setup_call_cleanup(true, call(Goal), Toggle1))
-% ).
+query_and_trace(StackTrace, Query) =>
+  setup_call_cleanup(
+    asserta(stack_trace(StackTrace)),
 
-once_trace_all(Goal) =>
-  setup_call_cleanup(trace, once(Goal), notrace).
+    setup_call_cleanup(trace, once(Query), notrace),
+
+    retract(stack_trace(StackTrace))
+  ).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(700, xfx, eq).

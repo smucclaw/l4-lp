@@ -11,39 +11,29 @@
 (def ^:private prelude-qlf-url
   "resources/swipl/prelude.qlf")
 
-(defn- fn->non-plain-obj [f]
-  (new #(this-as this (jsi/assoc! this :apply f))))
+(defn- swipl-query-once
+  [swipl & args]
+  (it-> swipl
+        (apply jsi/call-in it [:prolog :query] args)
+        (jsi/call it :once)))
 
 (defn- run-swipl-query! [swipl query]
   (prom/let
-   [stack-trace (transient [])
-
-    ;; Need to wrap functions by an opaque, non-plain JS object with a method
-    ;; that runs the original function.
-    ;; This is because if we pass in a plain object, or plain lambda, swipl-wasm
+   [stack-trace #js []
+    ;; Wrap the stack-trace in a non-plain JS object.
+    ;; Note that if we pass in a plain object, or plain lambda, swipl-wasm
     ;; treats them both as plain objects and tries to recursively convert it to
     ;; a Prolog dictionary, which fails.
-    log-stack-frame-callback
-    (fn->non-plain-obj #(conj! stack-trace %))
-
-    swipl-call-once (fn [& args]
-                      (it-> swipl
-                            (apply jsi/call-in it [:prolog :query] args)
-                            (jsi/call it :once)))
-
-    _ (swipl-call-once "asserta(js_log_stack_frame_callback(Func))"
-                       #js {:Func log-stack-frame-callback})
-
-    query-result (swipl-call-once (str "once_trace_all(" query ")"))
-
-    _ (swipl-call-once "retractall(js_log_stack_frame_callback(_))")]
-
+    stack-trace-obj
+    (new #(this-as this (jsi/assoc! this :log_stack_frame
+                                    (partial jsi/call stack-trace :push))))
+    query-result
+    (swipl-query-once swipl
+                      (str "query_and_trace(StackTrace," query ")")
+                      #js {:StackTrace stack-trace-obj})]
     {:query query
-     :bindings (-> query-result
-                   swipl-js->clj/swipl-query-result->bindings)
-     :trace (-> stack-trace
-                persistent!
-                swipl-js->clj/swipl-stack-trace->clj)}))
+     :bindings (-> query-result swipl-js->clj/swipl-query-result->bindings)
+     :trace (-> stack-trace swipl-js->clj/swipl-stack-trace->clj)}))
 
 (defn query-and-trace!
   ([prolog-program+queries]
@@ -60,8 +50,8 @@
     ;; Doing so results in a runtime error.
      _ (jsi/call-in swipl [:prolog :load_string]
                     "log_stack_frame(StackFrame) =>
-                      js_log_stack_frame_callback(Func),
-                      _ := Func.apply(StackFrame).")
+                       stack_trace(StackTrace),
+                       _ := StackTrace.log_stack_frame(StackFrame).")
 
      _ (jsi/call-in swipl [:prolog :consult] prelude-qlf-url)
      _ (jsi/call-in swipl [:prolog :load_string] program)]
