@@ -34,13 +34,9 @@ def _query_and_trace(prolog_program_and_queries):
         stack_trace = _StackTrace()
 
         janus.query_once(
-          'asserta(py_stack_trace(PyStackTrace))',
-          {'PyStackTrace': stack_trace}
+          f'run_query(StackTrace, {query})',
+          {'StackTrace': stack_trace}
         )
-
-        janus.query_once(f'once_trace_all({query})')
-
-        janus.query_once('retractall(py_stack_trace(_))')
 
         yield {'query': query, 'stack_trace': stack_trace.get()}
 
