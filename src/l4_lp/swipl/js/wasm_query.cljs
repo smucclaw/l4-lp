@@ -25,8 +25,9 @@
     ;; treats them both as plain objects and tries to recursively convert it to
     ;; a Prolog dictionary, which fails.
     stack-trace-obj
-    (new #(this-as this (jsi/assoc! this :log_stack_frame
-                                    (partial jsi/call stack-trace :push))))
+    (new #(this-as this
+                   (jsi/assoc! this :log_stack_frame
+                               (partial jsi/call stack-trace :push))))
     query-result
     (swipl-query-once swipl
                       (str "query_and_trace(StackTrace," query ")")
@@ -41,7 +42,7 @@
 
   ([{program :program queries :queries} query-result-callback]
    (prom/let
-    [swipl (Swipl. #js {:arguments #js ["-q"]})
+    [swipl (new Swipl #js {:arguments #js ["-q"]})
 
      _ (jsi/call-in swipl [:prolog :consult] prelude-qlf-url)
 
