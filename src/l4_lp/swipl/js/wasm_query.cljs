@@ -43,17 +43,16 @@
    (prom/let
     [swipl (Swipl. #js {:arguments #js ["-q"]})
 
-    ;; This rule invokes the callback function (wrapped as an opaque object)
-    ;; from SWI Prolog running in wasm.
+     _ (jsi/call-in swipl [:prolog :consult] prelude-qlf-url)
+
     ;; Note that any rule containing the special _ := _ assignment operator
     ;; CANNOT be pre-compiled and loaded in a qlf or buried under an "assert".
     ;; Doing so results in a runtime error.
-     _ (jsi/call-in swipl [:prolog :load_string]
-                    "log_stack_frame(StackFrame) =>
-                       stack_trace(StackTrace),
-                       _ := StackTrace.log_stack_frame(StackFrame).")
+     program (str "log_stack_frame(StackFrame) =>
+                     stack_trace(StackTrace),
+                     _ := StackTrace.log_stack_frame(StackFrame)."
+                  program)
 
-     _ (jsi/call-in swipl [:prolog :consult] prelude-qlf-url)
      _ (jsi/call-in swipl [:prolog :load_string] program)]
 
      (->> queries
