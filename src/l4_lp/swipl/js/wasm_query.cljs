@@ -50,7 +50,7 @@
     ;; Doing so results in a runtime error.
      program (str "log_stack_frame(StackFrame) =>
                      stack_trace(StackTrace),
-                     _ := StackTrace.log_stack_frame(StackFrame)."
+                     _ := StackTrace.log_stack_frame(StackFrame).\n"
                   program)
 
      _ (jsi/call-in swipl [:prolog :load_string] program)]
