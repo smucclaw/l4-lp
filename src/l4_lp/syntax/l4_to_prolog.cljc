@@ -7,23 +7,22 @@
             [meander.strategy.epsilon :as r]
             [tupelo.string :as str]))
 
-(def ^:private ->l4-ast
-  "Transforms EDN strings representing L4 programs into Clojure data."
+(defn- l4->clj
+  "Parses EDN strings representing L4 programs into Clojure data."
+  [l4-program]
   (let [parens-if-needed
         (r/match
          (m/re #"^(\(.*\)|\[.*\])$" [_ ?edn-str]) ?edn-str
          ?edn-str (str "(" ?edn-str ")"))]
-    (r/match
-     (m/or (m/pred string?
-                   (m/app #(-> % parens-if-needed edn/read-string)
-                          ?l4-program-ast))
-           ?l4-program-ast)
-      ?l4-program-ast)))
 
-(def ^:private l4-ast->seq-of-rules
+    (if (string? l4-program)
+      (-> l4-program parens-if-needed edn/read-string)
+      l4-program)))
+
+(def ^:private l4-clj->seq-of-rules
   (r/rewrite
    (m/with
-    [%horn-clause (m/seqable (m/pred #{'DECIDE 'QUERY}) _ & _)
+    [%horn-clause ((m/pred #{'DECIDE 'QUERY}) _ & _)
      %rule (m/and (m/or ((m/pred #{'GIVEN 'GIVETH}) . _ ..1 & %horn-clause)
                         %horn-clause)
                   !rules)
@@ -31,8 +30,11 @@
     %rules)
    (!rules ...)))
 
-(def ^:private ->seq-of-rules
-  (r/pipe ->l4-ast l4-ast->seq-of-rules))
+(defn- l4->seq-of-rules [l4-program]
+  (-> l4-program l4->clj l4-clj->seq-of-rules))
+
+(def ^:private time-units
+  #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS})
 
 (def ^:private l4-rule->prolog-rule
   "This function transforms the AST of an individual L4 rule or goal to the
@@ -101,7 +103,7 @@
     ((!xs ...) !bool-op ... (!x ...))
 
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
-    ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
+    ;; ?comparison ∈ {IS EQUALS = == < <= =< > >=}
     ;; ⊢ symbol? ?arg ∨ ∀ x ∈ ?arg, symbol? x ∨ number? x
     ;; ?var is a fresh variable
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?rhs
@@ -109,7 +111,7 @@
     ;; ⟦(?lhs ?comparison C[(?op ?arg)]⟧ = ⟦((?op ?arg ?var) AND (?lhs ?comparison ?rhs))⟧
 
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
-    ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
+    ;; ?comparison ∈ {IS EQUALS = == < <= =< > >=}
     ;; ⊢ symbol? ?arg ∨ ∀ x ∈ ?arg, symbol? x ∨ number? x
     ;; ?var is a fresh variable
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?lhs
@@ -126,8 +128,8 @@
        [%has-nested-arithmetic-expr
         (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM 'MINUS 'DIVIDE} ?op)
                  & (m/or
-                    (m/seqable (m/or (m/and (m/symbol _) ?arg)
-                                     (m/pred ?vec-of-symbols-and-nums ?arg)))
+                    ((m/or (m/and (m/symbol _) ?arg)
+                           (m/pred ?vec-of-symbols-and-nums ?arg)))
                     (m/pred ?coll-of-symbols-and-nums
                             (m/app #(into [] %) ?arg)))))
         %comparison
@@ -170,23 +172,21 @@
     ((is_valid_date (!date ...)))
 
     ;;  ?number ∈ ℕ
-    ;;  ?unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
-    ;; ---------------------------------------------------------
-    ;; ⟦(?date₀ + ?number ?unit IS ?date₁)⟧ =
-    ;;   ⟦(date_add_duration ?date₀ (?unit ?number) ?date₁)⟧
+    ;;  ?time-unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
+    ;; -----------------------------------------------------------
+    ;; ⟦(?date₀ + ?number ?time-unit IS ?date₁)⟧ =
+    ;;   ⟦(date_add_duration ?date₀ (?time-unit ?number) ?date₁)⟧
 
     ;;  ?number ∈ ℕ
-    ;;  ?unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
-    ;; ---------------------------------------------------------
-    ;; ⟦(?date₀ - ?number ?unit IS ?date₁)⟧ =
-    ;;   ⟦(date_minus_duration ?date₀ (?unit ?number) ?date₁)⟧
+    ;;  ?time-unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
+    ;; -----------------------------------------------------------
+    ;; ⟦(?date₀ - ?number ?time-unit IS ?date₁)⟧ =
+    ;;   ⟦(date_minus_duration ?date₀ (?time-unit ?number) ?date₁)⟧
     (. ?date-0
        (m/or (m/and + (m/let [?pred 'date_add_duration]))
              (m/and - (m/let [?pred 'date_minus_duration])))
-       ?number
-       (m/pred #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS} ?unit)
-       IS ?date-1)
-    ((?pred ?date-0 (?unit ?number) ?date-1))
+       ?number (m/pred ~time-units ?time-unit) IS ?date-1)
+    ((?pred ?date-0 (?time-unit ?number) ?date-1))
 
     ;;  ∀ 0 ≤ i ≤ m - 1, ?dateᵢ ≠ IS ∧ ?dateᵢ₊₁ ≠ WITHIN
     ;;  ∀ 0 ≤ j ≤ n, ?numberⱼ ∉ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS} 
@@ -196,10 +196,9 @@
     ;;   ⟦(date_is_within_duration_of_date
     ;;     (?date₀ ... ?dateₘ) (?number₀ ... ?numberₙ) (?date'₀ ... ?date'ᵣ))⟧
     (. !date-0 ..1 IS WITHIN . !number ..1
-       (m/pred #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS} ?unit)
-       OF . !date-1 ..1)
+       (m/pred ~time-units ?time-unit) OF . !date-1 ..1)
     ((date_is_within_duration_of_date
-      (!date-0 ...) (?unit (!number ...)) (!date-1 ...)))
+      (!date-0 ...) (?time-unit (!number ...)) (!date-1 ...)))
 
     ;;  ∀ 0 ≤ i ≤ m, ?yearᵢ ∉ {-}           ∀ 0 ≤ j ≤ n, ?monthⱼ ∉ {-}
     ;; -----------------------------------------------------------------------
@@ -266,7 +265,7 @@
           :program-rules (!rules ...)})
 
         prolog-rules->prolog-str
-        (fn [prolog-rules ending-str]
+        (fn [ending-str prolog-rules]
           (->> prolog-rules
                (eduction (mapcat (fn [prolog-rule]
                                    [(into () prolog-rule) ending-str])))
@@ -275,12 +274,12 @@
 
         prolog-program-rules+queries->prolog-program+queries-str
         (r/match
-         {:queries ?query :program-rules ?program-rules}
-          {:queries (->> ?query (mapv #(prolog-rules->prolog-str % "")))
-           :program (-> ?program-rules (prolog-rules->prolog-str ".\n"))})]
+         {:queries ?queries :program-rules ?program-rules}
+          {:queries (->> ?queries (mapv #(prolog-rules->prolog-str "" %)))
+           :program (->> ?program-rules (prolog-rules->prolog-str ".\n"))})]
 
     (->> l4-program
-         ->seq-of-rules
+         l4->seq-of-rules
          (eduction (map l4-rule->prolog-rule))
          prolog-rules->prolog-program-rules+queries
          prolog-program-rules+queries->prolog-program+queries-str)))
