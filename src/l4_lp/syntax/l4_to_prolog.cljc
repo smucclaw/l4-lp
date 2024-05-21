@@ -7,7 +7,7 @@
             [meander.strategy.epsilon :as r]
             [tupelo.string :as str]))
 
-(def ^:private l4->edn-ast
+(def ^:private l4->clj
   "Transforms EDN strings representing L4 programs into Clojure data."
   (let [parens-if-needed
         (r/match
@@ -15,11 +15,11 @@
          ?edn-str (str "(" ?edn-str ")"))]
     (r/match
      (m/pred string? ?l4-program-str)
-      (-> ?l4-program-str parens-if-needed edn/read-string) 
+      (-> ?l4-program-str parens-if-needed edn/read-string)
 
       ?l4-program-edn ?l4-program-edn)))
 
-(def ^:private l4-edn-ast->seq-of-rules
+(def ^:private l4-clj->seq-of-rules
   (r/rewrite
    (m/with
     [%horn-clause ((m/pred #{'DECIDE 'QUERY}) _ & _)
@@ -31,7 +31,10 @@
    (!rules ...)))
 
 (def ^:private l4->seq-of-rules
-  (r/pipe l4->edn-ast l4-edn-ast->seq-of-rules))
+  (r/pipe l4->clj l4-clj->seq-of-rules))
+
+(def ^:private time-units
+  #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS})
 
 (def ^:private l4-rule->prolog-rule
   "This function transforms the AST of an individual L4 rule or goal to the
@@ -182,9 +185,7 @@
     (. ?date-0
        (m/or (m/and + (m/let [?pred 'date_add_duration]))
              (m/and - (m/let [?pred 'date_minus_duration])))
-       ?number
-       (m/pred #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS} ?unit)
-       IS ?date-1)
+       ?number (m/pred ~time-units ?time-unit) IS ?date-1)
     ((?pred ?date-0 (?unit ?number) ?date-1))
 
     ;;  ∀ 0 ≤ i ≤ m - 1, ?dateᵢ ≠ IS ∧ ?dateᵢ₊₁ ≠ WITHIN
@@ -195,10 +196,9 @@
     ;;   ⟦(date_is_within_duration_of_date
     ;;     (?date₀ ... ?dateₘ) (?number₀ ... ?numberₙ) (?date'₀ ... ?date'ᵣ))⟧
     (. !date-0 ..1 IS WITHIN . !number ..1
-       (m/pred #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS} ?unit)
-       OF . !date-1 ..1)
+       (m/pred ~time-units ?time-unit) OF . !date-1 ..1)
     ((date_is_within_duration_of_date
-      (!date-0 ...) (?unit (!number ...)) (!date-1 ...)))
+      (!date-0 ...) (?time-unit (!number ...)) (!date-1 ...)))
 
     ;;  ∀ 0 ≤ i ≤ m, ?yearᵢ ∉ {-}           ∀ 0 ≤ j ≤ n, ?monthⱼ ∉ {-}
     ;; -----------------------------------------------------------------------
