@@ -172,21 +172,21 @@
     ((is_valid_date (!date ...)))
 
     ;;  ?number ∈ ℕ
-    ;;  ?unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
-    ;; ---------------------------------------------------------
-    ;; ⟦(?date₀ + ?number ?unit IS ?date₁)⟧ =
-    ;;   ⟦(date_add_duration ?date₀ (?unit ?number) ?date₁)⟧
+    ;;  ?time-unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
+    ;; -----------------------------------------------------------
+    ;; ⟦(?date₀ + ?number ?time-unit IS ?date₁)⟧ =
+    ;;   ⟦(date_add_duration ?date₀ (?time-unit ?number) ?date₁)⟧
 
     ;;  ?number ∈ ℕ
-    ;;  ?unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
-    ;; ---------------------------------------------------------
-    ;; ⟦(?date₀ - ?number ?unit IS ?date₁)⟧ =
-    ;;   ⟦(date_minus_duration ?date₀ (?unit ?number) ?date₁)⟧
+    ;;  ?time-unit ∈ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS}
+    ;; -----------------------------------------------------------
+    ;; ⟦(?date₀ - ?number ?time-unit IS ?date₁)⟧ =
+    ;;   ⟦(date_minus_duration ?date₀ (?time-unit ?number) ?date₁)⟧
     (. ?date-0
        (m/or (m/and + (m/let [?pred 'date_add_duration]))
              (m/and - (m/let [?pred 'date_minus_duration])))
        ?number (m/pred ~time-units ?time-unit) IS ?date-1)
-    ((?pred ?date-0 (?unit ?number) ?date-1))
+    ((?pred ?date-0 (?time-unit ?number) ?date-1))
 
     ;;  ∀ 0 ≤ i ≤ m - 1, ?dateᵢ ≠ IS ∧ ?dateᵢ₊₁ ≠ WITHIN
     ;;  ∀ 0 ≤ j ≤ n, ?numberⱼ ∉ {DAY DAYS WEEK WEEKS MONTH MONTHS YEAR YEARS} 
