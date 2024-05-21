@@ -11,7 +11,7 @@
   "Transforms EDN strings representing L4 programs into Clojure data."
   (let [parens-if-needed
         (r/match
-         (m/re #"^(\(.*\)|\[.*\])$" [?edn-str]) ?edn-str
+         (m/re #"^(\(.*\)|\[.*\])$" [_ ?edn-str]) ?edn-str
          ?edn-str (str "(" ?edn-str ")"))]
     (r/match
      (m/or (m/pred string?

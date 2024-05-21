@@ -7,24 +7,26 @@ import cytoolz.functoolz as ft
 import cytoolz.itertoolz as it
 import edn_format as edn
 
-@dataclass
-class Var:
-  name: str
+from l4_lp_py.syntax.l4_to_prolog import l4_to_prolog_program_and_queries
 
 @dataclass
 class Rule:
   givens: Sequence[Any]
+  giveths: Sequence[Any]
   head: Any
   body: Optional[Any]
 
-@dataclass(init = False)
+@dataclass
 class Fact:
   givens: Sequence[Any]
-  head: Any
+  giveths: Sequence[Any]
+  fact: Any
 
-  def __init__(self, givens, *head):
-    self.givens = givens
-    self.head = head
+@dataclass
+class Query:
+  givens: Sequence[Any]
+  giveths: Sequence[Any]
+  query: Any
 
 @dataclass
 class Date:
@@ -46,21 +48,29 @@ class Or:
   def __init__(self, *disjuncts):
     self.disjuncts = disjuncts
 
+@dataclass
+class Is:
+  lhs: Sequence[Any]
+  rhs: Sequence[Any]
+
 def l4_to_edn(l4_program):
   match l4_program:
     case str() as s:
       return edn.Symbol(s)
 
-    case Var(name):
-      return l4_to_edn(f'var/{name}')
+    case Fact(givens, giveths, fact):
+      return l4_to_edn(Rule(givens, giveths, fact, None))
 
-    case Fact(givens, head):
-      return l4_to_edn(Rule(givens, head, None))
-
-    case Rule(givens, head, body):
+    case Query(givens, giveths, query):
       givens = ('GIVEN', givens) if givens else ()
+      giveths = ('GIVETH', giveths) if giveths else ()
+      return l4_to_edn((*givens, *giveths, 'QUERY', *query))
+
+    case Rule(givens, giveths, head, body):
+      givens = ('GIVEN', givens) if givens else ()
+      giveths = ('GIVETH', giveths) if giveths else ()
       body = ('IF', body) if body else ()
-      return l4_to_edn((*givens, 'DECIDE', *head, *body))
+      return l4_to_edn((*givens, *giveths, 'DECIDE', *head, *body))
 
     case Date(year, month, day):
       return l4_to_edn((year, '-', month, '-', day))
@@ -79,9 +89,15 @@ def l4_to_edn(l4_program):
 
     case Or(disjuncts):
       return tuple(map(l4_to_edn, it.interpose('OR', disjuncts)))
+
+    case Is(lhs, rhs):
+      return tuple(map(l4_to_edn, (*lhs, 'IS', *rhs)))
  
     case ast_node:
       return ast_node
 
 def l4_to_edn_str(l4_program):
   return ft.pipe(l4_program, l4_to_edn, edn.dumps)
+
+def l4_edsl_to_prolog_program_and_queries(l4_program):
+  return ft.pipe(l4_program, l4_to_edn_str, l4_to_prolog_program_and_queries)
