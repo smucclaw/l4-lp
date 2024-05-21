@@ -46,9 +46,6 @@ l4_program = (
 prolog_program_and_queries = l4_edsl_to_prolog_program_and_queries(l4_program)
 pout.v(prolog_program_and_queries)
 
-program = prolog_program_and_queries['program']
-queries = prolog_program_and_queries['queries']
-
 init_swipl_engine()
 
 query_results = query_and_trace(prolog_program_and_queries)
