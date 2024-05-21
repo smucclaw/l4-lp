@@ -16,16 +16,11 @@ class Rule:
   head: Any
   body: Optional[Any]
 
-@dataclass(init = False)
+@dataclass
 class Fact:
   givens: Sequence[Any]
   giveths: Sequence[Any]
   fact: Any
-
-  def __init__(self, givens, giveths, *fact):
-    self.givens = givens
-    self.giveths = giveths
-    self.fact = fact
 
 @dataclass
 class Query:

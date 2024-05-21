@@ -38,8 +38,8 @@ l4_program = (
     query = 'p'
   ),
   Fact(
-    [], [],
-    datetime.date(2024, 1, 1), 'is a date'
+    givens = [], giveths = [],
+    fact = (datetime.date(2024, 1, 1), 'is a date')
   )
 )
 
