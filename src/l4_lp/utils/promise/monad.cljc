@@ -42,12 +42,6 @@
       (prom/let [result (f ?item)]
         (prom/recur (next-fn ?rest) (conj! return-coll result))))))
 
-#_(defn sequence
-  "Traverse a collection of promises using the identity function, ie:
-   sequence :: [PromiseT m a] -> PromiseT m [a]"
-  [promises]
-  (traverse identity promises))
-
 (defn >=>
   "Variadic Kleisli composition of promise monadic functions."
   ([] identity)
