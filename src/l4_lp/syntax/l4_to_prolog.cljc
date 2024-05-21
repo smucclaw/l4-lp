@@ -7,23 +7,22 @@
             [meander.strategy.epsilon :as r]
             [tupelo.string :as str]))
 
-(def ^:private ->l4-ast
+(def ^:private l4->edn-ast
   "Transforms EDN strings representing L4 programs into Clojure data."
   (let [parens-if-needed
         (r/match
          (m/re #"^(\(.*\)|\[.*\])$" [_ ?edn-str]) ?edn-str
          ?edn-str (str "(" ?edn-str ")"))]
     (r/match
-     (m/or (m/pred string?
-                   (m/app #(-> % parens-if-needed edn/read-string)
-                          ?l4-program-ast))
-           ?l4-program-ast)
-      ?l4-program-ast)))
+     (m/pred string? ?l4-program-str)
+      (-> ?l4-program-str parens-if-needed edn/read-string) 
 
-(def ^:private l4-ast->seq-of-rules
+      ?l4-program-edn ?l4-program-edn)))
+
+(def ^:private l4-edn-ast->seq-of-rules
   (r/rewrite
    (m/with
-    [%horn-clause (m/seqable (m/pred #{'DECIDE 'QUERY}) _ & _)
+    [%horn-clause ((m/pred #{'DECIDE 'QUERY}) _ & _)
      %rule (m/and (m/or ((m/pred #{'GIVEN 'GIVETH}) . _ ..1 & %horn-clause)
                         %horn-clause)
                   !rules)
@@ -31,8 +30,8 @@
     %rules)
    (!rules ...)))
 
-(def ^:private ->seq-of-rules
-  (r/pipe ->l4-ast l4-ast->seq-of-rules))
+(def ^:private l4->seq-of-rules
+  (r/pipe l4->edn-ast l4-edn-ast->seq-of-rules))
 
 (def ^:private l4-rule->prolog-rule
   "This function transforms the AST of an individual L4 rule or goal to the
@@ -101,7 +100,7 @@
     ((!xs ...) !bool-op ... (!x ...))
 
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
-    ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
+    ;; ?comparison ∈ {IS EQUALS = == < <= =< > >=}
     ;; ⊢ symbol? ?arg ∨ ∀ x ∈ ?arg, symbol? x ∨ number? x
     ;; ?var is a fresh variable
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?rhs
@@ -109,7 +108,7 @@
     ;; ⟦(?lhs ?comparison C[(?op ?arg)]⟧ = ⟦((?op ?arg ?var) AND (?lhs ?comparison ?rhs))⟧
 
     ;; ?op ∈ {MIN MAX PRODUCT SUM}
-    ;; ?comparison ∈ {'IS 'EQUALS '= '== '< '<= '=< '> '>=}
+    ;; ?comparison ∈ {IS EQUALS = == < <= =< > >=}
     ;; ⊢ symbol? ?arg ∨ ∀ x ∈ ?arg, symbol? x ∨ number? x
     ;; ?var is a fresh variable
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?lhs
@@ -126,8 +125,8 @@
        [%has-nested-arithmetic-expr
         (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM 'MINUS 'DIVIDE} ?op)
                  & (m/or
-                    (m/seqable (m/or (m/and (m/symbol _) ?arg)
-                                     (m/pred ?vec-of-symbols-and-nums ?arg)))
+                    ((m/or (m/and (m/symbol _) ?arg)
+                           (m/pred ?vec-of-symbols-and-nums ?arg)))
                     (m/pred ?coll-of-symbols-and-nums
                             (m/app #(into [] %) ?arg)))))
         %comparison
@@ -266,7 +265,7 @@
           :program-rules (!rules ...)})
 
         prolog-rules->prolog-str
-        (fn [prolog-rules ending-str]
+        (fn [ending-str prolog-rules]
           (->> prolog-rules
                (eduction (mapcat (fn [prolog-rule]
                                    [(into () prolog-rule) ending-str])))
@@ -275,12 +274,12 @@
 
         prolog-program-rules+queries->prolog-program+queries-str
         (r/match
-         {:queries ?query :program-rules ?program-rules}
-          {:queries (->> ?query (mapv #(prolog-rules->prolog-str % "")))
-           :program (-> ?program-rules (prolog-rules->prolog-str ".\n"))})]
+         {:queries ?queries :program-rules ?program-rules}
+          {:queries (->> ?queries (mapv #(prolog-rules->prolog-str "" %)))
+           :program (->> ?program-rules (prolog-rules->prolog-str ".\n"))})]
 
     (->> l4-program
-         ->seq-of-rules
+         l4->seq-of-rules
          (eduction (map l4-rule->prolog-rule))
          prolog-rules->prolog-program-rules+queries
          prolog-program-rules+queries->prolog-program+queries-str)))
