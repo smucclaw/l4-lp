@@ -13,11 +13,12 @@
         (r/match
          (m/re #"^(\(.*\)|\[.*\])$" [_ ?edn-str]) ?edn-str
          ?edn-str (str "(" ?edn-str ")"))]
+
     (r/match
      (m/pred string? ?l4-program-str)
       (-> ?l4-program-str parens-if-needed edn/read-string)
 
-      ?l4-program-edn ?l4-program-edn)))
+      ?l4-program ?l4-program)))
 
 (def ^:private l4-clj->seq-of-rules
   (r/rewrite
