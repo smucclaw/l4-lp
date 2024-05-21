@@ -8,7 +8,7 @@
             [tupelo.string :as str]))
 
 (defn- l4->clj
-  "Transforms EDN strings representing L4 programs into Clojure data."
+  "Parses EDN strings representing L4 programs into Clojure data."
   [l4-program]
   (let [parens-if-needed
         (r/match
