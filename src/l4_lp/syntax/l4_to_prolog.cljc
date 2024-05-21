@@ -7,18 +7,17 @@
             [meander.strategy.epsilon :as r]
             [tupelo.string :as str]))
 
-(def ^:private l4->clj
+(defn- l4->clj
   "Transforms EDN strings representing L4 programs into Clojure data."
+  [l4-program]
   (let [parens-if-needed
         (r/match
          (m/re #"^(\(.*\)|\[.*\])$" [_ ?edn-str]) ?edn-str
          ?edn-str (str "(" ?edn-str ")"))]
 
-    (r/match
-     (m/pred string? ?l4-program-str)
-      (-> ?l4-program-str parens-if-needed edn/read-string)
-
-      ?l4-program ?l4-program)))
+    (if (string? l4-program)
+      (-> l4-program parens-if-needed edn/read-string)
+      l4-program)))
 
 (def ^:private l4-clj->seq-of-rules
   (r/rewrite
@@ -31,8 +30,8 @@
     %rules)
    (!rules ...)))
 
-(def ^:private l4->seq-of-rules
-  (r/pipe l4->clj l4-clj->seq-of-rules))
+(defn- l4->seq-of-rules [l4-program]
+  (-> l4-program l4->clj l4-clj->seq-of-rules))
 
 (def ^:private time-units
   #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS})
