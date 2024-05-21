@@ -23,15 +23,11 @@
 (def ^:private l4-ast->seq-of-rules
   (r/rewrite
    (m/with
-    [%decide-query (m/pred #{'DECIDE 'QUERY})
-
-     %rule
-     (m/and (m/or ((m/pred #{'GIVEN 'GIVETH}) . _ ..1 %decide-query _ & _)
-                  (%decide-query _ & _))
-            !rules)
-
-     %rules (m/or (& %rule & %rules) (%rule & %rules)
-                  (& %rule) (%rule))]
+    [%horn-clause (m/seqable (m/pred #{'DECIDE 'QUERY}) _ & _)
+     %rule (m/and (m/or ((m/pred #{'GIVEN 'GIVETH}) . _ ..1 & %horn-clause)
+                        %horn-clause)
+                  !rules)
+     %rules (m/or (& %rule & %rules) (%rule & %rules) (& %rule) (%rule))]
     %rules)
    (!rules ...)))
 
@@ -73,8 +69,8 @@
     ;; ⊢ (symbol nil ?symbol) ⇓ ?symbol'
     ;; ⊢ (symbol "var" ?symbol) ⇓ ?var
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?e
-    ;; --------------------------------------------------------------------
-    ;; ⟦(GIVEN ?givens ... C[?symbol'] ...)⟧ = ⟦(GIVEN ?givens ... ?e ...)⟧
+    ;; ----------------------------------------------------------------------
+    ;; ⟦(GIVEN ?givens ... C[?symbol'] ...)⟧ = ⟦((GIVEN ?givens ... ?e ...))⟧
     ;;
     ;; Here, C[.] denotes contexts defined in the obvious way, ie:
     ;;   C ::= [.] | (C ... C) | [C ... C] | #{C ... C} | {C C,..., C C}
@@ -130,8 +126,8 @@
        [%has-nested-arithmetic-expr
         (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM 'MINUS 'DIVIDE} ?op)
                  & (m/or
-                    ((m/or (m/and (m/symbol _) ?arg)
-                           (m/pred ?vec-of-symbols-and-nums ?arg)))
+                    (m/seqable (m/or (m/and (m/symbol _) ?arg)
+                                     (m/pred ?vec-of-symbols-and-nums ?arg)))
                     (m/pred ?coll-of-symbols-and-nums
                             (m/app #(into [] %) ?arg)))))
         %comparison
