@@ -23,14 +23,15 @@
 (def ^:private l4-ast->seq-of-rules
   (r/rewrite
    (m/with
-    [%rule (m/and (m/or (m/seqable GIVEN . _ ..1 (m/pred #{'DECIDE 'QUERY}) _ & _)
-                        (m/seqable GIVETH . _ ..1 (m/pred #{'DECIDE 'QUERY}) _ & _)
-                        (m/seqable (m/pred #{'DECIDE 'QUERY}) _ & _))
-                  !rules)
-     %rules (m/or (m/seqable & %rule & %rules)
-                  (m/seqable %rule & %rules)
-                  (m/seqable & %rule)
-                  (m/seqable %rule))]
+    [%decide-query (m/pred #{'DECIDE 'QUERY})
+
+     %rule
+     (m/and (m/or ((m/pred #{'GIVEN 'GIVETH}) . _ ..1 %decide-query _ & _)
+                  (%decide-query _ & _))
+            !rules)
+
+     %rules (m/or (& %rule & %rules) (%rule & %rules)
+                  (& %rule) (%rule))]
     %rules)
    (!rules ...)))
 
@@ -97,9 +98,9 @@
     ;; TODO: Formalise BoolStruct parser + transpiler.
     (m/with
      [%bool-op (m/pred #{'AND 'OR} !bool-op)
-      %xs (m/or (m/seqable !xs ..1 %bool-op & %xs)
-                (m/seqable !xs ..1 %bool-op))]
-     (m/seqable & %xs . !x ..1))
+      %conjunct-disjunct (!xs ..1 %bool-op)
+      %xs (m/or (& %conjunct-disjunct & %xs) %conjunct-disjunct)]
+     (& %xs . !x ..1))
 
     ((!xs ...) !bool-op ... (!x ...))
 
@@ -124,13 +125,13 @@
             ?vec-of-symbols-and-nums
             (every-pred vector? ?coll-of-symbols-and-nums)
 
-            ?fresh-var (delay (gensym "Var__"))]
+            ?fresh-var (delay (-> (gensym "var__") str (symbol "var")))]
       (m/with
        [%has-nested-arithmetic-expr
         (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM 'MINUS 'DIVIDE} ?op)
                  & (m/or
-                    (m/seqable (m/or (m/and (m/symbol _) ?arg)
-                                     (m/pred ?vec-of-symbols-and-nums ?arg)))
+                    ((m/or (m/and (m/symbol _) ?arg)
+                           (m/pred ?vec-of-symbols-and-nums ?arg)))
                     (m/pred ?coll-of-symbols-and-nums
                             (m/app #(into [] %) ?arg)))))
         %comparison
@@ -228,8 +229,7 @@
     ;;
     ;; We restrict mixfix parsing to seqs where there is > 1 item present,
     ;; because otherwise there is no need for this.
-    (_ _ & _ :as ?predicate-application)
-    ~(l4-mixfix->prolog-prefix ?predicate-application)
+    (_ _ & _ :as ?pred-app) ~(l4-mixfix->prolog-prefix ?pred-app)
 
     ;; --------------------------------------
     ;;  ⟦[?x₀ ... ?xₙ]⟧ = [⟦?x₀⟧ , ... , ⟦?xₙ⟧]
