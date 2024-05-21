@@ -121,7 +121,7 @@
             ?vec-of-symbols-and-nums
             (every-pred vector? ?coll-of-symbols-and-nums)
 
-            ?fresh-var (delay (-> (gensym "var__") str (symbol "var")))]
+            ?fresh-var (delay (->> (gensym "var__") str (symbol "var")))]
       (m/with
        [%has-nested-arithmetic-expr
         (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM 'MINUS 'DIVIDE} ?op)
