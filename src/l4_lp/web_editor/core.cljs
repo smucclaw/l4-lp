@@ -37,11 +37,11 @@ DECIDE b of 0 and _ OTHERWISE")
 
 (uix/defui ^:private web-editor-component []
   (let [editor-elt-ref (uix/use-ref)]
+
     (uix/use-effect
      (fn []
        (cm-editor/bind-editor! @editor-elt-ref initial-editor-text)
-       (guifier/init-guifier-if-needed!))
-     [])
+       (guifier/init-guifier-if-needed!)))
 
     (uix/$
      :div
