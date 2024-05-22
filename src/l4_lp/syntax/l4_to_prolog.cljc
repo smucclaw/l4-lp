@@ -70,8 +70,8 @@
       TRS to rewrite and transform each node.
 
    Note that:
-   - Our semantics assumes a standard big step semantics with a notion of
-     contexts and first-class continuations.
+   - Our semantics assumes a standard big step semantics with first-class
+     continuations.
 
      This is used to axiomatise some of our equations / rewrite rules which
      manipulate nested subterms and their contexts, like for instance, the rules
