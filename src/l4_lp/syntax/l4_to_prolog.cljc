@@ -12,7 +12,7 @@
   [l4-program]
   (let [parens-if-needed
         (r/match
-         (m/re #"^\(.*\)$" [?edn-str]) ?edn-str
+         (m/re #"^\(.*\)$" ?edn-str-with-parens) ?edn-str-with-parens
          ?edn-str (str "(" ?edn-str ")"))]
 
     (if (string? l4-program)
