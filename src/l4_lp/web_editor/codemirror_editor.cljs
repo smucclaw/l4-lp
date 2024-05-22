@@ -48,5 +48,4 @@
         state (jsi/call cm-state/EditorState
                         :create
                         #js {:doc code :extensions extensions})]
-    (cm-view/EditorView.
-     #js {:parent editor-elt :state state})))
+    (new cm-view/EditorView #js {:parent editor-elt :state state})))
