@@ -11,7 +11,7 @@
 ;; https://blog.jakubholy.net/2023/interactive-code-snippets-fulcro/
 ;; https://github.com/nextjournal/clojure-mode
 
-(def ^:private editor-element-id
+#_(def ^:private editor-element-id
   "editor")
 
 (defn ^:private eval-query! [cm-editor-view]
@@ -43,8 +43,8 @@
        (jsi/call cm-view/keymap :of cm-cmds/historyKeymap)
        cm-clj/default_extensions])
 
-(defn bind-editor! [code]
-  (let [editor-elt (jsi/call js/document :getElementById editor-element-id)
+(defn bind-editor! [editor-elt code]
+  (let [;; editor-elt (jsi/call js/document :getElementById editor-element-id)
         state (jsi/call cm-state/EditorState
                         :create
                         #js {:doc code :extensions extensions})]

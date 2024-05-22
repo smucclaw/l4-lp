@@ -1,8 +1,9 @@
 (ns l4-lp.web-editor.core
   (:require [applied-science.js-interop :as jsi]
-            [hoplon.core :as h]
-            [hoplon.goog]
-            [l4-lp.web-editor.codemirror-editor :refer [bind-editor!]]))
+            [l4-lp.web-editor.codemirror-editor :as cm-editor]
+            [l4-lp.web-editor.guifier :as guifier]
+            [uix.core :as uix]
+            [uix.dom :as dom]))
 
 (def ^:private initial-editor-text
   ";; Enter an L4 program here, and then press M-Enter to evaluate all queries.
@@ -34,39 +35,44 @@ DECIDE b of 0 and _ OTHERWISE")
 (def ^:private web-editor-app-id
   "web-editor-app")
 
-(h/defelem ^:private html [_attrs _children]
-  (h/div
-   (h/link :rel "stylesheet"
-           :href "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-           :integrity "sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-           :crossorigin "anonymous")
+(uix/defui ^:private web-editor-component []
+  (let [editor-elt-ref (uix/use-ref)]
+    (uix/use-effect
+     (fn []
+       (cm-editor/bind-editor! @editor-elt-ref initial-editor-text)
+       (guifier/init-guifier-if-needed!))
+     [])
 
-   (h/title "L4 web editor")
-   (h/h1 "L4 web editor")
+    (uix/$
+     :div
+     (uix/$ :link
+            {:rel "stylesheet"
+             :href "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+             :integrity "sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+             :crossOrigin "anonymous"})
 
-   (h/a :href "https://github.com/smucclaw/l4-lp"
-        "Click here to visit the project on GitHub!")
+     (uix/$ :title "L4 web editor")
+     (uix/$ :h1 "L4 web editor")
 
-   (h/br)
-   (h/br)
+     (uix/$ :a {:href "https://github.com/smucclaw/l4-lp"}
+            "Click here to visit the project on GitHub!")
 
-  ;;  (h/div :class "form-group"
-  ;;         (h/label :for "l4-program"
-  ;;                  :class "col-sm-1 control-label"
-  ;;                  (h/b "L4 Program"))
-  ;;         (h/div :id "editor"))
+     (uix/$ :br)
+     (uix/$ :br)
 
-   (h/div :id "editor")
+     (uix/$ :div {:id "editor" :ref editor-elt-ref})
 
-   (h/br)
+     (uix/$ :br)
 
-   (h/h2 "Query results")
-   (h/div :id "guifier")))
+     (uix/$ :h2 "Query results")
+     (uix/$ :div {:id "guifier"}))))
 
-(defn mount-components! []
-  (-> js/document
-      (jsi/call :getElementById web-editor-app-id)
-      (jsi/call :replaceChildren (html))))
+(defn- render-react-web-editor-app! []
+  (let [app-root
+        (-> js/document
+            (jsi/call :getElementById web-editor-app-id)
+            dom/create-root)]
+    (dom/render-root (uix/$ web-editor-component) app-root)))
 
 (defn start! []
   (println "Starting..."))
@@ -75,6 +81,5 @@ DECIDE b of 0 and _ OTHERWISE")
   (println "Stopping..."))
 
 (defn init! []
-  (mount-components!)
-  (bind-editor! initial-editor-text)
+  (render-react-web-editor-app!)
   (start!))

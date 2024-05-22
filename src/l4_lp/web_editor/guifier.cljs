@@ -16,12 +16,10 @@
 (def ^:private guifier
   (atom nil))
 
-(defn- init-guifier-if-needed! []
+(defn init-guifier-if-needed! []
   (swap! guifier (some-fn identity #(new Guifier guifier-opts))))
 
 (defn query-and-trace-and-guifier! [l4-program]
-  (init-guifier-if-needed!)
-
   (let [prolog-program+queries
         (-> l4-program l4->prolog/l4->prolog-program+queries)
         guifier-query-results #js []]
