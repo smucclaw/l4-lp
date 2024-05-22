@@ -96,8 +96,10 @@ def l4_to_edn(l4_program):
     case ast_node:
       return ast_node
 
-def l4_to_edn_str(l4_program):
+def l4_edsl_to_edn_str(l4_program):
   return ft.pipe(l4_program, l4_to_edn, edn.dumps)
 
 def l4_edsl_to_prolog_program_and_queries(l4_program):
-  return ft.pipe(l4_program, l4_to_edn_str, l4_to_prolog_program_and_queries)
+  return ft.pipe(
+    l4_program, l4_edsl_to_edn_str, l4_to_prolog_program_and_queries
+  )
