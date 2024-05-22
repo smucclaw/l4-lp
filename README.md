@@ -117,7 +117,7 @@ Run the following command:
 L4's denotational semantics is given as an equational theory from
 the term algebra (ie concrete syntax) of L4 to that of Prolog.
 This is primarily documented and implemented by the
-`l4-rule->prolog-rule` in
+`l4-rule->prolog-rule` function in
 [l4_to_prolog.cljc](src/l4_lp/syntax/l4_to_prolog.cljc).
 
 ### Points to note
@@ -212,9 +212,15 @@ This is primarily documented and implemented by the
    5. Convert the function application into a predicate application, using
       the fresh variable as the output variable.
     
-   Note that we rely heavily on Meander
-   (like the [$ macro](https://cljdoc.org/d/meander/epsilon/0.0.421/doc/operator-overview#subtree-search-))
-   to conveniently manipulate nested terms and their contexts.
+   Note that such rules are:
+   - Formalised with the help of a standard big-step semantics with first-class 
+     continuations.
+   - Implemented using Meander's
+     [$ macro](https://cljdoc.org/d/meander/epsilon/0.0.626/doc/operator-overview#subtree-search-)
+     to conveniently manipulate nested terms and their contexts (captured as
+     continuations).
+
+Check out the implementation and comments in the code for more details!
 
 ## SWI-Prolog based rule engine runtime
 We implement a rule engine runtime in SWI-Prolog,

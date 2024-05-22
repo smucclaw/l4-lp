@@ -74,8 +74,8 @@
      continuations.
 
      This is used to axiomatise some of our equations / rewrite rules which
-     manipulate nested subterms and their contexts, like for instance, the rules
-     which recursively:
+     manipulate nested terms and their contexts (captured as continuations),
+     like the rules which recursively:
      - traverse the head and body of an L4 rule to identify symbols which
        appear in the GIVEN and GIVETH clauses, so that they can be labelled as
        variables.
