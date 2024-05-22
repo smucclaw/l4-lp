@@ -77,7 +77,8 @@
      manipulate nested subterms and their contexts, like for instance, the rules
      which recursively:
      - traverse the head and body of an L4 rule to identify symbols which
-       appear in the GIVEN and GIVETH clauses.
+       appear in the GIVEN and GIVETH clauses, so that they can be labelled as
+       variables.
      - flatten nested function applications into a conjunction of Prolog terms.
 
    - The resulting S-exp AST is also valid Prolog code because each S-exp
