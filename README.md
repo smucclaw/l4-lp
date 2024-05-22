@@ -195,11 +195,11 @@ This is primarily documented and implemented by the
    ```
    gets expanded to something like:
    ```
-   product_list([1, 2], Var__1),
-   sum_list(([0, 1, Var__1]), Var__2),
-   min_list(([Var__2, 3]), Var__3),
-   minus_list(([2, 1]), Var__4),
-   lt(Var__3, Var__4)
+   product_list([1, 2], Var__0),
+   sum_list(([0, 1, Var__0]), Var__1),
+   min_list(([Var__1, 3]), Var__2),
+   minus_list(([2, 1]), Var__3),
+   lt(Var__2, Var__3)
    ```
   
    The idea is that during the recursive transformation of a term,
