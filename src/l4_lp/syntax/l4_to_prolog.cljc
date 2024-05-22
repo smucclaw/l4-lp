@@ -7,19 +7,20 @@
             [meander.strategy.epsilon :as r]
             [tupelo.string :as str]))
 
-(defn- l4->clj
-  "Parses EDN strings representing L4 programs into Clojure data."
+(defn- l4->tokens
+  "Lexes strings representing L4 programs into a seq of tokens."
   [l4-program]
   (let [parens-if-needed
         (r/match
-         (m/re #"^(\(.*\)|\[.*\])$" [_ ?edn-str]) ?edn-str
+         (m/re #"^\(.*\)$" [?edn-str]) ?edn-str
          ?edn-str (str "(" ?edn-str ")"))]
 
     (if (string? l4-program)
-      (-> l4-program parens-if-needed edn/read-string)
+      (-> l4-program str/trim parens-if-needed edn/read-string)
       l4-program)))
 
-(def ^:private l4-clj->seq-of-rules
+(def ^:private l4-tokens->rules
+  "Partitions a seq of tokens into a seq of rules."
   (r/rewrite
    (m/with
     [%horn-clause ((m/pred #{'DECIDE 'QUERY}) _ & _)
@@ -31,24 +32,33 @@
    (!rules ...)))
 
 (defn- l4->seq-of-rules [l4-program]
-  (-> l4-program l4->clj l4-clj->seq-of-rules))
+  (-> l4-program l4->tokens l4-tokens->rules))
 
 (def ^:private time-units
-  #{'DAY 'DAYS 'WEEK 'WEEKS 'MONTH 'MONTHS 'YEAR 'YEARS})
+  (let [singular-time-units '(DAY WEEK MONTH YEAR)
+
+        unit->unit+plural
+        (r/match
+         (m/and (m/symbol ?time-unit-str) ?time-unit)
+          [?time-unit (symbol (str ?time-unit-str "S"))])]
+
+    (->> singular-time-units
+         (eduction (mapcat unit->unit+plural))
+         (into #{}))))
 
 (def ^:private l4-rule->prolog-rule
-  "This function transforms the AST of an individual L4 rule or goal to the
-   Prolog AST.
+  "Parses an individual L4 rule into Prolog / Datalog, which we use as our
+   intermediate representation.
 
-   Formally, we specify its behaviour via an interpretation function ⟦.⟧ mapping
-   from the L4 term algebra to that of Prolog, which we define via recursive
-   equations.
+   Formally, this is specified as an equational theory axiomatising a
+   interpretation function ⟦.⟧ mapping from the L4 term algebra to that of
+   Prolog.
 
    For the implementation, we:
-   1. Define a term rewriting system (TRS) that orients the equations 
-      defining ⟦.⟧ from left to right.
-   2. Traverse nodes in the L4 AST in a top-down manner, using the TRS to
-      rewrite and transform each node."
+   1. Define a term rewriting system (TRS) that orients the equational theory
+      from left to right.
+   2. Traverse the L4 rule (viewed as a tree) in a top-down manner, using the
+      TRS to rewrite and transform each node."
   (r/top-down
    (r/rewrite
     ;; -----------------------------------------------
