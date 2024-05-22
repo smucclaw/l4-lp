@@ -7,8 +7,8 @@
             [meander.strategy.epsilon :as r]
             [tupelo.string :as str]))
 
-(defn- l4->tokens
-  "Lexes strings representing L4 programs into a seq of tokens."
+(defn- l4->parse-tree
+  "Parses strings representing L4 programs into a parse tree."
   [l4-program]
   (let [parens-if-needed
         (r/match
@@ -19,23 +19,27 @@
       (-> l4-program str/trim parens-if-needed edn/read-string)
       l4-program)))
 
-(def ^:private l4-tokens->rules
-  "Partitions a seq of tokens into a seq of rules."
+(def ^:private l4-parse-tree->parse-tree-of-rules
+  "Identify rules (ie Horn clauses) in the raw parse tree and restructure the
+   tree so that each rule is grouped into its own subtree."
   (r/rewrite
    (m/with
-    [%horn-clause ((m/pred #{'DECIDE 'QUERY}) _ & _)
-     %rule (m/and (m/or ((m/pred #{'GIVEN 'GIVETH}) . _ ..1 & %horn-clause)
+    [%horn-clause ((m/pred '#{DECIDE QUERY}) _ & _)
+     %rule (m/and (m/or ((m/pred '#{GIVEN GIVETH}) . _ ..1 & %horn-clause)
                         %horn-clause)
                   !rules)
      %rules (m/or (& %rule & %rules) (%rule & %rules) (& %rule) (%rule))]
     %rules)
+
    (!rules ...)))
 
-(defn- l4->seq-of-rules [l4-program]
-  (-> l4-program l4->tokens l4-tokens->rules))
+(def ^:private l4->parse-tree-of-rules
+  "Parses an L4 program into a parse tree, with each subtree of the root node
+   representing the parse tree of an L4 rule (which represents a Horn clause)."
+  (r/pipe l4->parse-tree l4-parse-tree->parse-tree-of-rules))
 
 (def ^:private time-units
-  (let [singular-time-units '(DAY WEEK MONTH YEAR)
+  (let [singular-time-units '#{DAY WEEK MONTH YEAR}
 
         unit->unit+plural
         (r/match
@@ -47,8 +51,9 @@
          (into #{}))))
 
 (def ^:private l4-rule->prolog-rule
-  "Parses an individual L4 rule into Prolog / Datalog, which we use as our
-   intermediate representation.
+  "Transpiles and desugars the parse tree of an L4 rule (which represents a
+   Horn clause) into (an S-exp representation of) Prolog / Datalog, which we
+   use as our intermediate AST.
 
    Formally, this is specified as an equational theory axiomatising a
    interpretation function ⟦.⟧ mapping from the L4 term algebra to that of
@@ -57,8 +62,33 @@
    For the implementation, we:
    1. Define a term rewriting system (TRS) that orients the equational theory
       from left to right.
+
+      Each rewrite rule in the TRS defined here is accompanied by a comment
+      axiomatisating it as an equation in the equational theory.
+
    2. Traverse the L4 rule (viewed as a tree) in a top-down manner, using the
-      TRS to rewrite and transform each node."
+      TRS to rewrite and transform each node.
+
+   Note that:
+   - Our semantics assumes a standard big step semantics with first-class
+     continuations.
+
+     This is used to axiomatise some of our equations / rewrite rules which
+     manipulate nested terms and their contexts (captured as continuations),
+     like the rules which recursively:
+     - traverse the head and body of an L4 rule to identify symbols which
+       appear in the GIVEN and GIVETH clauses, so that they can be labelled as
+       variables.
+     - flatten nested function applications into a conjunction of Prolog terms.
+
+   - The resulting S-exp AST is also valid Prolog code because each S-exp
+     in the AST is also a Prolog M-exp. For instance, an S-exp of the form
+     ( p '( x₀ ', ... ', xₙ ') ) is used to represent the Prolog term
+     p(x₀, ..., xₙ)
+
+   - Prolog is a universal input format for Horn clause solvers like
+     Z3, Prolog, Datalog and ASP, so that the resulting S-exp AST can be
+     readily fed into such tools for static analysis and execution."
   (r/top-down
    (r/rewrite
     ;; -----------------------------------------------
@@ -72,12 +102,12 @@
     ;; TODO: Document semantics.
     (GIVEN
      . (m/with [%var (m/symbol nil !vars)]
-               (m/or (m/pred #{'GIVEN 'GIVETH}) %var (m/seqable %var & _)))
+               (m/or (m/pred '#{GIVEN GIVETH}) %var (m/seqable %var & _)))
      ..1
      (m/pred #{'DECIDE 'QUERY} ?decide-query) & ?horn-clause)
     ((GIVEN #{^& (!vars ...)} ?decide-query & ?horn-clause))
 
-    ;; ?symbol ∈ ?givens
+    ;; ⊢ ?symbol ∈ ?givens
     ;; ⊢ (symbol nil ?symbol) ⇓ ?symbol'
     ;; ⊢ (symbol "var" ?symbol) ⇓ ?var
     ;; (?C, λx. throw (cont C) x) ⊢ (?C ?var) ⇓ ?e
@@ -91,10 +121,11 @@
 
     (GIVEN _ & ?horn-clause) ?horn-clause
 
-    ;; --------------------------------------------------
-    ;; ⟦(DECIDE ?head₀ ... ?headₘ IF ?body₀ ... ?bodyₙ)⟧ =
+    ;; ?op ∈ {IF WHEN WHERE}
+    ;; ---------------------------------------------------
+    ;; ⟦(DECIDE ?head₀ ... ?headₘ ?op ?body₀ ... ?bodyₙ)⟧ =
     ;;   ⟦(:- (?head₀ ... ?headₘ) (?body₀ ... ?bodyₙ))⟧
-    (DECIDE . !head ..1 (m/pred #{'IF 'WHEN 'WHERE}) . !body ..1)
+    (DECIDE . !head ..1 (m/pred '#{IF WHEN WHERE}) . !body ..1)
     ((~(symbol ":-") (!head ...) (!body ...)))
 
     ;; -------------------------------------------------
@@ -104,11 +135,10 @@
     (QUERY . !query ..1) (QUERY ((!query ...)))
 
     ;; TODO: Formalise BoolStruct parser + transpiler.
-    (m/with
-     [%bool-op (m/pred #{'AND 'OR} !bool-op)
-      %conjunct-disjunct (!xs ..1 %bool-op)
-      %xs (m/or (& %conjunct-disjunct & %xs) %conjunct-disjunct)]
-     (& %xs . !x ..1))
+    (m/with [%bool-op (m/pred '#{AND OR} !bool-op)
+             %conjunct-disjunct (!xs ..1 %bool-op)
+             %xs (m/or (& %conjunct-disjunct & %xs) %conjunct-disjunct)]
+            (& %xs . !x ..1))
 
     ((!xs ...) !bool-op ... (!x ...))
 
@@ -136,14 +166,14 @@
             ?fresh-var (delay (->> (gensym "var__") str (symbol "var")))]
       (m/with
        [%has-nested-arithmetic-expr
-        (m/$ ?C ((m/pred #{'MIN 'MAX 'PRODUCT 'SUM 'MINUS 'DIVIDE} ?op)
+        (m/$ ?C ((m/pred '#{MIN MAX PRODUCT SUM MINUS DIVIDE} ?op)
                  & (m/or
                     ((m/or (m/and (m/symbol _) ?arg)
                            (m/pred ?vec-of-symbols-and-nums ?arg)))
                     (m/pred ?coll-of-symbols-and-nums
                             (m/app #(into [] %) ?arg)))))
         %comparison
-        (m/pred #{'IS 'EQUALS '= '== '< '<= '=< '> '>=} ?comparison)]
+        (m/pred '#{IS EQUALS = == < <= =< > >=} ?comparison)]
 
        (m/or  (m/and (& %has-nested-arithmetic-expr %comparison & ?rhs)
                      (m/let [?lhs (?C @?fresh-var)]))
@@ -262,7 +292,7 @@
   (str/replace s #" " ""))
 
 (defn l4->prolog-program+queries
-  "Given an L4 program, transpiles it into a map where:
+  "Given an L4 program, parses and transforms it into a map where:
    - :queries is a vector of Prolog queries (as strings).
    - :program is the Prolog program (as a string).
 
@@ -289,7 +319,7 @@
            :program (->> ?program-rules (prolog-rules->prolog-str ".\n"))})]
 
     (->> l4-program
-         l4->seq-of-rules
+         l4->parse-tree-of-rules
          (eduction (map l4-rule->prolog-rule))
          prolog-rules->prolog-program-rules+queries
          prolog-program-rules+queries->prolog-program+queries-str)))

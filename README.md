@@ -117,7 +117,7 @@ Run the following command:
 L4's denotational semantics is given as an equational theory from
 the term algebra (ie concrete syntax) of L4 to that of Prolog.
 This is primarily documented and implemented by the
-`l4-rule->prolog-rule` in
+`l4-rule->prolog-rule` function in
 [l4_to_prolog.cljc](src/l4_lp/syntax/l4_to_prolog.cljc).
 
 ### Points to note
@@ -195,16 +195,16 @@ This is primarily documented and implemented by the
    ```
    gets expanded to something like:
    ```
-   product_list([1, 2], Var__63),
-   sum_list(([0, 1, Var__63]), Var__64),
-   min_list(([Var__64, 3]), Var__65),
-   minus_list(([2, 1]), Var__66),
-   lt(Var__65, Var__66)
+   product_list([1, 2], Var__0),
+   sum_list(([0, 1, Var__0]), Var__1),
+   min_list(([Var__1, 3]), Var__2),
+   minus_list(([2, 1]), Var__3),
+   lt(Var__2, Var__3)
    ```
   
    The idea is that during the recursive transformation of a term,
    whenever we find a nested function application, we:
-   1. Capture its evaluation context in a continuation.
+   1. Capture its context in a continuation.
    2. Generate a fresh variable of the form `Var__N`.
    3. Throw the fresh variable to the continuation.
    4. Lift the function application from its nested context up to the top
@@ -212,10 +212,15 @@ This is primarily documented and implemented by the
    5. Convert the function application into a predicate application, using
       the fresh variable as the output variable.
     
-   Note that we rely heavily on Meander's context-sensitive rewriting
-   features
-   (like the [$ macro](https://cljdoc.org/d/meander/epsilon/0.0.421/doc/operator-overview#subtree-search-))
-   to conveniently manipulate nested terms and their evaluation contexts.
+   Note that such rules are:
+   - Formalised with the help of a standard big-step semantics with first-class 
+     continuations.
+   - Implemented using Meander's
+     [$ macro](https://cljdoc.org/d/meander/epsilon/0.0.626/doc/operator-overview#subtree-search-)
+     to conveniently manipulate nested terms and their contexts (captured as
+     continuations).
+
+Check out the implementation and comments in the code for more details!
 
 ## SWI-Prolog based rule engine runtime
 We implement a rule engine runtime in SWI-Prolog,
