@@ -204,7 +204,7 @@ This is primarily documented and implemented by the
   
    The idea is that during the recursive transformation of a term,
    whenever we find a nested function application, we:
-   1. Capture its evaluation context in a continuation.
+   1. Capture its context in a continuation.
    2. Generate a fresh variable of the form `Var__N`.
    3. Throw the fresh variable to the continuation.
    4. Lift the function application from its nested context up to the top
@@ -212,10 +212,9 @@ This is primarily documented and implemented by the
    5. Convert the function application into a predicate application, using
       the fresh variable as the output variable.
     
-   Note that we rely heavily on Meander's context-sensitive rewriting
-   features
+   Note that we rely heavily on Meander
    (like the [$ macro](https://cljdoc.org/d/meander/epsilon/0.0.421/doc/operator-overview#subtree-search-))
-   to conveniently manipulate nested terms and their evaluation contexts.
+   to conveniently manipulate nested terms and their contexts.
 
 ## SWI-Prolog based rule engine runtime
 We implement a rule engine runtime in SWI-Prolog,

@@ -62,10 +62,24 @@
    For the implementation, we:
    1. Define a term rewriting system (TRS) that orients the equational theory
       from left to right.
+
+      Each rewrite rule in the TRS defined here is accompanied by a comment
+      axiomatisating it as an equation in the equational theory.
+
    2. Traverse the L4 rule (viewed as a tree) in a top-down manner, using the
       TRS to rewrite and transform each node.
 
    Note that:
+   - Our semantics assumes a standard big step semantics with a notion of
+     contexts and first-class continuations.
+
+     This is used to axiomatise some of our equations / rewrite rules which
+     manipulate nested subterms and their contexts, like for instance, the rules
+     which recursively:
+     - traverse the head and body of an L4 rule to identify symbols which
+       appear in the GIVEN and GIVETH clauses.
+     - flatten nested function applications into a conjunction of Prolog terms.
+
    - The resulting S-exp AST is also valid Prolog code because each S-exp
      in the AST is also a Prolog M-exp. For instance, an S-exp of the form
      ( p '( x₀ ', ... ', xₙ ') ) is used to represent the Prolog term
