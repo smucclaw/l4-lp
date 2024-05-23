@@ -1,5 +1,11 @@
 (ns l4-lp.web-editor.core
-  (:require [applied-science.js-interop :as jsi]
+  (:require ["@mui/material/Box$default" :as Box]
+            ["@mui/material/Container$default" :as Container]
+            ["@mui/material/Divider$default" :as Divider]
+            ["@mui/material/Grid$default" :as Grid]
+            ["@mui/material/Link$default" :as Link]
+            ["@mui/material/Typography$default" :as Typography]
+            [applied-science.js-interop :as jsi]
             [l4-lp.web-editor.codemirror-editor :as cm-editor]
             [uix.core :as uix]
             [uix.dom :as dom]))
@@ -17,28 +23,39 @@
        {:editor-preamble-url web-editor-preamble-url
         :editor-elt @editor-elt-ref :guifier-elt-id "guifier"}))
     (uix/$
-     :div
+     Box
+     (uix/$ :title "L4 web editor")
+
+     (uix/$ :link
+            {:rel "preconnect"
+             :href "https://fonts.googleapis.com"})
+     (uix/$ :link
+            {:rel "preconnect"
+             :href "https://fonts.gstatic.com"
+             :cross-origin true})
      (uix/$ :link
             {:rel "stylesheet"
-             :href "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-             :integrity "sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-             :crossOrigin "anonymous"})
+             :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})
 
-     (uix/$ :title "L4 web editor")
-     (uix/$ :h1 "L4 web editor")
+     (uix/$
+      Grid {:container true}
+      (uix/$ Grid {:item true}
+             (uix/$ Container
+                    (uix/$ Typography {:variant :h2
+                                       :gutter-bottom true}
+                           "L4 web editor")
 
-     (uix/$ :a {:href "https://github.com/smucclaw/l4-lp"}
-            "Click here to visit the project on GitHub!")
+                    (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
+                                 :underline :hover
+                                 :variant :h5
+                                 :gutter-bottom true}
+                           "Click here to visit the project on GitHub!"))
+             (uix/$ Container {:id "editor" :ref editor-elt-ref}))
 
-     (uix/$ :br)
-     (uix/$ :br)
-
-     (uix/$ :div {:id "editor" :ref editor-elt-ref})
-
-     (uix/$ :br)
-
-     (uix/$ :h2 "Query results")
-     (uix/$ :div {:id "guifier"}))))
+      (uix/$ Grid {:item true}
+             (uix/$ Typography {:variant :h3 :gutter-bottom true}
+                    "Query results")
+             (uix/$ Container {:id "guifier"}))))))
 
 (defn- render-react-web-editor-app! []
   (let [app-root
