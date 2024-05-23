@@ -1,8 +1,8 @@
 (ns l4-lp.web-editor.core
   (:require ["@mui/material/Box$default" :as Box]
             ["@mui/material/Container$default" :as Container]
-            ["@mui/material/Divider$default" :as Divider]
-            ["@mui/material/Grid$default" :as Grid]
+            #_["@mui/material/Divider$default" :as Divider]
+            ["@mui/material/Unstable_Grid2$default" :as Grid]
             ["@mui/material/Link$default" :as Link]
             ["@mui/material/Typography$default" :as Typography]
             [applied-science.js-interop :as jsi]
@@ -39,8 +39,8 @@
 
      (uix/$
       Grid {:container true}
-      (uix/$ Grid {:item true}
-             (uix/$ Container
+      (uix/$ Grid
+             (uix/$ Container #_{:sx #js {:m 2}}
                     (uix/$ Typography {:variant :h2
                                        :gutter-bottom true}
                            "L4 web editor")
@@ -49,13 +49,24 @@
                                  :underline :hover
                                  :variant :h5
                                  :gutter-bottom true}
-                           "Click here to visit the project on GitHub!"))
-             (uix/$ Container {:id "editor" :ref editor-elt-ref}))
+                           "Click here to visit the project on GitHub!")
 
-      (uix/$ Grid {:item true}
-             (uix/$ Typography {:variant :h3 :gutter-bottom true}
-                    "Query results")
-             (uix/$ Container {:id "guifier"}))))))
+                    (uix/$ Typography {:mt 2 :variant :body1 :gutter-bottom true}
+                           "Enter an L4 program below, and then press M-Enter to evaluate all queries.
+When the evaluation completes, an execution trace will appear below the input window.
+Note that the whole pipeline, from parsing and transpilation to evaluation and
+processing of traces, runs directly in the browser."))
+
+             (uix/$ Box {:sx #js {:m 2}
+                         :id "editor" :ref editor-elt-ref}))
+
+      (uix/$ Grid
+             (uix/$ Box {:sx #js {:m 2}}
+                    (uix/$ Typography {:variant :h3 :gutter-bottom true}
+                           "Query results"))
+
+             (uix/$ Box {:xs #js {:m 2}
+                         :id "guifier"}))))))
 
 (defn- render-react-web-editor-app! []
   (let [app-root
