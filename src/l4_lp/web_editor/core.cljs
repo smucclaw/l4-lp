@@ -1,7 +1,6 @@
 (ns l4-lp.web-editor.core
   (:require [applied-science.js-interop :as jsi]
             [l4-lp.web-editor.codemirror-editor :as cm-editor]
-            [l4-lp.web-editor.guifier :as guifier]
             [uix.core :as uix]
             [uix.dom :as dom]))
 
@@ -14,9 +13,9 @@
 (uix/defui ^:private web-editor-component []
   (let [editor-elt-ref (uix/use-ref)]
     (uix/use-effect
-     (fn []
-       (guifier/init-guifier-if-needed!)
-       (cm-editor/bind-editor! @editor-elt-ref web-editor-preamble-url)))
+     #(cm-editor/bind-editor!
+       {:editor-preamble-url web-editor-preamble-url
+        :editor-elt @editor-elt-ref :guifier-elt-id "guifier"}))
     (uix/$
      :div
      (uix/$ :link

@@ -6,33 +6,35 @@
             ["@nextjournal/clojure-mode" :as cm-clj]
             ["@uiw/codemirror-theme-solarized" :as cm-solarized]
             [applied-science.js-interop :as jsi]
-            [l4-lp.web-editor.guifier :refer [query-and-trace-and-guifier!]]
             [lambdaisland.fetch :as fetch]
-            [promesa.core :as prom]))
+            [promesa.core :as prom]
+            [tupelo.core :refer [it->]]
+            [l4-lp.web-editor.guifier :as guifier]))
 
 ;; https://blog.jakubholy.net/2023/interactive-code-snippets-fulcro/
 ;; https://github.com/nextjournal/clojure-mode
 
-(defn ^:private eval-query! [cm-editor-view]
-  (-> cm-editor-view
-      (jsi/get-in [:state :doc])
-      str
-      query-and-trace-and-guifier!)
+(defn- eval-and-trace-query! [guifier cm-editor-view]
+  (it-> cm-editor-view
+      (jsi/get-in it [:state :doc])
+      (str it)
+      (guifier/query-and-trace-and-guifier! guifier it))
   true)
 
-(def ^:private eval-query-extension
+(defn- eval-and-trace-query-ext [guifier]
   (jsi/call cm-view/keymap :of
-            #js [#js {:key "Mod-Enter" :run eval-query!}]))
+            #js [#js {:key "Mod-Enter"
+                      :run #(eval-and-trace-query! guifier %)}]))
 
 (def ^:private theme
   (jsi/call cm-view/EditorView :theme
             #js {:& #js {:fontSize "14pt"}
                  :.cm-content #js {:fontFamily "Lucida Console"}}))
 
-(def ^:private extensions
+(defn- exts [guifier]
   #js [cm-solarized/solarizedLight
        theme
-       eval-query-extension
+       (eval-and-trace-query-ext guifier)
        (cm-cmds/history)
        (cm-lang/syntaxHighlighting cm-lang/defaultHighlightStyle)
        (cm-view/drawSelection)
@@ -42,10 +44,12 @@
        (jsi/call cm-view/keymap :of cm-cmds/historyKeymap)
        cm-clj/default_extensions])
 
-(defn bind-editor! [editor-elt preamble-url]
+(defn bind-editor!
+  [{:keys [editor-preamble-url editor-elt guifier-elt-id]}]
   (prom/let
-   [{preamble-text :body} (fetch/get preamble-url {:content-type :text})
+   [guifier (guifier/init-guifier! guifier-elt-id)
+    {preamble-text :body} (fetch/get editor-preamble-url {:content-type :text})
     state (jsi/call cm-state/EditorState
                     :create
-                    #js {:doc preamble-text :extensions extensions})]
+                    #js {:doc preamble-text :extensions (exts guifier)})]
     (new cm-view/EditorView #js {:parent editor-elt :state state})))
