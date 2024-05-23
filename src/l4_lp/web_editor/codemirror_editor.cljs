@@ -17,7 +17,7 @@
                                                [:state :doc :length])
                                :insert text}}))
 
-(uix/defui CodeMirrorEditor
+(uix/defui CMEditor
   [{:keys [ref editor-preamble-url max-height font-size]}]
   (let [theme (jsi/call cm-view/EditorView :theme
                         #js {:& #js {:font-size (name font-size)}

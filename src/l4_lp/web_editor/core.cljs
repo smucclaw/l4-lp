@@ -22,78 +22,81 @@
 (def ^:private web-editor-app-id
   "web-editor-app")
 
-(uix/defui ^:private WebEditor []
-  (let [[web-editor-instrs set-web-editor-instrs!] (uix/use-state nil)
+(uix/defui CMEditorGridItem [{:keys [cm-editor-ref]}]
+  (let [[web-editor-instrs set-web-editor-instrs!] (uix/use-state nil)]
+    (uix/use-effect
+     #(fetch-text-from-url-and-do! web-editor-instrs-url
+                                   set-web-editor-instrs!))
+    (uix/$
+     Grid
+     (uix/$ Box {:sx #js {:m 2}}
+            (uix/$ Typography {:variant :h2 :gutter-bottom true}
+                   "L4 web editor")
 
-        guifier-ref (uix/use-ref)
-        cm-editor-ref (uix/use-ref)
+            (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
+                         :underline :hover
+                         :variant :h5
+                         :gutter-bottom true}
+                   "Click here to visit the project on GitHub!")
 
-        cm-editor->query-trace-and-update-guifier!
+            (uix/$ Typography {:mt 2 :mb 2
+                               :max-width :md
+                               :variant :body1
+                               :gutter-bottom true}
+                   web-editor-instrs)
+
+            (uix/$ cm-editor/CMEditor
+                   {:ref cm-editor-ref
+                    :max-height :70vh
+                    :font-size :14pt
+                    :editor-preamble-url web-editor-preamble-url})))))
+
+(uix/defui GuifierGridItem [{:keys [cm-editor-ref guifier-ref]}]
+  (let [cm-editor->query-trace-and-update-guifier!
         #(let [cm-editor @cm-editor-ref
                guifier @guifier-ref]
            (it-> cm-editor
                  (jsi/get-in it [:view :state :doc])
                  (str it)
                  (guifier/query-trace-and-update-guifier! guifier it)))]
-
-    (uix/use-effect
-     #(fetch-text-from-url-and-do! web-editor-instrs-url
-                                   set-web-editor-instrs!))
-
     (uix/$
-     Box
-     (uix/$ :title "L4 web editor")
-     (uix/$ :link
-            {:rel "preconnect"
-             :href "https://fonts.googleapis.com"})
-     (uix/$ :link
-            {:rel "preconnect"
-             :href "https://fonts.gstatic.com"
-             :cross-origin "anonymous"})
-     (uix/$ :link
-            {:rel "stylesheet"
-             :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})
+     Grid
+     (uix/$ Box {:sx #js {:m 2}}
+            (uix/$ Typography {:variant :h4 :gutter-bottom true}
+                   "Query results")
 
-     (uix/$
-      Grid {:container true}
-      (uix/$ Grid
-             (uix/$ Box {:sx #js {:m 2}}
-                    (uix/$ Typography {:variant :h2 :gutter-bottom true}
-                           "L4 web editor")
+            (uix/$ Button {:variant :contained
+                           :size :large
+                           :end-icon (uix/$ SendIcon)
+                           :on-click cm-editor->query-trace-and-update-guifier!}
+                   "Run Queries")
 
-                    (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
-                                 :underline :hover
-                                 :variant :h5
-                                 :gutter-bottom true}
-                           "Click here to visit the project on GitHub!")
+            (uix/$ guifier/Guifier
+                   {:ref guifier-ref
+                    :max-height :100vh})))))
 
-                    (uix/$ Typography {:mt 2 :mb 2
-                                       :max-width :md
-                                       :variant :body1
-                                       :gutter-bottom true}
-                           web-editor-instrs)
+(uix/defui WebEditor []
+  (let [cm-editor-ref (uix/use-ref)
+        guifier-ref (uix/use-ref)]
+    (uix/$ Box
+           (uix/$ :title "L4 web editor")
+           (uix/$ :link
+                  {:rel "preconnect"
+                   :href "https://fonts.googleapis.com"})
+           (uix/$ :link
+                  {:rel "preconnect"
+                   :href "https://fonts.gstatic.com"
+                   :cross-origin "anonymous"})
+           (uix/$ :link
+                  {:rel "stylesheet"
+                   :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})
 
-                    (uix/$ cm-editor/CodeMirrorEditor
-                           {:ref cm-editor-ref
-                            :max-height :70vh
-                            :font-size :14pt
-                            :editor-preamble-url web-editor-preamble-url})))
-
-      (uix/$ Grid
-             (uix/$ Box {:sx #js {:m 2}}
-                    (uix/$ Typography {:variant :h4 :gutter-bottom true}
-                           "Query results")
-
-                    (uix/$ Button {:variant :contained
-                                   :size :large
-                                   :end-icon (uix/$ SendIcon)
-                                   :on-click
-                                   cm-editor->query-trace-and-update-guifier!}
-                           "Run Queries")
-
-                    (uix/$ guifier/Guifier
-                           {:ref guifier-ref
-                            :max-height :100vh})))))))
+           (uix/$ Grid {:container true}
+                  (uix/$ CMEditorGridItem
+                         {:cm-editor-ref cm-editor-ref})
+                  (uix/$ GuifierGridItem
+                         {:cm-editor-ref cm-editor-ref
+                          :guifier-ref guifier-ref})))))
 
 (defn- render-react-web-editor-app! []
   (let [app-root
