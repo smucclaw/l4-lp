@@ -1,12 +1,14 @@
 (ns l4-lp.web-editor.guifier
   (:require ["https://cdn.jsdelivr.net/npm/guifier@1.0.24/dist/Guifier.js$default"
              :as Guifier]
+            ["@mui/material/Box$default" :as Box]
             [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]
-            [l4-lp.syntax.l4-to-prolog :as l4->prolog]))
+            [l4-lp.syntax.l4-to-prolog :as l4->prolog]
+            [uix.core :as uix]))
 
-(defn init-guifier! [guifier-elt-id]
+(defn- init-guifier! [guifier-elt-id]
   (new Guifier
        #js {:data #js []
             :dataType "js"
@@ -14,7 +16,15 @@
             :withoutContainer true
             :readOnlyMode true}))
 
-(defn query-and-trace-and-guifier! [guifier l4-program]
+(uix/defui Guifier [{:keys [ref]}]
+  (let [elt-id (str `guifier#)]
+    (uix/use-effect
+     (fn [] (swap! ref (some-fn identity #(init-guifier! elt-id)))))
+    (uix/$ Box {:id elt-id
+                :max-height :100vh
+                :overflow :auto})))
+
+(defn query-trace-and-update-guifier! [guifier l4-program]
   (let [prolog-program+queries
         (-> l4-program l4->prolog/l4->prolog-program+queries)
         guifier-query-results #js []]
