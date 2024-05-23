@@ -1,14 +1,18 @@
 (ns l4-lp.web-editor.core
   (:require ["@mui/icons-material/Send$default" :as SendIcon]
+            ["@mui/icons-material/ExpandMore$default" :as ExpandMoreIcon]
+            ["@mui/material/Accordion$default" :as Accordion]
+            ["@mui/material/AccordionDetails$default" :as AccordionDetails]
+            ["@mui/material/AccordionSummary$default" :as AccordionSummary]
             ["@mui/material/Box$default" :as Box]
             ["@mui/material/Button$default" :as Button]
+            ["@mui/material/Unstable_Grid2$default" :as Grid]
             ["@mui/material/Link$default" :as Link]
             ["@mui/material/Typography$default" :as Typography]
-            ["@mui/material/Unstable_Grid2$default" :as Grid]
             [applied-science.js-interop :as jsi]
             [l4-lp.web-editor.codemirror-editor :as cm-editor]
             [l4-lp.web-editor.guifier :as guifier]
-            [l4-lp.web-editor.utils :refer [fetch-text-from-url-and-do!]]
+            [l4-lp.web-editor.utils :refer [fetch-text-from-url-and-then!]]
             [tupelo.core :refer [it->]]
             [uix.core :as uix]
             [uix.dom :as dom]))
@@ -22,36 +26,48 @@
 (def ^:private web-editor-app-id
   "web-editor-app")
 
-(uix/defui CMEditorGridItem [{:keys [cm-editor-ref]}]
+(uix/defui cm-editor-grid-item
+  [{:keys [grid-props cm-editor-ref]}]
+
   (let [[web-editor-instrs set-web-editor-instrs!] (uix/use-state nil)]
     (uix/use-effect
-     #(fetch-text-from-url-and-do! web-editor-instrs-url
-                                   set-web-editor-instrs!))
+     #(fetch-text-from-url-and-then! web-editor-instrs-url
+                                     set-web-editor-instrs!))
     (uix/$
-     Grid
-     (uix/$ Box {:sx #js {:m 2}}
-            (uix/$ Typography {:variant :h2 :gutter-bottom true}
-                   "L4 web editor")
+     Grid grid-props
+     (uix/$ Typography {:variant :h3 :gutter-bottom true}
+            "L4 web editor")
 
-            (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
-                         :underline :hover
-                         :variant :h5
-                         :gutter-bottom true}
-                   "Click here to visit the project on GitHub!")
+     (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
+                  :underline :hover
+                  :variant :h6}
+            "Click here to visit the project on GitHub!")
 
-            (uix/$ Typography {:mt 2 :mb 2
-                               :max-width :md
-                               :variant :body1
-                               :gutter-bottom true}
-                   web-editor-instrs)
+     (uix/$
+      Box {:m 2}
+      (uix/$ Accordion
+             (uix/$ AccordionSummary
+                    {:expand-icon (uix/$ ExpandMoreIcon)
+                     :aria-controls :web-editor-instrs-control
+                     :id :web-editor-instrs}
+                    (uix/$ Typography {:variant :h6}
+                           "Web editor instructions"))
+             (uix/$ AccordionDetails
+                    (uix/$ Typography {:mt 1 :mb 1
+                                       :max-width :md
+                                       :white-space :pre-line
+                                       :variant :body1}
+                           web-editor-instrs))))
 
-            (uix/$ cm-editor/CMEditor
-                   {:ref cm-editor-ref
-                    :max-height :70vh
-                    :font-size :14pt
-                    :editor-preamble-url web-editor-preamble-url})))))
+     (uix/$ cm-editor/cm-editor
+            {:ref cm-editor-ref
+             :max-height :80vh
+             :font-size :14pt
+             :editor-preamble-url web-editor-preamble-url}))))
 
-(uix/defui GuifierGridItem [{:keys [cm-editor-ref guifier-ref]}]
+(uix/defui guifier-grid-item
+  [{:keys [grid-props cm-editor-ref guifier-ref]}]
+
   (let [cm-editor->query-trace-and-update-guifier!
         #(let [cm-editor @cm-editor-ref
                guifier @guifier-ref]
@@ -60,22 +76,22 @@
                  (str it)
                  (guifier/query-trace-and-update-guifier! guifier it)))]
     (uix/$
-     Grid
-     (uix/$ Box {:sx #js {:m 2}}
-            (uix/$ Typography {:variant :h4 :gutter-bottom true}
-                   "Query results")
+     Grid grid-props
+     (uix/$ Typography {:variant :h4}
+            "Query results")
 
+     (uix/$ Box {:m 3}
             (uix/$ Button {:variant :contained
                            :size :large
                            :end-icon (uix/$ SendIcon)
                            :on-click cm-editor->query-trace-and-update-guifier!}
-                   "Run Queries")
+                   "Run Queries"))
 
-            (uix/$ guifier/Guifier
-                   {:ref guifier-ref
-                    :max-height :100vh})))))
+     (uix/$ guifier/guifier
+            {:ref guifier-ref
+             :max-height :100vh}))))
 
-(uix/defui WebEditor []
+(uix/defui web-editor-app []
   (let [cm-editor-ref (uix/use-ref)
         guifier-ref (uix/use-ref)]
     (uix/$ Box
@@ -92,10 +108,12 @@
                    :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})
 
            (uix/$ Grid {:container true}
-                  (uix/$ CMEditorGridItem
-                         {:cm-editor-ref cm-editor-ref})
-                  (uix/$ GuifierGridItem
-                         {:cm-editor-ref cm-editor-ref
+                  (uix/$ cm-editor-grid-item
+                         {:grid-props {:m 2}
+                          :cm-editor-ref cm-editor-ref})
+                  (uix/$ guifier-grid-item
+                         {:grid-props {:m 2 :mt 15}
+                          :cm-editor-ref cm-editor-ref
                           :guifier-ref guifier-ref})))))
 
 (defn- render-react-web-editor-app! []
@@ -103,7 +121,7 @@
         (-> js/document
             (jsi/call :getElementById web-editor-app-id)
             dom/create-root)]
-    (dom/render-root (uix/$ WebEditor) app-root)))
+    (dom/render-root (uix/$ web-editor-app) app-root)))
 
 (defn start! []
   (println "Starting..."))

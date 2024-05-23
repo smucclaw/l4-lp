@@ -16,7 +16,7 @@
             :withoutContainer true
             :readOnlyMode true}))
 
-(uix/defui Guifier [{:keys [ref max-height]}]
+(uix/defui guifier [{:keys [ref max-height]}]
   (let [elt-id (str `guifier#)]
     (uix/use-effect
      (fn [] (swap! ref (some-fn identity #(init-guifier! elt-id)))))

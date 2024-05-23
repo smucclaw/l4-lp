@@ -4,7 +4,7 @@
             ["@uiw/codemirror-theme-solarized" :as cm-solarized]
             ["@uiw/react-codemirror$default" :as CodeMirror]
             [applied-science.js-interop :as jsi]
-            [l4-lp.web-editor.utils :refer [fetch-text-from-url-and-do!]]
+            [l4-lp.web-editor.utils :refer [fetch-text-from-url-and-then!]]
             [uix.core :as uix]))
 
 ;; https://blog.jakubholy.net/2023/interactive-code-snippets-fulcro/
@@ -17,7 +17,7 @@
                                                [:state :doc :length])
                                :insert text}}))
 
-(uix/defui CMEditor
+(uix/defui cm-editor
   [{:keys [ref editor-preamble-url max-height font-size]}]
   (let [theme (jsi/call cm-view/EditorView :theme
                         #js {:& #js {:font-size (name font-size)}
@@ -34,6 +34,6 @@
             :ref ref
             :on-create-editor
             (fn [editor-view _editor-state]
-              (fetch-text-from-url-and-do!
+              (fetch-text-from-url-and-then!
                editor-preamble-url
                #(set-editor-text! editor-view %)))})))

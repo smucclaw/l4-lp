@@ -1,8 +1,3 @@
-Enter a L4 program below, then click the "Run Queries" button to the right to
-evaluate all queries.
-
-When each query completes, a corresponding execution trace will appear to the
-right, below the button.
-
-Note that the whole pipeline, from parsing and transpilation to evaluation and
-processing of traces, runs directly in the browser.
+Enter a L4 program below, then click the "Run Queries" button to evaluate all queries.
+When each query completes, a corresponding execution trace will be displayed below the button.
+Note that the whole pipeline, from parsing and transpilation to evaluation and processing of traces, runs directly in the browser.
