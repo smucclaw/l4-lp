@@ -35,14 +35,6 @@
                                      set-web-editor-instrs!))
     (uix/$
      Grid grid-props
-     (uix/$ Typography {:variant :h3 :gutter-bottom true}
-            "L4 web editor")
-
-     (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
-                  :underline :hover
-                  :variant :h6}
-            "Click here to visit the project on GitHub!")
-
      (uix/$
       Box {:m 2}
       (uix/$ Accordion
@@ -61,7 +53,7 @@
 
      (uix/$ cm-editor/cm-editor
             {:ref cm-editor-ref
-             :max-height :80vh
+             :max-height :90vh
              :font-size :14pt
              :editor-preamble-url web-editor-preamble-url}))))
 
@@ -107,12 +99,20 @@
                   {:rel "stylesheet"
                    :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})
 
+           (uix/$ Typography {:variant :h3 :gutter-bottom true}
+                  "L4 web editor")
+
+           (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
+                        :underline :hover
+                        :variant :h6}
+                  "Click here to visit the project on GitHub!")
+
            (uix/$ Grid {:container true}
                   (uix/$ cm-editor-grid-item
                          {:grid-props {:m 2}
                           :cm-editor-ref cm-editor-ref})
                   (uix/$ guifier-grid-item
-                         {:grid-props {:m 2 :mt 15}
+                         {:grid-props {:m 2}
                           :cm-editor-ref cm-editor-ref
                           :guifier-ref guifier-ref})))))
 
