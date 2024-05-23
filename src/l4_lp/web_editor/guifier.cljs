@@ -16,17 +16,16 @@
             :withoutContainer true
             :readOnlyMode true}))
 
-(uix/defui Guifier [{:keys [ref]}]
+(uix/defui Guifier [{:keys [ref max-height]}]
   (let [elt-id (str `guifier#)]
     (uix/use-effect
      (fn [] (swap! ref (some-fn identity #(init-guifier! elt-id)))))
-    (uix/$ Box {:id elt-id
-                :max-height :100vh
-                :overflow :auto})))
+    (uix/$ Box {:id elt-id :max-height max-height :overflow :auto})))
 
 (defn query-trace-and-update-guifier! [guifier l4-program]
   (let [prolog-program+queries
         (-> l4-program l4->prolog/l4->prolog-program+queries)
+
         guifier-query-results #js []]
 
     (jsi/call js/console :log

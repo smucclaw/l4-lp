@@ -75,6 +75,8 @@
 
                     (uix/$ cm-editor/CodeMirrorEditor
                            {:ref cm-editor-ref
+                            :max-height :70vh
+                            :font-size :14pt
                             :editor-preamble-url web-editor-preamble-url})))
 
       (uix/$ Grid
@@ -90,7 +92,8 @@
                            "Run Queries")
 
                     (uix/$ guifier/Guifier
-                           {:ref guifier-ref})))))))
+                           {:ref guifier-ref
+                            :max-height :100vh})))))))
 
 (defn- render-react-web-editor-app! []
   (let [app-root
