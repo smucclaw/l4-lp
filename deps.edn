@@ -14,8 +14,8 @@
         applied-science/js-interop {:mvn/version "0.4.2"}
         tupelo/tupelo {:mvn/version "23.07.04"}
         cljs-bean/cljs-bean {:mvn/version "1.9.0"}
-        ;; lambdaisland/uri {:mvn/version "1.19.155"}
-        ;; lambdaisland/fetch {:mvn/version "1.5.83"}
+        lambdaisland/uri {:mvn/version "1.19.155"}
+        lambdaisland/fetch {:mvn/version "1.5.83"}
         ;; metosin/malli {:mvn/version "0.16.1"}
         }
 

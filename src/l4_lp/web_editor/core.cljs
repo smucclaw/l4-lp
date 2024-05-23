@@ -5,44 +5,18 @@
             [uix.core :as uix]
             [uix.dom :as dom]))
 
-(def ^:private initial-editor-text
-  ";; Enter an L4 program here, and then press M-Enter to evaluate all queries.
-;; When the evaluation completes, an execution trace will appear below the input window.
-;; Note that the whole pipeline, from parsing and transpilation to evaluation and
-;; processing of traces, runs directly in the browser.
-
-GIVETH x
-QUERY MIN (MINUS 0 x) (SUM [1, 2, 3, -12]) 2 < PRODUCT (MAX (DIVIDE 12 3) 4 -1) 19 x
-
-GIVETH x y
-QUERY SUM x y IS 0
-AND MINUS x y IS 0
-
-GIVEN (x IS A Number)
-DECIDE x is between 0 and 10 or is 100
-IF 0 <= x AND x <= 10
-OR x IS MAX 100 -20
-
-DECIDE (2023 - 1 - 10) is a date
-
-GIVEN (xs IS A LIST OF Number)
-GIVETH x
-DECIDE b of x and xs
-WHERE x IS SUM xs
-
-DECIDE b of 0 and _ OTHERWISE")
+(def ^:private web-editor-preamble-url
+ "web_editor_preamble.edn")
 
 (def ^:private web-editor-app-id
   "web-editor-app")
 
 (uix/defui ^:private web-editor-component []
   (let [editor-elt-ref (uix/use-ref)]
-
     (uix/use-effect
      (fn []
-       (cm-editor/bind-editor! @editor-elt-ref initial-editor-text)
-       (guifier/init-guifier-if-needed!)))
-
+       (guifier/init-guifier-if-needed!)
+       (cm-editor/bind-editor! @editor-elt-ref web-editor-preamble-url)))
     (uix/$
      :div
      (uix/$ :link

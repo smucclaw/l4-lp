@@ -6,13 +6,12 @@
             ["@nextjournal/clojure-mode" :as cm-clj]
             ["@uiw/codemirror-theme-solarized" :as cm-solarized]
             [applied-science.js-interop :as jsi]
-            [l4-lp.web-editor.guifier :refer [query-and-trace-and-guifier!]]))
+            [l4-lp.web-editor.guifier :refer [query-and-trace-and-guifier!]]
+            [lambdaisland.fetch :as fetch]
+            [promesa.core :as prom]))
 
 ;; https://blog.jakubholy.net/2023/interactive-code-snippets-fulcro/
 ;; https://github.com/nextjournal/clojure-mode
-
-#_(def ^:private editor-element-id
-  "editor")
 
 (defn ^:private eval-query! [cm-editor-view]
   (-> cm-editor-view
@@ -43,9 +42,10 @@
        (jsi/call cm-view/keymap :of cm-cmds/historyKeymap)
        cm-clj/default_extensions])
 
-(defn bind-editor! [editor-elt code]
-  (let [;; editor-elt (jsi/call js/document :getElementById editor-element-id)
-        state (jsi/call cm-state/EditorState
-                        :create
-                        #js {:doc code :extensions extensions})]
+(defn bind-editor! [editor-elt preamble-url]
+  (prom/let
+   [{preamble-text :body} (fetch/get preamble-url {:content-type :text})
+    state (jsi/call cm-state/EditorState
+                    :create
+                    #js {:doc preamble-text :extensions extensions})]
     (new cm-view/EditorView #js {:parent editor-elt :state state})))
