@@ -26,12 +26,12 @@
   (uix/$
    Box {:flex-grow 1}
    (uix/$ AppBar {:position :sticky}
-          (uix/$ Toolbar
+          (uix/$ Toolbar {:variant :dense}
                  (uix/$ Link {:color :inherit
                               :href "https://github.com/smucclaw/l4-lp"}
                         (uix/$ GitHubIcon))
                  (uix/$ Typography {:mt 1 :ml 5 :mr 5
-                                    :variant :h4
+                                    :variant :h5
                                     :gutter-bottom true}
                         "L4 web editor")))))
 
@@ -65,7 +65,7 @@
             (uix/$ Grid {:ml 2 :mr 2}
                    (uix/$ query-button-and-output
                           {:cm-editor-ref cm-editor-ref
-                           :max-results-height :60vh}))))))
+                           :max-height :90vh}))))))
 
 (defn- render-web-editor-app! []
   (let [app-root

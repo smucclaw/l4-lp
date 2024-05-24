@@ -25,12 +25,14 @@
    (new Guifier
         #js {:data js-data
              :dataType "js"
-             :elementSelector (str "#" (jsi/call js/CSS :escape guifier-elt-id))
+             :elementSelector (->> guifier-elt-id
+                                   (jsi/call js/CSS :escape)
+                                   (str "#"))
              :withoutContainer true
              :readOnlyMode true})))
 
 (uix/defui guifier
-  [{:keys [data]}]
+  [{:keys [data box-props]}]
 
   (let [elt-id (str "guifier" (uix/use-id))
         guifier-ref (uix/use-ref)]
@@ -44,46 +46,42 @@
                        guifier)
                    (init-guifier! elt-id js-data))))))
 
-    (uix/$ Box {:id elt-id})))
+    (uix/$ Box (assoc box-props :id elt-id))))
 
 (uix/defui prolog-program-and-queries-comp
   [{prolog-program-and-queries :data}]
   (and
    (not-empty prolog-program-and-queries)
-    (uix/$
-     loading-bar
-     (uix/$ Accordion
-            (uix/$ AccordionSummary {:expand-icon (uix/$ ExpandMoreIcon)}
-                   (uix/$ Typography {:variant :h6}
-                          "Transpiled Prolog program and queries"))
-            (uix/$ AccordionDetails
-                   (uix/$ guifier {;; :max-height :100vh
-                                   :data prolog-program-and-queries}))))))
+   (uix/$
+    loading-bar
+    (uix/$ Accordion
+           (uix/$ AccordionSummary {:expand-icon (uix/$ ExpandMoreIcon)}
+                  (uix/$ Typography {:variant :h6}
+                         "Transpiled Prolog program and queries"))
+           (uix/$ AccordionDetails
+                  (uix/$ guifier {:data prolog-program-and-queries}))))))
 
 (uix/defui query-results-comp
-  [{query-results :data
-    max-height :max-height}]
-  (and
-   (not-empty query-results)
-   (uix/$
-    Box {:mt 4}
-    (uix/$ Typography {:m 2 :variant :h4} "Query Results")
-    (uix/$ Box {:max-height max-height
-                :overflow :auto}
-           (->> query-results
-                (map-indexed
-                 (fn [index result]
-                   (uix/$ Accordion {:key [index result]}
-                          (uix/$ AccordionSummary
-                                 {:expand-icon (uix/$ ExpandMoreIcon)
-                                  :aria-controls :panel-content}
-                                 (uix/$ Typography {:variant :h6}
-                                        (str "Query " (inc index))))
-                          (uix/$ AccordionDetails
-                                 (uix/$ guifier {:data result}))))))))))
+  [{query-results :data}]
+
+  (let [indexed-query-result->comp
+        (fn [index result]
+          (uix/$ Accordion {:key [index result]}
+                 (uix/$ AccordionSummary
+                        {:expand-icon (uix/$ ExpandMoreIcon)
+                         :aria-controls :panel-content}
+                        (uix/$ Typography {:variant :h6}
+                               (str "Query " (inc index))))
+                 (uix/$ AccordionDetails
+                        (uix/$ guifier {:data result}))))]
+    (uix/$ Box {:mt 4}
+           (uix/$ Typography {:m 2 :variant :h4} "Query Results")
+           (uix/$ Box #_{:max-height max-height :overflow :auto}
+                  (->> query-results
+                       (map-indexed indexed-query-result->comp))))))
 
 (uix/defui query-button-and-output
-  [{:keys [max-results-height cm-editor-ref]}]
+  [{:keys [max-height cm-editor-ref]}]
 
   (let [[queries-running? set-queries-running!] (uix/use-state false)
         [prolog-program-and-queries-stateful set-prolog!] (uix/use-state nil)
@@ -96,31 +94,29 @@
           (set-prolog! nil)
 
           (let [cm-editor-doc (jsi/get-in @cm-editor-ref [:view :state :doc])
-                l4-program (str cm-editor-doc)
                 prolog-program-and-queries
-                (-> l4-program l4->prolog/l4->prolog-program+queries)]
+                (-> cm-editor-doc str l4->prolog/l4->prolog-program+queries)]
+
+            (set-prolog! prolog-program-and-queries)
 
             (prom/do
-              (set-prolog! prolog-program-and-queries)
-
               (swipl-wasm-query/query-and-trace!
                prolog-program-and-queries
                (fn [result] (set-query-results! #(conj % result))))
 
               (set-queries-running! false))))]
-    (uix/$
-     Box
-     (uix/$ LoadingButton
-            {:sx #js {:m 3}
-             :loading queries-running?
-             :variant :contained
-             :size :large
-             :end-icon (uix/$ SendIcon)
-             :on-click cm-editor->query-trace-and-update-guifier!}
-            "Run Queries")
-
-     (uix/$ prolog-program-and-queries-comp
-            {:data prolog-program-and-queries-stateful})
-     (uix/$ query-results-comp
-            {:data query-results-stateful
-             :max-height max-results-height}))))
+    (uix/$ Box
+           (uix/$ LoadingButton
+                  {:sx #js {:m 3}
+                   :loading queries-running?
+                   :variant :contained
+                   :size :large
+                   :end-icon (uix/$ SendIcon)
+                   :on-click cm-editor->query-trace-and-update-guifier!}
+                  "Run Queries")
+           (uix/$ Box {:max-height max-height
+                       :overflow :auto}
+                  (uix/$ prolog-program-and-queries-comp
+                         {:data prolog-program-and-queries-stateful})
+                  (uix/$ query-results-comp
+                         {:data query-results-stateful})))))
