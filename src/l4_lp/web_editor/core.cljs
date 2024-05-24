@@ -1,9 +1,7 @@
 (ns l4-lp.web-editor.core
   (:require ["@mui/icons-material/GitHub$default" :as GitHubIcon]
-            ["@mui/icons-material/Send$default" :as SendIcon]
             ["@mui/material/AppBar$default" :as AppBar]
             ["@mui/material/Box$default" :as Box]
-            ["@mui/material/Button$default" :as Button]
             ["@mui/material/Link$default" :as Link]
             ["@mui/material/Toolbar$default" :as Toolbar]
             ["@mui/material/Typography$default" :as Typography]
@@ -57,8 +55,7 @@
    (uix/$ web-editor-top-bar)
 
    (let [cm-editor-ref (uix/use-ref)]
-     (uix/$ Grid {:container true
-                  :position :sticky}
+     (uix/$ Grid {:container true}
             (uix/$ Grid {:m 2}
                    (uix/$ cm-editor-and-instrs
                           {:cm-editor-ref cm-editor-ref

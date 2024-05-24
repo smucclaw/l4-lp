@@ -52,7 +52,7 @@
           (uix/$ Accordion
                  (uix/$ AccordionSummary
                         {:expand-icon (uix/$ ExpandMoreIcon)
-                         :aria-controls :web-editor-instrs-control
+                         :aria-controls :panel-content
                          :id :web-editor-instrs}
                         (uix/$ Typography {:variant :h6} "Usage instructions"))
                  (uix/$ AccordionDetails

@@ -75,7 +75,8 @@
                  (fn [index result]
                    (uix/$ Accordion {:key [index result]}
                           (uix/$ AccordionSummary
-                                 {:expand-icon (uix/$ ExpandMoreIcon)}
+                                 {:expand-icon (uix/$ ExpandMoreIcon)
+                                  :aria-controls :panel-content}
                                  (uix/$ Typography {:variant :h6}
                                         (str "Query " (inc index))))
                           (uix/$ AccordionDetails
