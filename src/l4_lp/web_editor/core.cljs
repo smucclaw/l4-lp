@@ -9,13 +9,14 @@
             ["@mui/material/Unstable_Grid2$default" :as Grid]
             ["@mui/material/Link$default" :as Link]
             ["@mui/material/Typography$default" :as Typography]
+            ["react-dom" :as react-dom]
             [applied-science.js-interop :as jsi]
             [l4-lp.web-editor.codemirror-editor :as cm-editor]
             [l4-lp.web-editor.guifier :as guifier]
             [l4-lp.web-editor.utils :refer [fetch-text-from-url-and-then!]]
             [tupelo.core :refer [it->]]
             [uix.core :as uix]
-            [uix.dom :as dom]))
+            [uix.dom :as uix-dom]))
 
 (def ^:private web-editor-preamble-url
  "web_editor_preamble.edn")
@@ -43,9 +44,9 @@
                      :aria-controls :web-editor-instrs-control
                      :id :web-editor-instrs}
                     (uix/$ Typography {:variant :h6}
-                           "Web editor instructions"))
+                           "Usage instructions"))
              (uix/$ AccordionDetails
-                    (uix/$ Typography {:mt 1 :mb 1
+                    (uix/$ Typography {:m 1 ;; :mt 1 :mb 1
                                        :max-width :md
                                        :white-space :pre-line
                                        :variant :body1}
@@ -70,7 +71,7 @@
     (uix/$
      Grid grid-props
      (uix/$ Typography {:variant :h4}
-            "Query results")
+            "Query Results")
 
      (uix/$ Box {:m 3}
             (uix/$ Button {:variant :contained
@@ -84,44 +85,42 @@
              :max-height :100vh}))))
 
 (uix/defui web-editor-app []
-  (let [cm-editor-ref (uix/use-ref)
-        guifier-ref (uix/use-ref)]
-    (uix/$ Box
-           (uix/$ :title "L4 web editor")
-           (uix/$ :link
-                  {:rel "preconnect"
-                   :href "https://fonts.googleapis.com"})
-           (uix/$ :link
-                  {:rel "preconnect"
-                   :href "https://fonts.gstatic.com"
-                   :cross-origin "anonymous"})
-           (uix/$ :link
-                  {:rel "stylesheet"
-                   :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})
+  (uix/$
+   Box
+   (uix/$ :title "L4 web editor")
 
-           (uix/$ Typography {:variant :h3 :gutter-bottom true}
-                  "L4 web editor")
+   (react-dom/preconnect "https://fonts.googleapis.com")
+   (react-dom/preconnect "https://fonts.gstatic.com"
+                         #js {:crossOrigin "anonymous"})
 
-           (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
-                        :underline :hover
-                        :variant :h6}
-                  "Click here to visit the project on GitHub!")
+   (react-dom/preload "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+                      #js {:as "style"})
 
-           (uix/$ Grid {:container true}
-                  (uix/$ cm-editor-grid-item
-                         {:grid-props {:m 2}
-                          :cm-editor-ref cm-editor-ref})
-                  (uix/$ guifier-grid-item
-                         {:grid-props {:m 2}
-                          :cm-editor-ref cm-editor-ref
-                          :guifier-ref guifier-ref})))))
+   (uix/$ Typography {:variant :h3 :gutter-bottom true}
+          "L4 web editor")
 
-(defn- render-react-web-editor-app! []
+   (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
+                :underline :hover
+                :variant :h6}
+          "Click here to visit the project on GitHub!")
+
+   (let [cm-editor-ref (uix/use-ref)
+         guifier-ref (uix/use-ref)]
+     (uix/$ Grid {:container true}
+            (uix/$ cm-editor-grid-item
+                   {:grid-props {:m 2}
+                    :cm-editor-ref cm-editor-ref})
+            (uix/$ guifier-grid-item
+                   {:grid-props {:m 2}
+                    :cm-editor-ref cm-editor-ref
+                    :guifier-ref guifier-ref})))))
+
+(defn- render-web-editor-app! []
   (let [app-root
         (-> js/document
             (jsi/call :getElementById web-editor-app-id)
-            dom/create-root)]
-    (dom/render-root (uix/$ web-editor-app) app-root)))
+            uix-dom/create-root)]
+    (uix-dom/render-root (uix/$ web-editor-app) app-root)))
 
 (defn start! []
   (println "Starting..."))
@@ -130,5 +129,5 @@
   (println "Stopping..."))
 
 (defn init! []
-  (render-react-web-editor-app!)
+  (render-web-editor-app!)
   (start!))
