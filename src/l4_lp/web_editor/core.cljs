@@ -45,10 +45,10 @@
                    :id :web-editor-instrs}
                   (uix/$ Typography {:variant :h6} "Usage instructions"))
            (uix/$ AccordionDetails
-                  (uix/$ Typography {:max-width :md
-                                     :variant :body1
-                                     :white-space :pre-line}
-                         (uix/$ loading-bar
+                  (uix/$ loading-bar
+                         (uix/$ Typography {:max-width :md
+                                            :variant :body1
+                                            :white-space :pre-line}
                                 (fetch-text! web-editor-instrs-url))))))
 
    (uix/$ loading-bar
