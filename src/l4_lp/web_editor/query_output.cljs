@@ -74,9 +74,9 @@
                                (str "Query " (inc index))))
                  (uix/$ AccordionDetails
                         (uix/$ guifier {:data result}))))]
-    (uix/$ Box {:mt 4}
+    (uix/$ Box #_{:mt 4}
            (uix/$ Typography {:m 2 :variant :h4} "Query Results")
-           (uix/$ Box #_{:max-height max-height :overflow :auto}
+           (uix/$ Box
                   (->> query-results
                        (map-indexed indexed-query-result->comp))))))
 
@@ -96,10 +96,9 @@
           (let [cm-editor-doc (jsi/get-in @cm-editor-ref [:view :state :doc])
                 prolog-program-and-queries
                 (-> cm-editor-doc str l4->prolog/l4->prolog-program+queries)]
-
-            (set-prolog! prolog-program-and-queries)
-
             (prom/do
+              (set-prolog! prolog-program-and-queries)
+
               (swipl-wasm-query/query-and-trace!
                prolog-program-and-queries
                (fn [result] (set-query-results! #(conj % result))))
@@ -107,7 +106,7 @@
               (set-queries-running! false))))]
     (uix/$ Box
            (uix/$ LoadingButton
-                  {:sx #js {:m 3}
+                  {:sx #js {:ml 5 :mb 2}
                    :loading queries-running?
                    :variant :contained
                    :size :large

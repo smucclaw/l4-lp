@@ -62,7 +62,7 @@
                            :max-editor-height :80vh
                            :editor-preamble-url editor-preamble-url
                            :editor-instrs-url editor-instrs-url}))
-            (uix/$ Grid {:ml 2 :mr 2}
+            (uix/$ Grid {:mt 3 :ml 2 :mr 2 :mb 2}
                    (uix/$ query-button-and-output
                           {:cm-editor-ref cm-editor-ref
                            :max-height :90vh}))))))
