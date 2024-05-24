@@ -43,7 +43,8 @@
                   (prom/then #(set-editor-text! editor-view %))))})))
 
 (uix/defui cm-editor-and-instrs
-  [{:keys [cm-editor-ref editor-instrs-url editor-preamble-url]}]
+  [{:keys [cm-editor-ref max-editor-height
+           editor-instrs-url editor-preamble-url]}]
 
   (uix/$ Box
          (uix/$
@@ -56,14 +57,14 @@
                         (uix/$ Typography {:variant :h6} "Usage instructions"))
                  (uix/$ AccordionDetails
                         (uix/$ Typography {:max-width :md
-                                           ;; :variant :body1
+                                           :variant :body1
                                            :white-space :pre-line}
                                (uix/$ loading-bar
                                       (fetch-as-text! editor-instrs-url))))))
          (uix/$ loading-bar
                 (uix/$ cm-editor
                        {:ref cm-editor-ref
-                        :max-height :90vh
+                        :max-height max-editor-height
                         :font-size :14pt
                         :editor-preamble-text
                         (fetch-as-text! editor-preamble-url)}))))
