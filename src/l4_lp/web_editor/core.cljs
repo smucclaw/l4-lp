@@ -1,86 +1,23 @@
 (ns l4-lp.web-editor.core
-  (:require ["@mui/icons-material/Send$default" :as SendIcon]
-            ["@mui/icons-material/ExpandMore$default" :as ExpandMoreIcon]
-            ["@mui/material/Accordion$default" :as Accordion]
-            ["@mui/material/AccordionDetails$default" :as AccordionDetails]
-            ["@mui/material/AccordionSummary$default" :as AccordionSummary]
-            ["@mui/material/Box$default" :as Box]
-            ["@mui/material/Button$default" :as Button]
-            ["@mui/material/CircularProgress$default" :as CircularProgress]
-            ["@mui/material/Unstable_Grid2$default" :as Grid]
+  (:require ["@mui/material/Box$default" :as Box]
             ["@mui/material/Link$default" :as Link]
             ["@mui/material/Typography$default" :as Typography]
+            ["@mui/material/Unstable_Grid2$default" :as Grid]
             ["react-dom" :as react-dom]
             [applied-science.js-interop :as jsi]
-            [l4-lp.web-editor.codemirror-editor :as cm-editor]
-            [l4-lp.web-editor.guifier :as guifier]
-            [l4-lp.web-editor.utils :refer [fetch-text!]]
+            [l4-lp.web-editor.codemirror-editor :refer [cm-editor-and-instrs]]
+            [l4-lp.web-editor.query-output :refer [query-button-and-output]]
             [uix.core :as uix]
             [uix.dom :as uix-dom]))
 
-(def ^:private web-editor-preamble-url
+(def ^:private editor-preamble-url
  "web_editor_preamble.edn")
 
-(def ^:private web-editor-instrs-url
+(def ^:private editor-instrs-url
   "web_editor_instructions.txt")
 
 (def ^:private web-editor-app-id
   "web-editor-app")
-
-(uix/defui loading-bar
-  [{:keys [children]}]
-  (uix/$ uix/suspense {:fallback (uix/$ CircularProgress)} children))
-
-(uix/defui cm-editor-grid-item
-  [{:keys [grid-props cm-editor-ref]}]
-
-  (uix/$
-   Grid grid-props
-   (uix/$
-    Box {:m 2}
-    (uix/$ Accordion
-           (uix/$ AccordionSummary
-                  {:expand-icon (uix/$ ExpandMoreIcon)
-                   :aria-controls :web-editor-instrs-control
-                   :id :web-editor-instrs}
-                  (uix/$ Typography {:variant :h6} "Usage instructions"))
-           (uix/$ AccordionDetails
-                  (uix/$ Typography {:max-width :md
-                                     :variant :body1
-                                     :white-space :pre-line}
-                         (uix/$ loading-bar
-                                (fetch-text! web-editor-instrs-url))))))
-
-   (uix/$ loading-bar
-          (uix/$ cm-editor/cm-editor
-                 {:ref cm-editor-ref
-                  :max-height :90vh
-                  :font-size :14pt
-                  :editor-preamble-text
-                  (fetch-text! web-editor-preamble-url)}))))
-
-(uix/defui guifier-grid-item
-  [{:keys [grid-props cm-editor-ref guifier-ref]}]
-
-  (let [cm-editor->query-trace-and-update-guifier!
-        #(let [cm-editor-doc (jsi/get-in @cm-editor-ref [:view :state :doc])
-               guifier @guifier-ref
-               cm-editor-text (str cm-editor-doc)]
-           (guifier/query-trace-and-update-guifier! guifier cm-editor-text))]
-
-    (uix/$
-     Grid grid-props
-     (uix/$ Typography {:variant :h4} "Query Results")
-
-     (uix/$ Box {:m 3}
-            (uix/$ Button {:variant :contained
-                           :size :large
-                           :end-icon (uix/$ SendIcon)
-                           :on-click cm-editor->query-trace-and-update-guifier!}
-                   "Run Queries"))
-
-     (uix/$ loading-bar
-            (uix/$ guifier/guifier {:ref guifier-ref :max-height :100vh})))))
 
 (uix/defui web-editor-app []
   (uix/$
@@ -94,23 +31,24 @@
    (uix/$ :link {:rel :stylesheet
                  :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})
 
-   (uix/$ Typography {:variant :h3 :gutter-bottom true} "L4 web editor")
+   (uix/$ Box {:ml 2 :mr 2}
+          (uix/$ Typography {:variant :h3 :gutter-bottom true} "L4 web editor")
 
-   (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
-                :underline :hover
-                :variant :h6}
-          "Click here to visit the project on GitHub!")
+          (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
+                       :underline :hover
+                       :variant :h6}
+                 "Click here to visit the project on GitHub!"))
 
-   (let [cm-editor-ref (uix/use-ref)
-         guifier-ref (uix/use-ref)]
+   (let [cm-editor-ref (uix/use-ref)]
      (uix/$ Grid {:container true}
-            (uix/$ cm-editor-grid-item
-                   {:grid-props {:m 2}
-                    :cm-editor-ref cm-editor-ref})
-            (uix/$ guifier-grid-item
-                   {:grid-props {:m 2}
-                    :cm-editor-ref cm-editor-ref
-                    :guifier-ref guifier-ref})))))
+            (uix/$ Grid {:m 2}
+                   (uix/$ cm-editor-and-instrs
+                          {:cm-editor-ref cm-editor-ref
+                           :editor-preamble-url editor-preamble-url
+                           :editor-instrs-url editor-instrs-url}))
+            (uix/$ Grid {:ml 2 :mr 2}
+                   (uix/$ query-button-and-output
+                          {:cm-editor-ref cm-editor-ref}))))))
 
 (defn- render-web-editor-app! []
   (let [app-root
