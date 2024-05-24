@@ -4,7 +4,7 @@
             ["@uiw/codemirror-theme-solarized" :as cm-solarized]
             ["@uiw/react-codemirror$default" :as CodeMirror]
             [applied-science.js-interop :as jsi]
-            [l4-lp.web-editor.utils :refer [fetch-text-from-url-and-then!]]
+            [promesa.core :as prom]
             [uix.core :as uix]))
 
 ;; https://blog.jakubholy.net/2023/interactive-code-snippets-fulcro/
@@ -18,7 +18,7 @@
                                :insert text}}))
 
 (uix/defui cm-editor
-  [{:keys [ref editor-preamble-url max-height font-size]}]
+  [{:keys [ref editor-preamble-text max-height font-size]}]
   (let [theme (jsi/call cm-view/EditorView :theme
                         #js {:& #js {:font-size (name font-size)}
                              :.cm-content #js {:font-family "Lucida Console"}
@@ -34,6 +34,5 @@
             :ref ref
             :on-create-editor
             (fn [editor-view _editor-state]
-              (fetch-text-from-url-and-then!
-               editor-preamble-url
-               #(set-editor-text! editor-view %)))})))
+              (-> editor-preamble-text
+                  (prom/then #(set-editor-text! editor-view %))))})))

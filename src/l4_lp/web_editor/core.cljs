@@ -6,6 +6,7 @@
             ["@mui/material/AccordionSummary$default" :as AccordionSummary]
             ["@mui/material/Box$default" :as Box]
             ["@mui/material/Button$default" :as Button]
+            ["@mui/material/CircularProgress$default" :as CircularProgress]
             ["@mui/material/Unstable_Grid2$default" :as Grid]
             ["@mui/material/Link$default" :as Link]
             ["@mui/material/Typography$default" :as Typography]
@@ -13,7 +14,7 @@
             [applied-science.js-interop :as jsi]
             [l4-lp.web-editor.codemirror-editor :as cm-editor]
             [l4-lp.web-editor.guifier :as guifier]
-            [l4-lp.web-editor.utils :refer [fetch-text-from-url-and-then!]]
+            [l4-lp.web-editor.utils :refer [fetch-text!]]
             [tupelo.core :refer [it->]]
             [uix.core :as uix]
             [uix.dom :as uix-dom]))
@@ -27,36 +28,40 @@
 (def ^:private web-editor-app-id
   "web-editor-app")
 
+(uix/defui with-loading-bar
+  [{:keys [children]}]
+  (uix/$ uix/suspense {:fallback (uix/$ CircularProgress)} children))
+
 (uix/defui cm-editor-grid-item
   [{:keys [grid-props cm-editor-ref]}]
 
-  (let [[web-editor-instrs set-web-editor-instrs!] (uix/use-state nil)]
-    (uix/use-effect
-     #(fetch-text-from-url-and-then! web-editor-instrs-url
-                                     set-web-editor-instrs!))
-    (uix/$
-     Grid grid-props
-     (uix/$
-      Box {:m 2}
-      (uix/$ Accordion
-             (uix/$ AccordionSummary
-                    {:expand-icon (uix/$ ExpandMoreIcon)
-                     :aria-controls :web-editor-instrs-control
-                     :id :web-editor-instrs}
-                    (uix/$ Typography {:variant :h6}
-                           "Usage instructions"))
-             (uix/$ AccordionDetails
-                    (uix/$ Typography {:m 1 ;; :mt 1 :mb 1
-                                       :max-width :md
-                                       :white-space :pre-line
-                                       :variant :body1}
-                           web-editor-instrs))))
+  (uix/$
+   Grid grid-props
+   (uix/$
+    Box {:m 2}
+    (uix/$ Accordion
+           (uix/$ AccordionSummary
+                  {:expand-icon (uix/$ ExpandMoreIcon)
+                   :aria-controls :web-editor-instrs-control
+                   :id :web-editor-instrs}
+                  (uix/$ Typography {:variant :h6}
+                         "Usage instructions"))
+           (uix/$ AccordionDetails
+                  (uix/$ Typography {:m 1 ;; :mt 1 :mb 1
+                                     :max-width :md
+                                     :white-space :pre-line
+                                     :variant :body1}
+                         (uix/$ with-loading-bar
+                                (-> web-editor-instrs-url
+                                    fetch-text!))))))
 
-     (uix/$ cm-editor/cm-editor
-            {:ref cm-editor-ref
-             :max-height :90vh
-             :font-size :14pt
-             :editor-preamble-url web-editor-preamble-url}))))
+   (uix/$ with-loading-bar
+          (uix/$ cm-editor/cm-editor
+                 {:ref cm-editor-ref
+                  :max-height :90vh
+                  :font-size :14pt
+                  :editor-preamble-text
+                  (fetch-text! web-editor-preamble-url)}))))
 
 (uix/defui guifier-grid-item
   [{:keys [grid-props cm-editor-ref guifier-ref]}]
@@ -80,21 +85,22 @@
                            :on-click cm-editor->query-trace-and-update-guifier!}
                    "Run Queries"))
 
-     (uix/$ guifier/guifier
-            {:ref guifier-ref
-             :max-height :100vh}))))
+     (uix/$ with-loading-bar
+            (uix/$ guifier/guifier
+                   {:ref guifier-ref
+                    :max-height :100vh})))))
 
 (uix/defui web-editor-app []
   (uix/$
    Box
    (uix/$ :title "L4 web editor")
 
+   ;; Load fonts for MUI Typography components.
    (react-dom/preconnect "https://fonts.googleapis.com")
    (react-dom/preconnect "https://fonts.gstatic.com"
                          #js {:crossOrigin "anonymous"})
-
-   (react-dom/preload "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-                      #js {:as "style"})
+   (uix/$ :link {:rel :stylesheet
+                 :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})
 
    (uix/$ Typography {:variant :h3 :gutter-bottom true}
           "L4 web editor")
