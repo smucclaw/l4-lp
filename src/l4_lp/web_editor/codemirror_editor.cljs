@@ -11,11 +11,9 @@
 ;; https://github.com/nextjournal/clojure-mode
 
 (defn- set-editor-text! [editor-view text]
-  (jsi/call editor-view :dispatch
-            #js {:changes #js {:from 0
-                               :to (jsi/get-in editor-view
-                                               [:state :doc :length])
-                               :insert text}}))
+  (let [editor-doc-length (jsi/get-in editor-view [:state :doc :length])]
+    (jsi/call editor-view :dispatch
+              #js {:changes #js {:from 0 :to editor-doc-length :insert text}})))
 
 (uix/defui cm-editor
   [{:keys [ref editor-preamble-text max-height font-size]}]

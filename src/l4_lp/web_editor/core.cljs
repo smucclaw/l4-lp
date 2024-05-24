@@ -15,7 +15,6 @@
             [l4-lp.web-editor.codemirror-editor :as cm-editor]
             [l4-lp.web-editor.guifier :as guifier]
             [l4-lp.web-editor.utils :refer [fetch-text!]]
-            [tupelo.core :refer [it->]]
             [uix.core :as uix]
             [uix.dom :as uix-dom]))
 
@@ -28,7 +27,7 @@
 (def ^:private web-editor-app-id
   "web-editor-app")
 
-(uix/defui with-loading-bar
+(uix/defui loading-bar
   [{:keys [children]}]
   (uix/$ uix/suspense {:fallback (uix/$ CircularProgress)} children))
 
@@ -44,18 +43,15 @@
                   {:expand-icon (uix/$ ExpandMoreIcon)
                    :aria-controls :web-editor-instrs-control
                    :id :web-editor-instrs}
-                  (uix/$ Typography {:variant :h6}
-                         "Usage instructions"))
+                  (uix/$ Typography {:variant :h6} "Usage instructions"))
            (uix/$ AccordionDetails
-                  (uix/$ Typography {:m 1 ;; :mt 1 :mb 1
-                                     :max-width :md
-                                     :white-space :pre-line
-                                     :variant :body1}
-                         (uix/$ with-loading-bar
-                                (-> web-editor-instrs-url
-                                    fetch-text!))))))
+                  (uix/$ Typography {:max-width :md
+                                     :variant :body1
+                                     :white-space :pre-line}
+                         (uix/$ loading-bar
+                                (fetch-text! web-editor-instrs-url))))))
 
-   (uix/$ with-loading-bar
+   (uix/$ loading-bar
           (uix/$ cm-editor/cm-editor
                  {:ref cm-editor-ref
                   :max-height :90vh
@@ -67,16 +63,14 @@
   [{:keys [grid-props cm-editor-ref guifier-ref]}]
 
   (let [cm-editor->query-trace-and-update-guifier!
-        #(let [cm-editor @cm-editor-ref
-               guifier @guifier-ref]
-           (it-> cm-editor
-                 (jsi/get-in it [:view :state :doc])
-                 (str it)
-                 (guifier/query-trace-and-update-guifier! guifier it)))]
+        #(let [cm-editor-doc (jsi/get-in @cm-editor-ref [:view :state :doc])
+               guifier @guifier-ref
+               cm-editor-text (str cm-editor-doc)]
+           (guifier/query-trace-and-update-guifier! guifier cm-editor-text))]
+
     (uix/$
      Grid grid-props
-     (uix/$ Typography {:variant :h4}
-            "Query Results")
+     (uix/$ Typography {:variant :h4} "Query Results")
 
      (uix/$ Box {:m 3}
             (uix/$ Button {:variant :contained
@@ -85,25 +79,22 @@
                            :on-click cm-editor->query-trace-and-update-guifier!}
                    "Run Queries"))
 
-     (uix/$ with-loading-bar
-            (uix/$ guifier/guifier
-                   {:ref guifier-ref
-                    :max-height :100vh})))))
+     (uix/$ loading-bar
+            (uix/$ guifier/guifier {:ref guifier-ref :max-height :100vh})))))
 
 (uix/defui web-editor-app []
   (uix/$
    Box
    (uix/$ :title "L4 web editor")
 
-   ;; Load fonts for MUI Typography components.
+   ;; Load fonts for MUI components.
    (react-dom/preconnect "https://fonts.googleapis.com")
    (react-dom/preconnect "https://fonts.gstatic.com"
                          #js {:crossOrigin "anonymous"})
    (uix/$ :link {:rel :stylesheet
                  :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})
 
-   (uix/$ Typography {:variant :h3 :gutter-bottom true}
-          "L4 web editor")
+   (uix/$ Typography {:variant :h3 :gutter-bottom true} "L4 web editor")
 
    (uix/$ Link {:href "https://github.com/smucclaw/l4-lp"
                 :underline :hover
