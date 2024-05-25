@@ -37,27 +37,28 @@
 (uix/defui cm-editor
   [{:keys [ref editor-preamble-text max-height font-size]}]
   (let [exts (uix/use-memo #(exts font-size) [font-size])
-        [preamble-loaded? set-preamble-loaded!] (uix/use-state false)
 
-         ref-callback-fn
-         (uix/use-callback
-          #(jsi/let [^:js {:keys [editor state view] :as cm-editor} %]
-             (when (and editor state view)
-               (when-not preamble-loaded?
-                 (prom/chain
-                  editor-preamble-text
-                  (partial set-editor-text! view)
-                  (fn [_] (set-preamble-loaded! true))))
-               (reset! ref cm-editor)))
+        ;; https://github.com/uiwjs/react-codemirror/issues/314
+        #_ref-callback-fn
+        #_(uix/use-callback
+         #(jsi/let [^:js {:keys [editor state view] :as cm-editor} %]
+            (when (and editor state view)
+              (prom/then editor-preamble-text
+                         (partial set-editor-text! view))
+              (reset! ref cm-editor))
 
-          [ref editor-preamble-text preamble-loaded?])]
+            [ref editor-preamble-text]))]
 
     (uix/$ CodeMirror
            {:theme cm-solarized/solarizedLight
             :extensions exts
             :basic-setup true
             :max-height max-height
-            :ref ref-callback-fn})))
+            :ref ref #_ref-callback-fn
+            :on-create-editor
+            (fn [editor-view _editor-state]
+              (prom/then editor-preamble-text
+                         #(set-editor-text! editor-view %)))})))
 
 (uix/defui editor-instrs
   [{:keys [editor-instrs-text

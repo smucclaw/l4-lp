@@ -63,15 +63,17 @@
                                (str "Query " (inc index))))
                  (uix/$ AccordionDetails
                         (uix/$ guifier {:data result}))))]
-    (uix/$ Box (->> query-results
-                    (map-indexed indexed-query-result->comp)))))
+    (->> query-results
+         (eduction (map-indexed indexed-query-result->comp))
+         to-array)))
 
 (uix/defui query-output
   [{:keys [max-height
            prolog-program-and-queries
            query-results]}]
   (uix/$ Box
-         (uix/$ Typography {:mb 2 :variant :h4} "Query Results")
+         (uix/$ Typography {:ml 2 :mr 2 :mb 2 :variant :h4}
+                "Query Results")
 
          (uix/$ Box {:max-height max-height
                      :overflow :auto}
