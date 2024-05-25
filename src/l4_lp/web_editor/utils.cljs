@@ -11,6 +11,9 @@
         (fetch/get it {:content-type :text})
         (prom/map :body it)))
 
+(defn memoised-fetch-as-text! [url]
+  (uix/use-memo #(fetch-as-text! url) [url]))
+
 (uix/defui suspense-loading-bar
   [{:keys [children]}]
   (uix/$ uix/suspense {:fallback (uix/$ CircularProgress)} children))

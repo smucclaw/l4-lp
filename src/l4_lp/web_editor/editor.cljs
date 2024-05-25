@@ -10,7 +10,7 @@
             ["@uiw/codemirror-theme-solarized" :as cm-solarized]
             ["@uiw/react-codemirror$default" :as CodeMirror]
             [applied-science.js-interop :as jsi]
-            [l4-lp.web-editor.utils :refer [fetch-as-text!
+            [l4-lp.web-editor.utils :refer [memoised-fetch-as-text!
                                             suspense-loading-bar]]
             [promesa.core :as prom]
             [uix.core :as uix]))
@@ -36,20 +36,31 @@
 
 (uix/defui cm-editor
   [{:keys [ref editor-preamble-text max-height font-size]}]
-  (let [exts (uix/use-memo #(exts font-size) [font-size])]
+  (let [exts (uix/use-memo #(exts font-size) [font-size])
+        [preamble-loaded? set-preamble-loaded!] (uix/use-state false)
+
+         ref-callback-fn
+         (uix/use-callback
+          #(jsi/let [^:js {:keys [editor state view] :as cm-editor} %]
+             (when (and editor state view)
+               (when-not preamble-loaded?
+                 (prom/chain
+                  editor-preamble-text
+                  (partial set-editor-text! view)
+                  (fn [_] (set-preamble-loaded! true))))
+               (reset! ref cm-editor)))
+
+          [ref editor-preamble-text preamble-loaded?])]
+
     (uix/$ CodeMirror
            {:theme cm-solarized/solarizedLight
             :extensions exts
             :basic-setup true
             :max-height max-height
-            :ref ref
-            :on-create-editor
-            (fn [editor-view _editor-state]
-              (-> editor-preamble-text
-                  (prom/then #(set-editor-text! editor-view %))))})))
+            :ref ref-callback-fn})))
 
 (uix/defui editor-instrs
-  [{:keys [editor-instrs-url
+  [{:keys [editor-instrs-text
            max-text-width]}]
   (uix/$ Accordion
          (uix/$ AccordionSummary
@@ -62,21 +73,25 @@
                        (uix/$ Typography {:max-width max-text-width
                                           :variant :body1
                                           :white-space :pre-line}
-                              (fetch-as-text! editor-instrs-url))))))
+                              editor-instrs-text)))))
 
 (uix/defui editor
   [{:keys [max-editor-height
            editor-ref
            editor-instrs-url editor-preamble-url]}]
-  (uix/$ Box
-         (uix/$ editor-instrs
-                {:max-text-width :sm
-                 :editor-instrs-url editor-instrs-url})
-         (uix/$ Box {:mt 2}
-                (uix/$ suspense-loading-bar
-                       (uix/$ cm-editor
-                              {:ref editor-ref
-                               :max-height max-editor-height
-                               :font-size :14pt
-                               :editor-preamble-text
-                               (fetch-as-text! editor-preamble-url)})))))
+  (let [editor-instrs-text
+        (memoised-fetch-as-text! editor-instrs-url)
+        editor-preamble-text
+        (memoised-fetch-as-text! editor-preamble-url)]
+    (uix/$ Box
+           (uix/$ editor-instrs
+                  {:max-text-width :sm
+                   :editor-instrs-text editor-instrs-text})
+           (uix/$ Box {:mt 2}
+                  (uix/$ suspense-loading-bar
+                         (uix/$ cm-editor
+                                {:ref editor-ref
+                                 :max-height max-editor-height
+                                 :font-size :14pt
+                                 :editor-preamble-text
+                                 editor-preamble-text}))))))
