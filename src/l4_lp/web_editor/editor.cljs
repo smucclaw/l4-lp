@@ -1,16 +1,20 @@
-(ns l4-lp.web-editor.codemirror-editor
+(ns l4-lp.web-editor.editor
   (:require ["@codemirror/view" :as cm-view]
             ["@mui/icons-material/ExpandMore$default" :as ExpandMoreIcon]
+            ["@mui/icons-material/Send$default" :as SendIcon]
+            ["@mui/lab/LoadingButton$default" :as LoadingButton]
             ["@mui/material/Accordion$default" :as Accordion]
             ["@mui/material/AccordionDetails$default" :as AccordionDetails]
             ["@mui/material/AccordionSummary$default" :as AccordionSummary]
             ["@mui/material/Box$default" :as Box]
             ["@mui/material/Typography$default" :as Typography]
+            ["@mui/material/Unstable_Grid2$default" :as Grid]
             ["@nextjournal/clojure-mode" :as cm-clj]
             ["@uiw/codemirror-theme-solarized" :as cm-solarized]
             ["@uiw/react-codemirror$default" :as CodeMirror]
             [applied-science.js-interop :as jsi]
-            [l4-lp.web-editor.utils :refer [fetch-as-text! loading-bar]]
+            [l4-lp.web-editor.utils :refer [fetch-as-text!
+                                            suspense-loading-bar]]
             [promesa.core :as prom]
             [uix.core :as uix]))
 
@@ -33,6 +37,7 @@
         exts #js [theme
                   (jsi/call cm-view/keymap :of cm-clj/complete_keymap)
                   cm-clj/default_extensions]]
+
     (uix/$ CodeMirror
            {:theme cm-solarized/solarizedLight
             :extensions exts
@@ -44,29 +49,35 @@
               (-> editor-preamble-text
                   (prom/then #(set-editor-text! editor-view %))))})))
 
-(uix/defui cm-editor-and-instrs
-  [{:keys [cm-editor-ref max-editor-height
-           editor-instrs-url editor-preamble-url]}]
+(uix/defui editor-instrs
+  [{:keys [editor-instrs-url
+           max-text-width]}]
+  (uix/$ Accordion
+         (uix/$ AccordionSummary
+                {:expand-icon (uix/$ ExpandMoreIcon)
+                 :aria-controls :panel-content
+                 :id :web-editor-instrs}
+                (uix/$ Typography {:variant :h6} "Usage instructions"))
+         (uix/$ AccordionDetails
+                (uix/$ suspense-loading-bar
+                       (uix/$ Typography {:max-width max-text-width
+                                          :variant :body1
+                                          :white-space :pre-line}
+                              (fetch-as-text! editor-instrs-url))))))
 
+(uix/defui editor
+  [{:keys [max-editor-height
+           editor-ref
+           editor-instrs-url editor-preamble-url]}]
   (uix/$ Box
-         (uix/$
-          Box {:ml 2 :mr 2 :mb 2}
-          (uix/$ Accordion
-                 (uix/$ AccordionSummary
-                        {:expand-icon (uix/$ ExpandMoreIcon)
-                         :aria-controls :panel-content
-                         :id :web-editor-instrs}
-                        (uix/$ Typography {:variant :h6} "Usage instructions"))
-                 (uix/$ AccordionDetails
-                        (uix/$ Typography {:max-width :md
-                                           :variant :body1
-                                           :white-space :pre-line}
-                               (uix/$ loading-bar
-                                      (fetch-as-text! editor-instrs-url))))))
-         (uix/$ loading-bar
-                (uix/$ cm-editor
-                       {:ref cm-editor-ref
-                        :max-height max-editor-height
-                        :font-size :14pt
-                        :editor-preamble-text
-                        (fetch-as-text! editor-preamble-url)}))))
+         (uix/$ editor-instrs
+                {:max-text-width :sm
+                 :editor-instrs-url editor-instrs-url})
+         (uix/$ Box {:mt 2}
+                (uix/$ suspense-loading-bar
+                       (uix/$ cm-editor
+                              {:ref editor-ref
+                               :max-height max-editor-height
+                               :font-size :14pt
+                               :editor-preamble-text
+                               (fetch-as-text! editor-preamble-url)})))))

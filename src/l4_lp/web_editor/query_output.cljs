@@ -1,7 +1,5 @@
 (ns l4-lp.web-editor.query-output
   (:require ["@mui/icons-material/ExpandMore$default" :as ExpandMoreIcon]
-            ["@mui/icons-material/Send$default" :as SendIcon]
-            ["@mui/lab/LoadingButton$default" :as LoadingButton]
             ["@mui/material/Accordion$default" :as Accordion]
             ["@mui/material/AccordionDetails$default" :as AccordionDetails]
             ["@mui/material/AccordionSummary$default" :as AccordionSummary]
@@ -11,10 +9,7 @@
              :as Guifier]
             [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
-            [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]
-            [l4-lp.syntax.l4-to-prolog :as l4->prolog]
-            [l4-lp.web-editor.utils :refer [loading-bar]]
-            [promesa.core :as prom]
+            [l4-lp.web-editor.utils :refer [suspense-loading-bar]]
             [uix.core :as uix]))
 
 (defn- init-guifier!
@@ -53,7 +48,7 @@
   (and
    (not-empty prolog-program-and-queries)
    (uix/$
-    loading-bar
+    suspense-loading-bar
     (uix/$ Accordion
            (uix/$ AccordionSummary {:expand-icon (uix/$ ExpandMoreIcon)}
                   (uix/$ Typography {:variant :h6}
@@ -74,48 +69,20 @@
                                (str "Query " (inc index))))
                  (uix/$ AccordionDetails
                         (uix/$ guifier {:data result}))))]
-    (uix/$ Box #_{:mt 4}
-           (uix/$ Typography {:m 2 :variant :h4} "Query Results")
-           (uix/$ Box
-                  (->> query-results
-                       (map-indexed indexed-query-result->comp))))))
+    (uix/$ Box (->> query-results
+                    (map-indexed indexed-query-result->comp)))))
 
-(uix/defui query-button-and-output
-  [{:keys [max-height cm-editor-ref]}]
+(uix/defui query-output
+  [{:keys [max-height
+           prolog-program-and-queries
+           query-results]}]
+  (uix/$ Box
+         (uix/$ Typography {:mb 2 :variant :h4} "Query Results")
 
-  (let [[queries-running? set-queries-running!] (uix/use-state false)
-        [prolog-program-and-queries-stateful set-prolog!] (uix/use-state nil)
-        [query-results-stateful set-query-results!] (uix/use-state [])
-
-        cm-editor->query-trace-and-update-guifier!
-        (fn []
-          (set-queries-running! true)
-          (set-query-results! [])
-          (set-prolog! nil)
-
-          (let [cm-editor-doc (jsi/get-in @cm-editor-ref [:view :state :doc])
-                prolog-program-and-queries
-                (-> cm-editor-doc str l4->prolog/l4->prolog-program+queries)]
-            (prom/do
-              (set-prolog! prolog-program-and-queries)
-
-              (swipl-wasm-query/query-and-trace!
-               prolog-program-and-queries
-               (fn [result] (set-query-results! #(conj % result))))
-
-              (set-queries-running! false))))]
-    (uix/$ Box
-           (uix/$ LoadingButton
-                  {:sx #js {:ml 5 :mb 2}
-                   :loading queries-running?
-                   :variant :contained
-                   :size :large
-                   :end-icon (uix/$ SendIcon)
-                   :on-click cm-editor->query-trace-and-update-guifier!}
-                  "Run Queries")
-           (uix/$ Box {:max-height max-height
-                       :overflow :auto}
-                  (uix/$ prolog-program-and-queries-comp
-                         {:data prolog-program-and-queries-stateful})
-                  (uix/$ query-results-comp
-                         {:data query-results-stateful})))))
+         (uix/$ Box {:max-height max-height
+                     :overflow :auto}
+                (uix/$ Box {:ml 2 :mr 2 :mb 2}
+                       (uix/$ prolog-program-and-queries-comp
+                              {:data prolog-program-and-queries}))
+                (uix/$ query-results-comp
+                       {:data query-results}))))

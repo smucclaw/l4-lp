@@ -11,6 +11,6 @@
         (fetch/get it {:content-type :text})
         (prom/map :body it)))
 
-(uix/defui loading-bar
+(uix/defui suspense-loading-bar
   [{:keys [children]}]
   (uix/$ uix/suspense {:fallback (uix/$ CircularProgress)} children))
