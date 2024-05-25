@@ -55,14 +55,15 @@
    (uix/$ web-editor-top-bar)
 
    (let [cm-editor-ref (uix/use-ref)]
-     (uix/$ Grid {:container true}
-            (uix/$ Grid {:m 2}
+     (uix/$ Grid {:container true
+                  :spacing 2}
+            (uix/$ Grid {:mt 2}
                    (uix/$ cm-editor-and-instrs
                           {:cm-editor-ref cm-editor-ref
                            :max-editor-height :80vh
                            :editor-preamble-url editor-preamble-url
                            :editor-instrs-url editor-instrs-url}))
-            (uix/$ Grid {:mt 3 :ml 2 :mr 2 :mb 2}
+            (uix/$ Grid {:mt 3}
                    (uix/$ query-button-and-output
                           {:cm-editor-ref cm-editor-ref
                            :max-height :90vh}))))))

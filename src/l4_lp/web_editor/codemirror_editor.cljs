@@ -20,7 +20,9 @@
 (defn- set-editor-text! [editor-view text]
   (let [editor-doc-length (jsi/get-in editor-view [:state :doc :length])]
     (jsi/call editor-view :dispatch
-              #js {:changes #js {:from 0 :to editor-doc-length :insert text}})))
+              #js {:changes #js {:from 0
+                                 :to editor-doc-length
+                                 :insert text}})))
 
 (uix/defui cm-editor
   [{:keys [ref editor-preamble-text max-height font-size]}]
