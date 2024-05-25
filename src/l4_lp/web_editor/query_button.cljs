@@ -1,6 +1,5 @@
 (ns l4-lp.web-editor.query-button 
-  (:require ["@mui/icons-material/Send$default" :as SendIcon]
-            ["@mui/lab/LoadingButton$default" :as LoadingButton]
+  (:require ["@mui/lab/LoadingButton$default" :as LoadingButton]
             [applied-science.js-interop :as jsi]
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]
             [l4-lp.syntax.l4-to-prolog :as l4->prolog]
@@ -9,10 +8,9 @@
 
 (uix/defui query-button
   [{:keys [cm-editor-ref
-           queries-running-state
-           set-prolog!
-           set-query-results!]}]
-  (let [[queries-running? set-queries-running!] queries-running-state
+           set-prolog! set-query-results!
+           button-props children]}]
+  (let [[queries-running? set-queries-running!] (uix/use-state false)
         query-fn
         (fn []
           (set-queries-running! true)
@@ -30,13 +28,8 @@
                (fn [result] (set-query-results! #(conj % result))))
 
               (set-queries-running! false))))]
-
     (uix/$ LoadingButton
-           {:sx #js {:ml 3}
-            :loading queries-running?
-            :variant :contained
-            :color :inherit
-            :size :medium
-            :end-icon (uix/$ SendIcon)
-            :on-click query-fn}
-           "Run Queries")))
+           (merge button-props
+                  {:loading queries-running?
+                   :on-click query-fn})
+           children)))

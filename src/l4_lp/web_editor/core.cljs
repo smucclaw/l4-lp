@@ -1,5 +1,6 @@
 (ns l4-lp.web-editor.core
-  (:require ["@mui/material/Box$default" :as Box]
+  (:require ["@mui/icons-material/Send$default" :as SendIcon]
+            ["@mui/material/Box$default" :as Box]
             ["@mui/material/Unstable_Grid2$default" :as Grid]
             ["react-dom" :as react-dom]
             [applied-science.js-interop :as jsi]
@@ -32,7 +33,6 @@
 
 (uix/defui web-editor-app []
   (let [cm-editor-ref (uix/use-ref)
-        queries-running-state (uix/use-state false)
         [prolog-program-and-queries set-prolog!] (uix/use-state nil)
         [query-results set-query-results!] (uix/use-state [])]
     (uix/$ Box
@@ -42,9 +42,14 @@
            (uix/$ top-bar/top-bar
                   (uix/$ query-button/query-button
                          {:cm-editor-ref cm-editor-ref
-                          :queries-running-state queries-running-state
                           :set-prolog! set-prolog!
-                          :set-query-results! set-query-results!}))
+                          :set-query-results! set-query-results!
+                          :button-props {:sx #js {:ml 3}
+                                         :variant :contained
+                                         :color :inherit
+                                         :size :medium
+                                         :end-icon (uix/$ SendIcon)}}
+                         "Run Queries"))
 
            (uix/$ Grid {:container true
                         :spacing 2}
