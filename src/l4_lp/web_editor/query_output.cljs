@@ -39,14 +39,16 @@
 
 (uix/defui prolog-program-and-queries-comp
   [{prolog-program-and-queries :data}]
-  (uix/$
-   suspense-loading-bar
-   (uix/$ Accordion
-          (uix/$ AccordionSummary {:expand-icon (uix/$ ExpandMoreIcon)}
-                 (uix/$ Typography {:variant :h6}
-                        "Transpiled Prolog program and queries"))
-          (uix/$ AccordionDetails
-                 (uix/$ guifier {:data prolog-program-and-queries})))))
+  (and
+   (not-empty prolog-program-and-queries)
+   (uix/$
+    suspense-loading-bar
+    (uix/$ Accordion
+           (uix/$ AccordionSummary {:expand-icon (uix/$ ExpandMoreIcon)}
+                  (uix/$ Typography {:variant :h6}
+                         "Transpiled Prolog program and queries"))
+           (uix/$ AccordionDetails
+                  (uix/$ guifier {:data prolog-program-and-queries}))))))
 
 (uix/defui query-results-comp
   [{query-results :data}]
@@ -75,9 +77,8 @@
 
          (uix/$ Box {:max-height max-height
                      :overflow :auto}
-                (and (not-empty prolog-program-and-queries)
-                     (uix/$ Box {:ml 2 :mr 2 :mb 2}
-                            (uix/$ prolog-program-and-queries-comp
-                                   {:data prolog-program-and-queries})))
+                (uix/$ Box {:ml 2 :mr 2 :mb 2}
+                       (uix/$ prolog-program-and-queries-comp
+                              {:data prolog-program-and-queries}))
                 (uix/$ query-results-comp
                        {:data query-results}))))
