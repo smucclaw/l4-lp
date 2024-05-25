@@ -16,9 +16,9 @@
   ([guifier-elt-id]
    (init-guifier! guifier-elt-id nil))
   
-  ([guifier-elt-id js-data]
+  ([guifier-elt-id data]
    (new Guifier
-        #js {:data js-data
+        #js {:data (bean/->js data)
              :dataType "js"
              :elementSelector (->> guifier-elt-id
                                    (jsi/call js/CSS :escape)
@@ -30,18 +30,12 @@
   [{:keys [data box-props]}]
 
   (let [elt-id (str "guifier" (uix/use-id))
-        guifier-ref (uix/use-ref)]
-
-    (uix/use-effect
-     #(swap! guifier-ref
-             (fn [guifier]
-               (let [js-data (bean/->js data)]
-                 (if guifier
-                   (do (jsi/call guifier :setData js-data "js")
-                       guifier)
-                   (init-guifier! elt-id js-data))))))
-
-    (uix/$ Box (assoc box-props :id elt-id))))
+        guifier-callback-ref
+        (uix/use-callback #(init-guifier! elt-id data)
+                          [elt-id data])]
+    (uix/$ Box
+           (merge box-props
+                  {:ref guifier-callback-ref :id elt-id}))))
 
 (uix/defui prolog-program-and-queries-comp
   [{prolog-program-and-queries :data}]
