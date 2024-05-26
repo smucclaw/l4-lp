@@ -34,7 +34,7 @@
 (uix/defui web-editor-app []
   (let [cm-editor-ref (uix/use-ref)
         [prolog-program-and-queries set-prolog!] (uix/use-state nil)
-        [query-results set-query-results!] (uix/use-state [])]
+        [query-results set-query-results!] (uix/use-state nil)]
     (uix/$ Box
            (uix/$ :title "L4 web editor")
            (uix/$ mui-fonts)
