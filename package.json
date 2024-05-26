@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "shadow-cljs": "2.28.7"
+    "shadow-cljs": "2.28.8"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -22,7 +22,7 @@
     "server": "shadow-cljs server"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.24.6",
     "@nextjournal/clojure-mode": "^0.3.2",
     "@uiw/codemirror-theme-solarized": "^4.22.1",
     "pythonia": "^1.2.0"

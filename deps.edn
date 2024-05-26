@@ -1,5 +1,5 @@
 {:paths ["src"]
- :deps {thheller/shadow-cljs {:mvn/version "2.28.7"}
+ :deps {thheller/shadow-cljs {:mvn/version "2.28.8"}
         binaryage/devtools {:mvn/version "1.0.7"}
         hoplon/hoplon {:mvn/version "7.5.0"}
         com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.6"}
