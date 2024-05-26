@@ -77,8 +77,8 @@
                               editor-instrs-text)))))
 
 (uix/defui editor
-  [{:keys [max-editor-height
-           editor-ref
+  [{:keys [editor-ref
+           max-editor-height max-editor-instrs-width editor-font-size
            editor-instrs-url editor-preamble-url]}]
   (let [editor-instrs-text
         (memoised-fetch-as-text! editor-instrs-url)
@@ -86,13 +86,13 @@
         (memoised-fetch-as-text! editor-preamble-url)]
     (uix/$ Box
            (uix/$ editor-instrs
-                  {:max-text-width :sm
+                  {:max-text-width max-editor-instrs-width
                    :editor-instrs-text editor-instrs-text})
            (uix/$ Box {:mt 2}
                   (uix/$ suspense-loading-bar
                          (uix/$ cm-editor
                                 {:ref editor-ref
                                  :max-height max-editor-height
-                                 :font-size :14pt
+                                 :font-size editor-font-size
                                  :editor-preamble-text
                                  editor-preamble-text}))))))

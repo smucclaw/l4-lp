@@ -56,6 +56,8 @@
                   (uix/$ Grid {:ml 2 :mr 2}
                          (uix/$ editor/editor
                                 {:max-editor-height :85vh
+                                 :max-editor-instrs-width :sm
+                                 :editor-font-size :14pt
                                  :editor-ref cm-editor-ref
                                  :editor-preamble-url editor-preamble-url
                                  :editor-instrs-url editor-instrs-url}))
