@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "shadow-cljs": "2.28.7"
+    "shadow-cljs": "2.28.8"
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -22,7 +22,7 @@
     "server": "shadow-cljs server"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.5",
+    "@babel/runtime": "^7.24.6",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^6.0.0-alpha.8",
