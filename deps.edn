@@ -1,12 +1,13 @@
 {:paths ["src"]
- :deps {thheller/shadow-cljs {:mvn/version "2.28.7"}
+ :deps {thheller/shadow-cljs {:mvn/version "2.28.8"}
         binaryage/devtools {:mvn/version "1.0.7"}
         hoplon/hoplon {:mvn/version "7.5.0"}
         com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.6"}
         instaparse/instaparse {:mvn/version "1.4.14"}
         ;; com.github.clj-easy/graal-build-time {:mvn/version "1.0.5"}
         net.cgrand/xforms {:mvn/version "0.19.6"}
-        datascript/datascript {:mvn/version "1.6.5"}
+        ;; datascript/datascript {:mvn/version "1.6.5"}
+        io.github.tonsky/datascript {:git/sha "995f8a234e28a13d39bf560a484f780241ccc303"}
         ;; vvvvalvalval/datalog-rules {:mvn/version "0.1.0"}
         io.github.noprompt/meander {:git/sha "74de6b1f651441092cc12d1c9012ef7086033040"}
         funcool/promesa {:mvn/version "11.0.678"}
