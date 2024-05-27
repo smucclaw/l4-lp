@@ -9,7 +9,7 @@
             [l4-lp.ide.ui.utils :refer [suspense-loading-bar]]
             [uix.core :as uix]))
 
-(uix/defui transpiled-prolog
+(uix/defui ^:private transpiled-prolog
   [{:keys [data]}]
   (and
    (not-empty data)
@@ -22,7 +22,7 @@
            (uix/$ AccordionDetails
                   (uix/$ guifier {:data data}))))))
 
-(uix/defui query-results
+(uix/defui ^:private query-results
   [{:keys [data]}]
   (let [indexed-query-result->comp
         (fn [index result]

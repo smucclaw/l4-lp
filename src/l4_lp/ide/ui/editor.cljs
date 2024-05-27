@@ -18,8 +18,7 @@
 (defn- set-editor-text! [editor-view text]
   (let [editor-doc-length (jsi/get-in editor-view [:state :doc :length])]
     (jsi/call editor-view :dispatch
-              #js {:changes #js {:from 0
-                                 :to editor-doc-length
+              #js {:changes #js {:from 0 :to editor-doc-length
                                  :insert text}})))
 
 (defn- exts [font-size]

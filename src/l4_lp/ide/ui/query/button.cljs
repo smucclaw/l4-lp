@@ -55,6 +55,5 @@
               (set-queries-running! false))))]
     (uix/$ LoadingButton
            (merge button-props
-                  {:loading queries-running?
-                   :on-click query-fn})
+                  {:loading queries-running? :on-click query-fn})
            children)))

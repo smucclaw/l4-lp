@@ -17,8 +17,7 @@
                               :href "https://github.com/smucclaw/l4-lp"}
                         (uix/$ GitHubIcon))
                  (uix/$ Typography {:mt 1 :ml 5 :mr 5
-                                    :variant :h5
-                                    :gutter-bottom true}
+                                    :variant :h5 :gutter-bottom true}
                         "L4 IDE")
                 children))
          (uix/$ Toolbar)))

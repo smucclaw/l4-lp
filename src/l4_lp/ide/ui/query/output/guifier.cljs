@@ -7,26 +7,26 @@
             [uix.core :as uix]))
 
 (defn- init-guifier!
-  ([guifier-elt-id]
-   (init-guifier! guifier-elt-id nil))
-  
-  ([guifier-elt-id data]
-   (new Guifier
-        #js {:data (bean/->js data)
-             :dataType "js"
-             :elementSelector (->> guifier-elt-id
-                                   (jsi/call js/CSS :escape)
-                                   (str "#"))
-             :withoutContainer true
-             :readOnlyMode true})))
+  ([elt-id]
+   (init-guifier! elt-id nil))
+
+  ([elt-id data]
+   (let [escaped-elt-id (->> elt-id
+                             (jsi/call js/CSS :escape)
+                             (str "#"))]
+     (new Guifier
+          #js {:data (bean/->js data)
+               :dataType "js"
+               :elementSelector escaped-elt-id
+               :withoutContainer true
+               :readOnlyMode true}))))
 
 (uix/defui guifier
   [{:keys [data box-props]}]
-
-  (let [elt-id (str "guifier" (uix/use-id))
+  (let [elt-id (uix/use-id)
         guifier-callback-ref
         (uix/use-callback #(init-guifier! elt-id data)
-                          [elt-id data])]
-    (uix/$ Box
-           (merge box-props
-                  {:ref guifier-callback-ref :id elt-id}))))
+                          [elt-id data])
+        box-props (merge box-props
+                         {:id elt-id :ref guifier-callback-ref})]
+    (uix/$ Box box-props)))
