@@ -37,7 +37,7 @@
                 "Run Queries")))
 
 (uix/defui ^:private ide-grid
-  [{:keys [cm-editor-ref transpiled-prolog-program-and-queries query-results]}]
+  [{:keys [cm-editor-ref transpiled-prolog query-results]}]
   (uix/$ Grid {:container true}
          (uix/$ Grid {:ml 2 :mr 2}
                 (uix/$ ide-instrs {:sx #js {:mb 2}
@@ -49,8 +49,7 @@
          (uix/$ Grid {:mt 2 :ml 2 :mr 2}
                 (uix/$ query-output
                        {:max-height :85vh
-                        :transpiled-prolog-program-and-queries
-                        transpiled-prolog-program-and-queries
+                        :transpiled-prolog transpiled-prolog
                         :query-results query-results}))))
 
 (uix/defui ^:private ide-app []
