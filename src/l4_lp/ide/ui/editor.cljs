@@ -12,8 +12,8 @@
 ;; https://blog.jakubholy.net/2023/interactive-code-snippets-fulcro/
 ;; https://github.com/nextjournal/clojure-mode
 
-(def ^:private ide-preamble-url
- "ide_preamble.edn")
+(def ^:private sample-program-url
+ "ide_sample_program.edn")
 
 (defn- set-editor-text! [editor-view text]
   (let [editor-doc-length (jsi/get-in editor-view [:state :doc :length])]
@@ -33,7 +33,7 @@
 
 (uix/defui editor
   [{:keys [ref max-height font-size]}]
-  (let [ide-preamble-text (memoised-fetch-as-text! ide-preamble-url)
+  (let [preamble-text (memoised-fetch-as-text! sample-program-url)
         exts (uix/use-memo #(exts font-size) [font-size])
 
         ;; https://github.com/uiwjs/react-codemirror/issues/314
@@ -56,5 +56,5 @@
                    :ref ref #_ref-callback-fn
                    :on-create-editor
                    (fn [editor-view _editor-state]
-                     (prom/bind ide-preamble-text
+                     (prom/bind preamble-text
                                 #(set-editor-text! editor-view %)))}))))

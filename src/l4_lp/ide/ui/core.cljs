@@ -15,13 +15,12 @@
 (uix/defui ^:private mui-fonts
   "Component to load fonts for Material UI."
   []
-  (uix/$
-   :div
-   (react-dom/preconnect "https://fonts.googleapis.com")
-   (react-dom/preconnect "https://fonts.gstatic.com"
-                         #js {:crossOrigin "anonymous"})
-   (uix/$ :link {:rel :stylesheet
-                 :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})))
+  (uix/$ :div
+         (react-dom/preconnect "https://fonts.googleapis.com")
+         (react-dom/preconnect "https://fonts.gstatic.com"
+                               #js {:crossOrigin "anonymous"})
+         (uix/$ :link {:rel :stylesheet
+                       :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})))
 
 (uix/defui ^:private top-bar-and-query-button
   [{:keys [cm-editor-ref set-transpiled-prolog! set-query-results!]}]
@@ -56,8 +55,7 @@
 
 (uix/defui ^:private ide-app []
   (let [cm-editor-ref (uix/use-ref)
-        [transpiled-prolog set-transpiled-prolog!]
-        (uix/use-state nil)
+        [transpiled-prolog set-transpiled-prolog!] (uix/use-state nil)
         [query-results set-query-results!] (uix/use-state nil)]
     (uix/$ Box
            (uix/$ :title "L4 IDE")
