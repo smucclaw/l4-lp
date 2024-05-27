@@ -12,9 +12,9 @@
   "ide_usage_instructions.txt")
 
 (uix/defui ide-instrs
-  [{:keys [max-text-width]}]
+  [{:keys [max-text-width sx]}]
   (let [ide-instrs-text (memoised-fetch-as-text! ide-instrs-url)]
-    (uix/$ Accordion
+    (uix/$ Accordion {:sx sx}
            (uix/$ AccordionSummary
                   {:expand-icon (uix/$ ExpandMoreIcon)
                    :aria-controls :panel-content
