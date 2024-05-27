@@ -8,9 +8,11 @@
                                         memoised-fetch-as-text!]]
             [uix.core :as uix]))
 
+(def ^:private ide-instrs-url
+  "ide_usage_instructions.txt")
+
 (uix/defui ide-instrs
-  [{:keys [ide-instrs-url
-           max-text-width]}]
+  [{:keys [max-text-width]}]
   (let [ide-instrs-text (memoised-fetch-as-text! ide-instrs-url)]
     (uix/$ Accordion
            (uix/$ AccordionSummary
