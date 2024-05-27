@@ -1,4 +1,4 @@
-(ns l4-lp.web-editor.utils 
+(ns l4-lp.ide.ui.utils 
   (:require ["@mui/material/CircularProgress$default" :as CircularProgress]
             [lambdaisland.fetch :as fetch]
             [promesa.core :as prom]

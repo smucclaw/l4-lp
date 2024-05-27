@@ -1,4 +1,4 @@
-(ns l4-lp.web-editor.top-bar 
+(ns l4-lp.ide.ui.top-bar 
   (:require ["@mui/icons-material/GitHub$default" :as GitHubIcon]
             ["@mui/material/AppBar$default" :as AppBar]
             ["@mui/material/Box$default" :as Box]
@@ -19,6 +19,6 @@
                  (uix/$ Typography {:mt 1 :ml 5 :mr 5
                                     :variant :h5
                                     :gutter-bottom true}
-                        "L4 web editor")
+                        "L4 IDE")
                 children))
          (uix/$ Toolbar)))

@@ -1,4 +1,4 @@
-(ns l4-lp.web-editor.query-button 
+(ns l4-lp.ide.ui.query.button 
   (:require ["@mui/lab/LoadingButton$default" :as LoadingButton]
             [applied-science.js-interop :as jsi]
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]

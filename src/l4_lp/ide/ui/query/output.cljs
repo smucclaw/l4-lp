@@ -1,4 +1,4 @@
-(ns l4-lp.web-editor.query-output
+(ns l4-lp.ide.ui.query.output
   (:require ["@mui/icons-material/ExpandMore$default" :as ExpandMoreIcon]
             ["@mui/material/Accordion$default" :as Accordion]
             ["@mui/material/AccordionDetails$default" :as AccordionDetails]
@@ -9,7 +9,7 @@
              :as Guifier]
             [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
-            [l4-lp.web-editor.utils :refer [suspense-loading-bar]]
+            [l4-lp.ide.ui.utils :refer [suspense-loading-bar]]
             [uix.core :as uix]))
 
 (defn- init-guifier!

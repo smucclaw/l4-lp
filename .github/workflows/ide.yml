@@ -1,4 +1,4 @@
-name: Build and deploy web editor app
+name: Build and deploy IDE web app
 
 # Controls when the workflow will run
 on:
