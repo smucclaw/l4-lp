@@ -36,6 +36,10 @@
                                 :end-icon (uix/$ SendIcon)}}
                 "Run Queries")))
 
+
+;; TODO:
+;; This component triggers a warning that each item of the Grid container
+;; should have a unique :key prop.
 (uix/defui ^:private ide-grid
   [{:keys [cm-editor-ref transpiled-prolog query-results]}]
   (uix/$ Grid {:container true}
