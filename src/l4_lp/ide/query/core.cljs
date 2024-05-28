@@ -34,9 +34,8 @@
             (do (jsi/assoc! worker :onmessage nil)
                 (on-done))))]
 
-    (jsi/update! worker :onmessage
-                 (some-fn identity (constantly on-message!)))
-
-    (post-data-as-js! :worker worker
-                      :tag "l4-program"
-                      :payload l4-program)))
+    (when-not (jsi/get worker :onmessage)
+      (jsi/assoc! worker :onmessage on-message!)
+      (post-data-as-js! :worker worker
+                        :tag "l4-program"
+                        :payload l4-program))))
