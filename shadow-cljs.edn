@@ -4,8 +4,14 @@
  :builds
  {:ide
   {:target :esm
-   :output-dir "public/js"
-   :modules {:l4_ide {:init-fn l4-lp.ide.core/init!}}
+   :output-dir "public/js/l4_ide"
+   :asset-path "/js/l4_ide"
+   :modules {:shared {:entries []}
+             :main {:init-fn l4-lp.ide.core/init!
+                    :depends-on #{:shared}}
+             :query_worker {:init-fn l4-lp.ide.query-worker/init!
+                            :depends-on #{:shared}
+                            :web-worker true}}
    :devtools {:before-load l4-lp.ide.core/stop!
               :after-load l4-lp.ide.core/start!}
    :compiler-options {:output-feature-set :es2021

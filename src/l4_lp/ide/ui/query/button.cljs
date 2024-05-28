@@ -1,9 +1,7 @@
 (ns l4-lp.ide.ui.query.button 
   (:require ["@mui/lab/LoadingButton$default" :as LoadingButton]
             [applied-science.js-interop :as jsi]
-            [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]
-            [l4-lp.syntax.l4-to-prolog :as l4->prolog]
-            [promesa.core :as prom]
+            [meander.strategy.epsilon :as r]
             [uix.core :as uix]))
 
 ;; TODO:
@@ -36,13 +34,34 @@
            set-transpiled-prolog! set-query-results!
            button-props children]}]
   (let [[queries-running? set-queries-running!] (uix/use-state false)
-        query-fn
+        query-fn!
         (fn []
           (set-queries-running! true)
           (set-query-results! [])
           (set-transpiled-prolog! nil)
 
-          (let [cm-editor-doc (jsi/get-in @cm-editor-ref [:view :state :doc])
+          (let [l4-program (-> @cm-editor-ref
+                               (jsi/get-in [:view :state :doc])
+                               str)
+                query-worker (new js/Worker "/js/l4_ide/query_worker.js"
+                                  #js {:type "module"})]
+
+            (jsi/assoc! query-worker :onmessage
+                        (r/match
+                         #js {:tag (m/some "transpiled-prolog")
+                              :payload (m/some ?transpiled-prolog)}
+                          (set-transpiled-prolog! ?transpiled-prolog)
+
+                          #js {:tag (m/some "query-result")
+                               :payload (m/some ?query-result)}
+                          (set-query-results! #(conj % ?query-result))
+
+                          #js {:tag (m/some "done")}
+                          (set-queries-running! false)))
+
+            (jsi/call query-worker :postMessage l4-program))
+
+          #_(let [cm-editor-doc (jsi/get-in @cm-editor-ref [:view :state :doc])
                 prolog-program-and-queries
                 (-> cm-editor-doc str l4->prolog/l4->prolog-program+queries)]
             (prom/do
@@ -55,5 +74,5 @@
               (set-queries-running! false))))]
     (uix/$ LoadingButton
            (merge button-props
-                  {:loading queries-running? :on-click query-fn})
+                  {:loading queries-running? :on-click query-fn!})
            children)))
