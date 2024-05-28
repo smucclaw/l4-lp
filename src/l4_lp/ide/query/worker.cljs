@@ -48,5 +48,5 @@
   ;;   constant onmessage assigned a value more than once.
   ;;   Original definition at externs.shadow.js:7
   ;; To workaround this, we add an event handler via addEventListener instead. 
-  (jsi/call js/globalThis
-            :addEventListener "message" on-message!))
+  (jsi/call js/globalThis :addEventListener
+            "message" on-message!))
