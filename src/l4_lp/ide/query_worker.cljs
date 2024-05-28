@@ -30,7 +30,7 @@
        transpiled-prolog
        #(post-data-as-js! :tag "query-result" :payload %))
 
-      (post-data-as-js! :tag "done" :payload nil))))
+      (post-data-as-js! :tag "done"))))
 
 (defn init! []
   (set! js/onmessage transpile-and-query!))

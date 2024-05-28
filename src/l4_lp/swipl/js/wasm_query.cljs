@@ -8,6 +8,8 @@
             [promesa.core :as prom]
             [tupelo.core :refer [it->]]))
 
+;; TODO:
+;; This URL is incorrect when run as a web worker.
 (def ^:private prelude-qlf-url
   "resources/swipl/prelude.qlf")
 
@@ -28,6 +30,7 @@
     (new #(this-as this
                    (jsi/assoc! this :log_stack_frame
                                (partial jsi/call stack-trace :push))))
+
     query-result
     (swipl-query-once swipl
                       (str "query_and_trace(StackTrace," query ")")
