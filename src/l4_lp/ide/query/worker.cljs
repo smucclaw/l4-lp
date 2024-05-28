@@ -33,13 +33,20 @@
   ;; that it's defined.
   (jsi/assoc! js/globalThis :window #js {})
 
-  (set! js/onmessage
-        (jsi/fn [^:js {:keys [data]}]
-          (m/match data
-            #js {:tag (m/some "swipl-prelude-qlf-url")
-                 :payload (m/some ?url)}
-            (reset! swipl-prelude-qlf-url ?url)
+  ;; For some reason, (set! js/onmessage ...) yields the following error when
+  ;; compiled with :optimizations :advanced
+  ;;   constant onmessage assigned a value more than once.
+  ;;   Original definition at externs.shadow.js:7
+  ;; To workaround this, we add an event handler via addEventListener instead. 
+  (jsi/call
+   js/globalThis
+   :addEventListener "message"
+   (jsi/fn [^:js {:keys [data]}]
+     (m/match data
+       #js {:tag (m/some "swipl-prelude-qlf-url")
+            :payload (m/some ?url)}
+       (reset! swipl-prelude-qlf-url ?url)
 
-            #js {:tag (m/some "l4-program")
-                 :payload (m/some ?l4-program)}
-            (transpile-and-query! ?l4-program)))))
+       #js {:tag (m/some "l4-program")
+            :payload (m/some ?l4-program)}
+       (transpile-and-query! ?l4-program)))))
