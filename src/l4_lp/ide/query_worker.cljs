@@ -10,9 +10,9 @@
                        :payload (bean/->js payload)}))
 
 (defn transpile-and-query! [^js event]
-  (let [l4-program (jsi/get event :data)
-        transpiled-prolog (-> l4-program
-                              l4->prolog/l4->prolog-program+queries)]
+  (jsi/let [^:js {{:keys [l4-program swipl-prelude-qlf-url]}:data} event
+            transpiled-prolog (-> l4-program
+                                  l4->prolog/l4->prolog-program+queries)]
 
     (prom/do
       (post-data-as-js! :tag "transpiled-prolog" :payload transpiled-prolog)
@@ -28,7 +28,8 @@
 
       (swipl-wasm-query/query-and-trace!
        transpiled-prolog
-       #(post-data-as-js! :tag "query-result" :payload %))
+       :swipl-prelude-qlf-url swipl-prelude-qlf-url
+       :query-result-callback #(post-data-as-js! :tag "query-result" :payload %))
 
       (post-data-as-js! :tag "done"))))
 
