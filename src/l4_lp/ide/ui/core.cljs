@@ -39,13 +39,13 @@
 (uix/defui ^:private ide-grid
   [{:keys [cm-editor-ref transpiled-prolog query-results]}]
   (uix/$ Grid {:container true}
-         (uix/$ Grid {:ml 2 :mr 2}
+         (uix/$ Grid {:key :editor :ml 2 :mr 2}
                 (uix/$ ide-instrs {:sx #js {:mb 2} :max-text-width :md})
                 (uix/$ editor
                        {:max-height :85vh
                         :font-size :14pt
                         :ref cm-editor-ref}))
-         (uix/$ Grid {:mt 2 :ml 2 :mr 2}
+         (uix/$ Grid {:key :query-output :mt 2 :ml 2 :mr 2}
                 (uix/$ query-output
                        {:max-height :85vh
                         :transpiled-prolog transpiled-prolog
