@@ -19,22 +19,23 @@
 (defn transpile-and-query!
   [l4-program
    & {:keys [on-transpiled-prolog on-query-result on-done]}]
-  (when-not (jsi/get worker :onmessage)
-    (jsi/assoc!
-     worker :onmessage
-     (jsi/fn [^:js {:keys [data]}]
-       (m/match data
-         #js {:tag (m/some "transpiled-prolog")
-              :payload (m/some ?transpiled-prolog)}
-         (on-transpiled-prolog ?transpiled-prolog)
+  (let [on-message!
+        (jsi/fn [^:js {:keys [data]}]
+          (m/match data
+            #js {:tag (m/some "transpiled-prolog")
+                 :payload (m/some ?transpiled-prolog)}
+            (on-transpiled-prolog ?transpiled-prolog)
 
-         #js {:tag (m/some "query-result")
-              :payload (m/some ?query-result)}
-         (on-query-result ?query-result)
+            #js {:tag (m/some "query-result")
+                 :payload (m/some ?query-result)}
+            (on-query-result ?query-result)
 
-         #js {:tag (m/some "done")}
-         (do (jsi/assoc! worker :onmessage nil)
-             (on-done)))))
+            #js {:tag (m/some "done")}
+            (do (jsi/assoc! worker :onmessage nil)
+                (on-done))))]
+
+    (jsi/update! worker :onmessage
+                 (some-fn identity (constantly on-message!)))
 
     (post-data-as-js! :worker worker
                       :tag "l4-program"

@@ -23,6 +23,16 @@
            #(post-data-as-js! :tag "query-result" :payload %))
           (prom/hcat #(post-data-as-js! :tag "done") it))))
 
+(jsi/defn ^:private on-message! [^:js {:keys [data]}]
+  (m/match data
+    #js {:tag (m/some "swipl-prelude-qlf-url")
+         :payload (m/some ?url)}
+    (reset! swipl-prelude-qlf-url ?url)
+
+    #js {:tag (m/some "l4-program")
+         :payload (m/some ?l4-program)}
+    (transpile-and-query! ?l4-program)))
+
 (defn init! []
   ;; Ugly hack to get swipl wasm working in a web worker without access
   ;; to js/window.
@@ -38,15 +48,5 @@
   ;;   constant onmessage assigned a value more than once.
   ;;   Original definition at externs.shadow.js:7
   ;; To workaround this, we add an event handler via addEventListener instead. 
-  (jsi/call
-   js/globalThis
-   :addEventListener "message"
-   (jsi/fn [^:js {:keys [data]}]
-     (m/match data
-       #js {:tag (m/some "swipl-prelude-qlf-url")
-            :payload (m/some ?url)}
-       (reset! swipl-prelude-qlf-url ?url)
-
-       #js {:tag (m/some "l4-program")
-            :payload (m/some ?l4-program)}
-       (transpile-and-query! ?l4-program)))))
+  (jsi/call js/globalThis
+            :addEventListener "message" on-message!))
