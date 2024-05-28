@@ -45,7 +45,6 @@
                                str)
                 query-worker (new js/Worker "/js/l4_ide/query_worker.js"
                                   #js {:type "module"})]
-
             (jsi/assoc!
              query-worker :onmessage
              (jsi/fn [^:js {:keys [data]}]
