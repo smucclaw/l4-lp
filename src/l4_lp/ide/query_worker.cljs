@@ -13,6 +13,7 @@
   (let [l4-program (jsi/get event :data)
         transpiled-prolog (-> l4-program
                               l4->prolog/l4->prolog-program+queries)]
+
     (prom/do
       (post-data-as-js! :tag "transpiled-prolog" :payload transpiled-prolog)
 

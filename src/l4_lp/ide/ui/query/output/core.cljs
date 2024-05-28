@@ -12,7 +12,7 @@
 (uix/defui ^:private transpiled-prolog
   [{:keys [data]}]
   (and
-   (not-empty data)
+   (some? data)
    (uix/$
     suspense-loading-bar
     (uix/$ Accordion

@@ -3,19 +3,18 @@
              :as Guifier]
             ["@mui/material/Box$default" :as Box]
             [applied-science.js-interop :as jsi]
-            [cljs-bean.core :as bean]
             [uix.core :as uix]))
 
 (defn- init-guifier!
   ([elt-id]
    (init-guifier! elt-id nil))
 
-  ([elt-id data]
+  ([elt-id js-data]
    (let [escaped-elt-id (->> elt-id
                              (jsi/call js/CSS :escape)
                              (str "#"))]
      (new Guifier
-          #js {:data (bean/->js data)
+          #js {:data js-data
                :dataType "js"
                :elementSelector escaped-elt-id
                :withoutContainer true

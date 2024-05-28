@@ -1,7 +1,7 @@
 (ns l4-lp.ide.ui.query.button 
   (:require ["@mui/lab/LoadingButton$default" :as LoadingButton]
             [applied-science.js-interop :as jsi]
-            [meander.strategy.epsilon :as r]
+            [meander.epsilon :as m]
             [uix.core :as uix]))
 
 ;; TODO:
@@ -46,18 +46,20 @@
                 query-worker (new js/Worker "/js/l4_ide/query_worker.js"
                                   #js {:type "module"})]
 
-            (jsi/assoc! query-worker :onmessage
-                        (r/match
-                         #js {:tag (m/some "transpiled-prolog")
-                              :payload (m/some ?transpiled-prolog)}
-                          (set-transpiled-prolog! ?transpiled-prolog)
+            (jsi/assoc!
+             query-worker :onmessage
+             (jsi/fn [^:js {:keys [data]}]
+               (m/match data
+                 #js {:tag (m/some "transpiled-prolog")
+                      :payload (m/some ?transpiled-prolog)}
+                 (set-transpiled-prolog! ?transpiled-prolog)
 
-                          #js {:tag (m/some "query-result")
-                               :payload (m/some ?query-result)}
-                          (set-query-results! #(conj % ?query-result))
+                 #js {:tag (m/some "query-result")
+                      :payload (m/some ?query-result)}
+                 (set-query-results! #(conj % ?query-result))
 
-                          #js {:tag (m/some "done")}
-                          (set-queries-running! false)))
+                 #js {:tag (m/some "done")}
+                 (set-queries-running! false))))
 
             (jsi/call query-worker :postMessage l4-program))
 
