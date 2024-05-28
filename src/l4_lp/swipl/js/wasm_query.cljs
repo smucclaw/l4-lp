@@ -36,8 +36,8 @@
 
 (defn query-and-trace!
   [{program :program queries :queries}
-   & {:keys [query-result-callback swipl-prelude-qlf-url]
-      :or {query-result-callback identity
+   & {:keys [on-query-result swipl-prelude-qlf-url]
+      :or {on-query-result identity
            swipl-prelude-qlf-url "resources/swipl/prelude.qlf"}}]
    (prom/let
     [swipl (new Swipl #js {:arguments #js ["-q"]})
@@ -57,7 +57,7 @@
      (->> queries
           (prom-m/traverse
            (prom-m/>=> #(run-swipl-query! swipl %)
-                       query-result-callback)))))
+                       on-query-result)))))
 
 (defn query-and-trace-js! [prolog-program+queries]
   (->> prolog-program+queries

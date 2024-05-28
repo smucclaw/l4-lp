@@ -1,15 +1,20 @@
 (ns l4-lp.ide.query.core 
   (:require [applied-science.js-interop :as jsi]
+            [l4-lp.ide.query.utils :refer [post-data-as-js!]]
             [lambdaisland.uri :as uri]
             [meander.epsilon :as m]))
+
+(def ^:private swipl-prelude-qlf-url
+  (let [app-url (jsi/get-in js/window [:location :origin])]
+    (str (uri/join app-url "./resources/swipl/prelude.qlf"))))
 
 (def ^:private worker
   (new js/Worker "/js/l4_ide/query_worker.js"
        #js {:type "module"}))
 
-(def ^:private swipl-prelude-qlf-url
-  (let [app-url (jsi/get-in js/window [:location :origin])]
-    (str (uri/join app-url "./resources/swipl/prelude.qlf"))))
+(post-data-as-js! :worker worker
+                  :tag "swipl-prelude-qlf-url"
+                  :payload swipl-prelude-qlf-url)
 
 (defn transpile-and-query!
   [l4-program
@@ -31,6 +36,6 @@
          (do (jsi/assoc! worker :onmessage nil)
              (on-done)))))
 
-    (jsi/call worker :postMessage
-              #js {:l4-program l4-program
-                   :swipl-prelude-qlf-url swipl-prelude-qlf-url})))
+    (post-data-as-js! :worker worker
+                      :tag "l4-program"
+                      :payload l4-program)))
