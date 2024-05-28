@@ -16,15 +16,6 @@
                                   l4->prolog/l4->prolog-program+queries)]
     (post-data-as-js! :tag "transpiled-prolog" :payload transpiled-prolog)
 
-    ;; Ugly hack to get swipl wasm working in a web worker without access
-    ;; to js/window.
-    ;; The issue is that it fails to load prolog and qlf files on nodejs via Prolog.consult
-    ;; with following error:
-    ;; ERROR: JavaScript: ReferenceError: window is not defined
-    ;; To solve this, we assign a global window object to an empty object just so
-    ;; that it's defined.
-    (jsi/assoc! js/globalThis :window #js {})
-
     (it-> transpiled-prolog
         (swipl-wasm-query/query-and-trace!
          it
@@ -34,4 +25,12 @@
         (prom/hcat #(post-data-as-js! :tag "done") it))))
 
 (defn init! []
+  ;; Ugly hack to get swipl wasm working in a web worker without access
+  ;; to js/window.
+  ;; The issue is that otherwise, it fails to load prolog and qlf file via
+  ;; Prolog.consult with following error:
+  ;; ERROR: JavaScript: ReferenceError: window is not defined
+  ;; To solve this, we assign a global window object to an empty object just so
+  ;; that it's defined.
+  (jsi/assoc! js/globalThis :window #js {})
   (set! js/onmessage transpile-and-query!))
