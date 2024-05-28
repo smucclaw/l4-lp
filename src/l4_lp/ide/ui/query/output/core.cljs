@@ -48,7 +48,7 @@
 
          (uix/$ Box {:max-height max-height
                      :overflow :auto}
-                (uix/$ Box {:ml 2 :mr 2 :mb 2}
+                (uix/$ Box {:mb 2}
                        (uix/$ transpiled-prolog
                               {:data transpiled-prolog-data}))
                 (uix/$ query-results {:data query-results-data}))))

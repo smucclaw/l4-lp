@@ -9,7 +9,7 @@
    :modules {:shared {:entries []}
              :main {:init-fn l4-lp.ide.core/init!
                     :depends-on #{:shared}}
-             :query_worker {:init-fn l4-lp.ide.query-worker/init!
+             :query_worker {:init-fn l4-lp.ide.query.worker/init!
                             :depends-on #{:shared}
                             :web-worker true}}
    :devtools {:before-load l4-lp.ide.core/stop!
@@ -49,7 +49,6 @@
   :py-node-lib
   {:target :node-library
    :output-to "src/l4_lp_py/_l4_lp_nodejs_lib/nodejs_lib.js"
-   ;; :js-options {:js-provider :import}
    :compiler-options {:output-feature-set :es2021
                       :externs ["datascript/externs.js"]}
    :exports
