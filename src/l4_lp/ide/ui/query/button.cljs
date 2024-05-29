@@ -15,14 +15,14 @@
         query-fn!
         (fn []
           (set-queries-running! true)
-          (on-click)
 
-          (let [l4-program (-> @cm-editor-ref
-                               (jsi/get-in [:view :state :doc])
-                               str)]
+          (let [cm-editor-doc (jsi/get-in @cm-editor-ref [:view :state :doc])
+                query-worker @query-worker-ref]
+            (on-click)
+
             (transpile-and-query-on-worker!
-             :l4-program l4-program
-             :worker @query-worker-ref
+             :l4-program (str cm-editor-doc)
+             :worker query-worker
              :on-transpiled-prolog on-transpiled-prolog
              :on-query-result on-query-result
              :on-done #(set-queries-running! false))))]
