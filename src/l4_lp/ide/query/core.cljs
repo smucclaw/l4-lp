@@ -7,16 +7,15 @@
   (let [app-url (jsi/get-in js/window [:location :origin])]
     (str (uri/join app-url "./resources/swipl/prelude.qlf"))))
 
-(def ^:private worker
+(defn init-worker! []
   (new js/Worker "/js/l4_ide/query_worker.js"
        #js {:type "module"}))
 
 (def ^:private no-op
   (constantly nil))
 
-(defn transpile-and-query!
-  [l4-program
-   & {:keys [on-transpiled-prolog on-query-result on-done]
+(defn transpile-and-query-on-worker!
+  [& {:keys [l4-program worker on-transpiled-prolog on-query-result on-done]
       :or {on-transpiled-prolog no-op
            on-query-result no-op
            on-done no-op}}]
