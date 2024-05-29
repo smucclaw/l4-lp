@@ -18,10 +18,10 @@ jobs:
       - uses: actions/checkout@v4
 
       # Setup JVM and Clojure tooling
-      - name: Setup GraalVM
-        uses: graalvm/setup-graalvm@v1
+      - name: 'Setup OpenJDK'
+        uses: actions/setup-java@v4
         with:
-          distribution: 'graalvm-community'
+          distribution: 'microsoft'
           java-version: 21
 
       - name: Setup Clojure build tools
