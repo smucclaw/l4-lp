@@ -22,8 +22,7 @@
              l4-program
              :on-transpiled-prolog on-transpiled-prolog
              :on-query-result on-query-result
-             :on-done
-             #(set-queries-running! false))))]
+             :on-done  #(set-queries-running! false))))]
     (uix/$ LoadingButton
            (merge button-props
                   {:loading queries-running? :on-click query-fn!})
