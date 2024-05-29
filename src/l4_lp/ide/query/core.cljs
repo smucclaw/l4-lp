@@ -1,5 +1,6 @@
 (ns l4-lp.ide.query.core 
   (:require [applied-science.js-interop :as jsi]
+            [l4-lp.ide.query.utils :refer [no-op]]
             [lambdaisland.uri :as uri]
             [meander.epsilon :as m]))
 
@@ -10,9 +11,6 @@
 (defn init-worker! []
   (new js/Worker "/js/l4_ide/query_worker.js"
        #js {:type "module"}))
-
-(def ^:private no-op
-  (constantly nil))
 
 (defn transpile-and-query-on-worker!
   [& {:keys [l4-program worker on-transpiled-prolog on-query-result on-done]
