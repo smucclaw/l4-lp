@@ -6,7 +6,11 @@
   {:target :esm
    :output-dir "public/js/l4_ide"
    :asset-path "/js/l4_ide"
-   :modules {:shared {:entries []}
+   :modules {:shared {:entries []
+                      ;; Need to append this or else we get the following error
+                      ;; when compiling with :optimizations :advanced
+                      ;; https://clojurians.slack.com/archives/C6N245JGG/p1713199477949549 
+                      :append "export { $jscomp };"}
              :main {:init-fn l4-lp.ide.core/init!
                     :depends-on #{:shared}}
              :query_worker {:init-fn l4-lp.ide.query.worker/init!
