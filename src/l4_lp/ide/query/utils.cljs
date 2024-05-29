@@ -2,9 +2,6 @@
   (:require [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]))
 
-(def no-op
-  (constantly nil))
-
 (defn post-data-as-js! [& {:keys [worker tag payload]}]
   (let [post-message!
         (if worker

@@ -1,6 +1,5 @@
 (ns l4-lp.ide.query.core 
   (:require [applied-science.js-interop :as jsi]
-            [l4-lp.ide.query.utils :refer [no-op]]
             [lambdaisland.uri :as uri]
             [meander.epsilon :as m]))
 
@@ -8,12 +7,15 @@
   (let [app-url (jsi/get-in js/window [:location :origin])]
     (str (uri/join app-url "./resources/swipl/prelude.qlf"))))
 
-(defn init-worker! []
-  (new js/Worker "/js/l4_ide/query_worker.js"
-       #js {:type "module"}))
+(def ^:private no-op
+  (constantly nil))
+
+(def worker-js-url
+  "/js/l4_ide/query_worker.js")
 
 (defn transpile-and-query-on-worker!
-  [& {:keys [l4-program worker on-transpiled-prolog on-query-result on-done]
+  [& {:keys [l4-program worker
+             on-transpiled-prolog on-query-result on-done]
       :or {on-transpiled-prolog no-op
            on-query-result no-op
            on-done no-op}}]

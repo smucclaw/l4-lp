@@ -5,7 +5,7 @@
             ["@mui/material/AccordionSummary$default" :as AccordionSummary]
             ["@mui/material/Typography$default" :as Typography]
             [l4-lp.ide.ui.utils :refer [suspense-loading-bar
-                                        memoised-fetch-as-text!]]
+                                        use-cached-fetch-as-text!]]
             [uix.core :as uix]))
 
 (def ^:private ide-instrs-url
@@ -13,7 +13,7 @@
 
 (uix/defui ide-instrs
   [{:keys [max-text-width sx]}]
-  (let [ide-instrs-text (memoised-fetch-as-text! ide-instrs-url)]
+  (let [ide-instrs-text (use-cached-fetch-as-text! ide-instrs-url)]
     (uix/$ Accordion {:sx sx}
            (uix/$ AccordionSummary
                   {:expand-icon (uix/$ ExpandMoreIcon)

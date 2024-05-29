@@ -4,7 +4,7 @@
             ["@uiw/codemirror-theme-solarized" :as cm-solarized]
             ["@uiw/react-codemirror$default" :as CodeMirror]
             [applied-science.js-interop :as jsi]
-            [l4-lp.ide.ui.utils :refer [memoised-fetch-as-text!
+            [l4-lp.ide.ui.utils :refer [use-cached-fetch-as-text!
                                         suspense-loading-bar]]
             [promesa.core :as prom]
             [uix.core :as uix]))
@@ -32,7 +32,7 @@
 
 (uix/defui editor
   [{:keys [ref max-height font-size]}]
-  (let [preamble-text (memoised-fetch-as-text! sample-program-url)
+  (let [preamble-text (use-cached-fetch-as-text! sample-program-url)
         exts (uix/use-memo #(exts font-size) [font-size])
 
         ;; https://github.com/uiwjs/react-codemirror/issues/314
