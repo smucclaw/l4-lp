@@ -18,9 +18,9 @@
                       :append "var $jscomp = $jscomp || {};export { $jscomp };"}
              :main {:init-fn l4-lp.ide.core/init!
                     :depends-on #{:shared}}
-             :query_worker {:init-fn l4-lp.ide.query.worker/init!
-                            :depends-on #{:shared}
-                            :web-worker true}}
+             :worker {:init-fn l4-lp.ide.browser-backend.worker/init!
+                      :depends-on #{:shared}
+                      :web-worker true}}
    :devtools {:before-load l4-lp.ide.core/stop!
               :after-load l4-lp.ide.core/start!}
    :compiler-options {:output-feature-set :es2021

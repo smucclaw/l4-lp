@@ -4,8 +4,10 @@
             [cljs-bean.core :as bean]
             [lambdaisland.fetch :as fetch]
             [promesa.core :as prom]
+            [promesa.exec.csp :as csp]
             [tupelo.core :refer [it->]]
-            [uix.core :as uix]))
+            [uix.core :as uix]
+            [uix.dom :as uix-dom]))
 
 (uix/defui suspense-loading-bar
   [{:keys [children]}]
@@ -30,20 +32,50 @@
 
     [text fetched?]))
 
+(defn- add-to-chan! [set-chan! data]
+  (set-chan! (fn [chan]
+               (prom/chain chan
+                           #(csp/put % data)
+                           (constantly chan)))))
+
 (defn use-web-worker!
   [js-script-url
    & {:keys [worker-opts]}]
   (let [worker-ref (uix/use-ref)
-        [worker-ready? set-worker-ready!] (uix/use-state false)]
+        [worker-state set-worker-state!] (uix/use-state nil)
+        [input-chan set-input-chan!] (uix/use-state (csp/chan :buf 10))
+        [output-chan set-output-chan!] (uix/use-state (csp/chan :buf 10))
+        post-js-data! #(add-to-chan! set-input-chan! %)]
 
     (uix/use-effect
-     (fn []
-       (let [opts (-> worker-opts bean/->js (jsi/assoc! :type "module"))
-             worker (new js/Worker js-script-url opts)]
-         (reset! worker-ref worker)
-         (set-worker-ready! true))
-       #(jsi/call @worker-ref :terminate))
+     #(let [opts (-> worker-opts bean/->js (jsi/assoc! :type "module"))
+            worker (new js/Worker js-script-url opts)]
+        (reset! worker-ref worker)
+        (set-worker-state! :ready)
+        (fn []
+          (jsi/call @worker-ref :terminate)
+          (set-worker-state! :stopped)))
 
      [js-script-url worker-opts])
 
-    [worker-ref worker-ready?]))
+     (uix/use-effect
+      #(when (= worker-state :ready)
+         (prom/let [js-data (csp/take input-chan)]
+           (set-worker-state! :busy)
+           (jsi/assoc! @worker-ref :onmessage
+                       (jsi/fn [^:js {:keys [data]}]
+                         (if data
+                           (add-to-chan! set-output-chan! data)
+                           (set-worker-state! :ready))))
+           (jsi/call @worker-ref :postMessage js-data)))
+
+      [worker-state input-chan output-chan])
+
+    [worker-state post-js-data! output-chan]))
+
+(defn render-app! [app-id elt]
+  (let [app-root
+        (-> js/document
+            (jsi/call :getElementById app-id)
+            uix-dom/create-root)]
+    (uix-dom/render-root elt app-root)))

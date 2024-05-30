@@ -4,15 +4,15 @@
             ["@mui/material/Unstable_Grid2$default" :as Grid]
             ["react-dom" :as react-dom]
             [applied-science.js-interop :as jsi]
+            [l4-lp.ide.browser-backend.core :as backend]
             [l4-lp.ide.ui.editor :refer [editor]]
             [l4-lp.ide.ui.ide-instrs :refer [ide-instrs]]
             [l4-lp.ide.ui.query.button :refer [query-button]]
             [l4-lp.ide.ui.query.output.core :refer [query-output]]
             [l4-lp.ide.ui.top-bar :refer [top-bar]]
-            [uix.core :as uix]
-            [uix.dom :as uix-dom]))
+            [uix.core :as uix]))
 
-(uix/defui ^:private mui-fonts
+(uix/defui mui-fonts
   "Component to load fonts for Material UI."
   []
   (uix/$ :div
@@ -22,15 +22,12 @@
          (uix/$ :link {:rel :stylesheet
                        :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})))
 
-(uix/defui ^:private top-bar-and-query-button
-  [{:keys [cm-editor-ref
-           on-button-click on-transpiled-prolog on-query-result]}]
+(uix/defui top-bar-and-query-button
+  [{:keys [button-loading? on-button-click]}]
   (uix/$ top-bar
          (uix/$ query-button
-                {:cm-editor-ref cm-editor-ref
-                 :on-click on-button-click
-                 :on-transpiled-prolog on-transpiled-prolog
-                 :on-query-result on-query-result
+                {:on-click on-button-click
+                 :loading? button-loading?
                  :button-props {:sx #js {:ml 3}
                                 :variant :contained
                                 :color :inherit
@@ -38,7 +35,7 @@
                                 :end-icon (uix/$ SendIcon)}}
                 "Run Queries")))
 
-(uix/defui ^:private ide-grid
+(uix/defui ide-grid
   [{:keys [cm-editor-ref transpiled-prolog query-results]}]
   (uix/$ Grid {:container true}
          (uix/$ Grid {:ml 2 :mr 2}
@@ -52,34 +49,3 @@
                        {:max-height :85vh
                         :transpiled-prolog transpiled-prolog
                         :query-results query-results}))))
-
-(uix/defui ^:private ide-app []
-  (let [cm-editor-ref (uix/use-ref)
-        [transpiled-prolog set-transpiled-prolog!] (uix/use-state nil)
-        [query-results set-query-results!] (uix/use-state [])]
-    (uix/$ Box
-           (uix/$ :title "L4 IDE")
-           (uix/$ mui-fonts)
-
-           (uix/$ top-bar-and-query-button
-                  {:cm-editor-ref cm-editor-ref
-                   :on-button-click
-                   (fn []
-                     (set-query-results! [])
-                     (set-transpiled-prolog! nil))
-                   :on-transpiled-prolog set-transpiled-prolog!
-                   :on-query-result
-                   (fn [result]
-                     (set-query-results! #(conj % result)))})
-
-           (uix/$ ide-grid
-                  {:cm-editor-ref cm-editor-ref
-                   :transpiled-prolog transpiled-prolog
-                   :query-results query-results}))))
-
-(defn render-ide-app! [ide-app-id]
-  (let [app-root
-        (-> js/document
-            (jsi/call :getElementById ide-app-id)
-            uix-dom/create-root)]
-    (uix-dom/render-root (uix/$ ide-app) app-root)))

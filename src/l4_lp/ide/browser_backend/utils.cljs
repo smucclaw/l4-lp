@@ -1,4 +1,4 @@
-(ns l4-lp.ide.query.utils 
+(ns l4-lp.ide.browser-backend.utils 
   (:require [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]))
 

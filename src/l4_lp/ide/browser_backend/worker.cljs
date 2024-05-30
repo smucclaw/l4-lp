@@ -1,6 +1,6 @@
-(ns l4-lp.ide.query.worker 
+(ns l4-lp.ide.browser-backend.worker 
   (:require [applied-science.js-interop :as jsi]
-            [l4-lp.ide.query.utils :refer [post-data-as-js!]]
+            [l4-lp.ide.browser-backend.utils :refer [post-data-as-js!]]
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]
             [l4-lp.syntax.l4-to-prolog :as l4->prolog]
             [meander.epsilon :as m]
@@ -18,10 +18,10 @@
            :swipl-prelude-qlf-url swipl-prelude-qlf-url
            :on-query-result
            #(post-data-as-js! :tag "query-result" :payload %))
-          (prom/hcat #(post-data-as-js! :tag "done") it))))
+          (prom/hcat #(js/postMessage nil) it))))
 
-(jsi/defn ^:private on-message! [^:js {:keys [data]}]
-  (m/match data
+(defn ^:private on-message! [event]
+  (m/match (jsi/get event :data)
     #js {:swipl-prelude-qlf-url (m/some ?swipl-prelude-qlf-url)
          :l4-program (m/some ?l4-program)}
     (transpile-and-query! ?swipl-prelude-qlf-url ?l4-program)))
