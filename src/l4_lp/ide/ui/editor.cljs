@@ -4,9 +4,7 @@
             ["@uiw/codemirror-theme-solarized" :as cm-solarized]
             ["@uiw/react-codemirror$default" :as CodeMirror]
             [applied-science.js-interop :as jsi]
-            [l4-lp.ide.ui.utils :refer [use-cached-fetch-as-text!
-                                        suspense-loading-bar]]
-            [promesa.core :as prom]
+            [l4-lp.ide.ui.utils :refer [use-fetch-as-text!]]
             [uix.core :as uix]))
 
 ;; https://blog.jakubholy.net/2023/interactive-code-snippets-fulcro/
@@ -32,28 +30,24 @@
 
 (uix/defui editor
   [{:keys [ref max-height font-size]}]
-  (let [preamble-text (use-cached-fetch-as-text! sample-program-url)
-        exts (uix/use-memo #(exts font-size) [font-size])
+  (let [[sample-program-text sample-program-fetched?]
+        (use-fetch-as-text! sample-program-url)
+         exts (uix/use-memo #(exts font-size) [font-size])
 
         ;; https://github.com/uiwjs/react-codemirror/issues/314
-        #_ref-callback-fn
-        #_(uix/use-callback
-           #(jsi/let [^:js {:keys [editor state view] :as cm-editor} %]
-              (when (and editor state view)
-                (prom/then editor-preamble-text
-                           (partial set-editor-text! view))
-                (reset! ref cm-editor))
+         editor-callback-ref
+         (uix/use-callback
+          #(jsi/let [^:js {:keys [editor state view] :as cm-editor} %]
+             (when (and editor state view sample-program-fetched?)
+               (set-editor-text! view sample-program-text)
+               (reset! ref cm-editor)))
 
-              [ref editor-preamble-text]))]
+          [ref sample-program-text sample-program-fetched?])]
 
-    (uix/$ suspense-loading-bar
-           (uix/$ CodeMirror
-                  {:theme cm-solarized/solarizedLight
-                   :extensions exts
-                   :basic-setup true
-                   :max-height max-height
-                   :ref ref #_ref-callback-fn
-                   :on-create-editor
-                   (fn [editor-view _editor-state]
-                     (prom/bind preamble-text
-                                #(set-editor-text! editor-view %)))}))))
+    (uix/$ CodeMirror
+           {:theme cm-solarized/solarizedLight
+            :extensions exts
+            :basic-setup true
+            :max-height max-height
+            :ref editor-callback-ref
+            :value "Loading sample program..."})))
