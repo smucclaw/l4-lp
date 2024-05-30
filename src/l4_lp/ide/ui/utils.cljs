@@ -30,20 +30,20 @@
 
     [text fetched?]))
 
-(defn use-web-worker
+(defn use-web-worker!
   [js-script-url
-   & {:keys [on-worker-init worker-opts]
-      :or {on-worker-init (uix/use-callback (fn []) [])}}]
-  (let [worker-ref (uix/use-ref)]
+   & {:keys [worker-opts]}]
+  (let [worker-ref (uix/use-ref)
+        [worker-ready? set-worker-ready!] (uix/use-state false)]
 
     (uix/use-effect
      (fn []
        (let [opts (-> worker-opts bean/->js (jsi/assoc! :type "module"))
              worker (new js/Worker js-script-url opts)]
          (reset! worker-ref worker)
-         (on-worker-init))
+         (set-worker-ready! true))
        #(jsi/call @worker-ref :terminate))
 
-     [on-worker-init js-script-url worker-opts])
+     [js-script-url worker-opts])
 
-    worker-ref))
+    [worker-ref worker-ready?]))

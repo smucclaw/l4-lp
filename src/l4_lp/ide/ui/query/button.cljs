@@ -3,7 +3,7 @@
             [applied-science.js-interop :as jsi]
             [l4-lp.ide.query.core :refer [worker-js-url
                                           transpile-and-query-on-worker!]]
-            [l4-lp.ide.ui.utils :refer [use-web-worker]]
+            [l4-lp.ide.ui.utils :refer [use-web-worker!]]
             [uix.core :as uix]))
 
 (uix/defui query-button
@@ -12,17 +12,14 @@
            on-transpiled-prolog on-query-result
            button-props children]}]
   (let [[loading? set-loading!] (uix/use-state true)
-        set-ready! (uix/use-callback #(set-loading! false) [])
-        query-worker-ref
-        (use-web-worker worker-js-url
-                        :on-worker-init set-ready!)
+        [query-worker query-worker-ready?] (use-web-worker! worker-js-url)
         query-fn!
         (fn []
           (set-loading! true)
 
           (let [cm-editor-doc (jsi/get-in @cm-editor-ref
                                           [:view :state :doc])
-                query-worker @query-worker-ref]
+                query-worker @query-worker]
             (on-click)
 
             (transpile-and-query-on-worker!
@@ -30,7 +27,12 @@
              :worker query-worker
              :on-transpiled-prolog on-transpiled-prolog
              :on-query-result on-query-result
-             :on-done set-ready!)))]
+             :on-done #(set-loading! false))))]
+
+    (uix/use-effect
+     #(when query-worker-ready?
+        (set-loading! false))
+     [query-worker-ready?])
 
     (uix/$ LoadingButton
            (merge button-props
