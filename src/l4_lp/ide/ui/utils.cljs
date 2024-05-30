@@ -44,8 +44,7 @@
   (let [worker-ref (uix/use-ref)
         [worker-state set-worker-state!] (uix/use-state nil)
         [input-chan set-input-chan!] (uix/use-state (csp/chan :buf 10))
-        [output-chan set-output-chan!] (uix/use-state (csp/chan :buf 10))
-        post-js-data! #(add-to-chan! set-input-chan! %)]
+        [output-chan set-output-chan!] (uix/use-state (csp/chan :buf 10))]
  
     (uix/use-effect
      #(fn []
@@ -74,7 +73,9 @@
            (jsi/call worker :postMessage js-data)))
       [worker-state input-chan output-chan])
 
-    [worker-state post-js-data! output-chan]))
+    {:worker-state worker-state
+     :post-js-to-worker #(add-to-chan! set-input-chan! %)
+     :output-chan output-chan}))
 
 (defn render-app! [app-id elt]
   (let [app-root

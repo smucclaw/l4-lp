@@ -1,10 +1,7 @@
 (ns l4-lp.ide.ui.core 
   (:require ["@mui/icons-material/Send$default" :as SendIcon]
-            ["@mui/material/Box$default" :as Box]
             ["@mui/material/Unstable_Grid2$default" :as Grid]
             ["react-dom" :as react-dom]
-            [applied-science.js-interop :as jsi]
-            [l4-lp.ide.browser-backend.core :as backend]
             [l4-lp.ide.ui.editor :refer [editor]]
             [l4-lp.ide.ui.ide-instrs :refer [ide-instrs]]
             [l4-lp.ide.ui.query.button :refer [query-button]]

@@ -14,7 +14,9 @@
 (uix/defui ^:private ide-app []
   (let [cm-editor-ref (uix/use-ref)
 
-        [query-worker-state post-js-query! query-output-chan]
+        {query-worker-state :worker-state
+         post-js-to-query-worker! :post-js-to-worker
+         query-output-chan :output-chan}
         (use-web-worker! backend/worker-js-url)
 
         [transpiled-prolog set-transpiled-prolog!] (uix/use-state nil)
@@ -47,7 +49,7 @@
                          (jsi/get-in [:view :state :doc])
                          str
                          backend/l4-program->worker-data
-                         post-js-query!))})
+                         post-js-to-query-worker!))})
 
            (uix/$ ui/ide-grid
                   {:cm-editor-ref cm-editor-ref
