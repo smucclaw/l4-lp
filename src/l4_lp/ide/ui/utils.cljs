@@ -54,8 +54,6 @@
         (set-worker-state! :ready)
         (fn []
           (jsi/call @worker-ref :terminate)
-          (csp/close! input-chan)
-          (csp/close! output-chan)
           (set-worker-state! :stopped)))
 
      [js-script-url worker-opts])
