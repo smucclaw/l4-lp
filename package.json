@@ -25,14 +25,14 @@
     "@babel/runtime": "^7.24.6",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "6.0.0-alpha.8",
-    "@mui/lab": "6.0.0-alpha.8",
-    "@mui/material": "6.0.0-alpha.8",
+    "@mui/icons-material": "6.0.0-alpha.9",
+    "@mui/lab": "6.0.0-alpha.9",
+    "@mui/material": "6.0.0-alpha.9",
     "@nextjournal/clojure-mode": "^0.3.2",
     "@uiw/codemirror-theme-solarized": "^4.22.1",
     "@uiw/react-codemirror": "^4.22.1",
     "pythonia": "^1.2.1",
-    "react": "19.0.0-rc-6f23540c7d-20240528",
-    "react-dom": "19.0.0-rc-6f23540c7d-20240528"
+    "react": "19.0.0-rc-38e3b23483-20240529",
+    "react-dom": "19.0.0-rc-38e3b23483-20240529"
   }
 }
