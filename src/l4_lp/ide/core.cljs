@@ -21,16 +21,15 @@
         [query-results set-query-results!] (uix/use-state [])]
 
     (uix/use-effect
-     #(prom/chain query-output-chan
-                  csp/take
-                  (fn [data]
-                    (backend/on-data-from-worker
-                     data
-                     :on-transpiled-prolog set-transpiled-prolog!
-                     :on-query-result
-                     (fn [result]
-                       (set-query-results! (fn [results]
-                                             (conj results result)))))))
+     #(prom/let [query-output-chan query-output-chan
+                 data (csp/take query-output-chan)]
+        (backend/on-data-from-worker
+         data
+         :on-transpiled-prolog set-transpiled-prolog!
+         :on-query-result
+         (fn [result]
+           (set-query-results! (fn [results]
+                                 (conj results result))))))
      [query-output-chan])
 
     (uix/$ Box

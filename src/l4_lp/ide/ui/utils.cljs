@@ -60,7 +60,8 @@
 
      (uix/use-effect
       #(when (= worker-state :ready)
-         (prom/let [js-data (csp/take input-chan)]
+         (prom/let [input-chan input-chan
+                    js-data (csp/take input-chan)]
            (set-worker-state! :busy)
            (jsi/assoc! @worker-ref :onmessage
                        (jsi/fn [^:js {:keys [data]}]
