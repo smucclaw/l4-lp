@@ -24,7 +24,8 @@
   (m/match (jsi/get event :data)
     #js {:swipl-prelude-qlf-url (m/some ?swipl-prelude-qlf-url)
          :l4-program (m/some ?l4-program)}
-    (transpile-and-query! ?swipl-prelude-qlf-url ?l4-program)))
+    (transpile-and-query! ?swipl-prelude-qlf-url ?l4-program)
+    _ nil))
 
 (defn init! []
   ;; Ugly hack to get swipl wasm working in a web worker without access
