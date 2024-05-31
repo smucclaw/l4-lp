@@ -76,7 +76,7 @@ semantics and pipeline implemented in this project.
 This project is developed with:
 - JDK LTS 21
 - Nodejs LTS 20
-- SWI-Prolog 9.3.6
+- SWI-Prolog 9.3.7
 
 # Usage
 ## Setup
