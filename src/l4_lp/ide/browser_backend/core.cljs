@@ -13,9 +13,13 @@
 (def worker-js-url
   "/js/l4_ide/worker.js")
 
+(def swipl-prelude-url-data
+  #js {:tag "swipl-prelude-qlf-url"
+       :payload swipl-prelude-qlf-url})
+
 (defn l4-program->worker-data [l4-program]
-  #js {:l4-program l4-program
-       :swipl-prelude-qlf-url swipl-prelude-qlf-url})
+  #js {:tag "l4-program"
+       :payload l4-program})
 
 (defn on-data-from-worker
   [data

@@ -15,12 +15,22 @@
   (let [cm-editor-ref (uix/use-ref)
 
         {query-worker-state :worker-state
-         post-js-to-query-worker! :post-js-to-worker
+         post-to-query-worker! :post-to-worker
          query-output-chan :output-chan}
         (use-web-worker! backend/worker-js-url)
 
+        [swipl-prelude-url-sent? set-swipl-prelude-url-sent!]
+        (uix/use-state false)
+
         [transpiled-prolog set-transpiled-prolog!] (uix/use-state nil)
         [query-results set-query-results!] (uix/use-state [])]
+
+    (uix/use-effect
+     #(when (and (= query-worker-state :ready)
+                 (not swipl-prelude-url-sent?))
+        (post-to-query-worker! backend/swipl-prelude-url-data)
+        (set-swipl-prelude-url-sent! true))
+     [query-worker-state swipl-prelude-url-sent? post-to-query-worker!])
 
     (uix/use-effect
      #(prom/let [query-output-chan query-output-chan
@@ -49,7 +59,7 @@
                          (jsi/get-in [:view :state :doc])
                          str
                          backend/l4-program->worker-data
-                         post-js-to-query-worker!))})
+                         post-to-query-worker!))})
 
            (uix/$ ui/ide-grid
                   {:cm-editor-ref cm-editor-ref

@@ -7,7 +7,13 @@
             [promesa.core :as prom]
             [tupelo.core :refer [it->]]))
 
-(defn- transpile-and-query! [swipl-prelude-qlf-url l4-program]
+(def ^:private swipl-prelude-qlf-url
+  (atom nil))
+
+(defn post-done! []
+  (js/postMessage nil))
+
+(defn- transpile-and-query! [l4-program]
   (let [transpiled-prolog (-> l4-program
                               l4->prolog/l4->prolog-program+queries)]
     (post-data-as-js! :tag "transpiled-prolog" :payload transpiled-prolog)
@@ -15,17 +21,23 @@
     (it-> transpiled-prolog
           (swipl-wasm-query/query-and-trace!
            it
-           :swipl-prelude-qlf-url swipl-prelude-qlf-url
+           :swipl-prelude-qlf-url @swipl-prelude-qlf-url
            :on-query-result
            #(post-data-as-js! :tag "query-result" :payload %))
-          (prom/hcat #(js/postMessage nil) it))))
+          (prom/hcat #(post-done!) it))))
 
 (defn ^:private on-message! [event]
   (m/match (jsi/get event :data)
-    #js {:swipl-prelude-qlf-url (m/some ?swipl-prelude-qlf-url)
-         :l4-program (m/some ?l4-program)}
-    (transpile-and-query! ?swipl-prelude-qlf-url ?l4-program)
-    _ nil))
+    #js {:tag "swipl-prelude-qlf-url"
+         :payload (m/some ?swipl-prelude-qlf-url)}
+    (do (reset! swipl-prelude-qlf-url ?swipl-prelude-qlf-url)
+        (post-done!))
+
+    #js {:tag "l4-program"
+         :payload (m/some ?l4-program)}
+    (transpile-and-query! ?l4-program)
+
+    _ (post-done!)))
 
 (defn init! []
   ;; Ugly hack to get swipl wasm working in a web worker without access

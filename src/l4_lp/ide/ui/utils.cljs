@@ -74,7 +74,7 @@
       [worker-state input-chan output-chan])
 
     {:worker-state worker-state
-     :post-js-to-worker #(add-to-chan! set-input-chan! %)
+     :post-to-worker #(add-to-chan! set-input-chan! %)
      :output-chan output-chan}))
 
 (defn render-app! [app-id elt]
