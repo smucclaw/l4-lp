@@ -26,8 +26,8 @@
         [query-results set-query-results!] (uix/use-state [])]
 
     (uix/use-effect
-     #(when (and (= query-worker-state :ready)
-                 (not swipl-prelude-url-sent?))
+     #(when (and (not swipl-prelude-url-sent?)
+                 (= query-worker-state :ready))
         (post-to-query-worker! backend/swipl-prelude-url-data)
         (set-swipl-prelude-url-sent! true))
      [query-worker-state swipl-prelude-url-sent? post-to-query-worker!])
