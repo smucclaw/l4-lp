@@ -11,7 +11,7 @@
   (constantly nil))
 
 (def worker-js-url
-  "/js/l4_ide/worker.js")
+  "./js/l4_ide/worker.js")
 
 (def swipl-prelude-url-data
   #js {:tag "swipl-prelude-qlf-url"
