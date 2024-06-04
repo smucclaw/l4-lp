@@ -4,7 +4,7 @@
             [meander.epsilon :as m]))
 
 (def ^:private swipl-prelude-qlf-url
-  (let [app-url (jsi/get-in js/window [:location :origin])]
+  (let [app-url (jsi/get-in js/window [:location :href])]
     (str (uri/join app-url "./resources/swipl/prelude.qlf"))))
 
 (def ^:private no-op
