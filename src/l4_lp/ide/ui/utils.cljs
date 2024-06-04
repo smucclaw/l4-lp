@@ -45,7 +45,7 @@
         [worker-state set-worker-state!] (uix/use-state nil)
         [input-chan set-input-chan!] (uix/use-state (csp/chan :buf 10))
         [output-chan set-output-chan!] (uix/use-state (csp/chan :buf 10))]
- 
+
     (uix/use-effect
      #(fn []
         (jsi/call @worker-ref :terminate)
@@ -55,6 +55,11 @@
     (uix/use-effect
      #(let [opts (-> worker-opts bean/->js (jsi/assoc! :type "module"))
             worker (new js/Worker js-script-url opts)]
+        (jsi/assoc! worker :onmessage
+                    (jsi/fn [^:js {:keys [data]}]
+                      (if data
+                        (add-to-chan! set-output-chan! data)
+                        (set-worker-state! :ready))))
         (reset! worker-ref worker)
         (set-worker-state! :ready))
      [js-script-url worker-opts])
@@ -65,11 +70,6 @@
                     input-chan input-chan
                     js-data (csp/take input-chan)]
            (set-worker-state! :busy)
-           (jsi/assoc! worker :onmessage
-                       (jsi/fn [^:js {:keys [data]}]
-                         (if data
-                           (add-to-chan! set-output-chan! data)
-                           (set-worker-state! :ready))))
            (jsi/call worker :postMessage js-data)))
       [worker-state input-chan output-chan])
 
