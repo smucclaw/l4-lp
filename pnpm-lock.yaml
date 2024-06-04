@@ -13,19 +13,19 @@ importers:
         version: 7.24.6
       '@emotion/react':
         specifier: ^11.11.4
-        version: 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+        version: 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@emotion/styled':
         specifier: ^11.11.5
-        version: 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+        version: 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@mui/icons-material':
         specifier: 6.0.0-alpha.9
-        version: 6.0.0-alpha.9(@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+        version: 6.0.0-alpha.9(@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@mui/lab':
         specifier: 6.0.0-alpha.9
-        version: 6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
+        version: 6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
       '@mui/material':
         specifier: 6.0.0-alpha.9
-        version: 6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
+        version: 6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
       '@nextjournal/clojure-mode':
         specifier: ^0.3.2
         version: 0.3.2
@@ -34,16 +34,16 @@ importers:
         version: 4.22.1(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
       '@uiw/react-codemirror':
         specifier: ^4.22.1
-        version: 4.22.1(@babel/runtime@7.24.6)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1))(@codemirror/language@6.10.1)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(codemirror@6.0.1(@lezer/common@1.2.1))(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
+        version: 4.22.1(@babel/runtime@7.24.6)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1))(@codemirror/language@6.10.1)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(codemirror@6.0.1(@lezer/common@1.2.1))(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
       pythonia:
         specifier: ^1.2.1
         version: 1.2.1(ws@7.5.9)
       react:
-        specifier: 19.0.0-rc-9d4fba0788-20240530
-        version: 19.0.0-rc-9d4fba0788-20240530
+        specifier: 19.0.0-rc-9598c41a20-20240603
+        version: 19.0.0-rc-9598c41a20-20240603
       react-dom:
-        specifier: 19.0.0-rc-9d4fba0788-20240530
-        version: 19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530)
+        specifier: 19.0.0-rc-9598c41a20-20240603
+        version: 19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603)
     devDependencies:
       shadow-cljs:
         specifier: 2.28.8
@@ -816,10 +816,10 @@ packages:
   randomfill@1.0.4:
     resolution: {integrity: sha512-87lcbR8+MhcWcUiQ+9e+Rwx8MyR2P7qnt15ynUlbm3TU/fjbgz4GsvfSUDTemtCCtVCqb4ZcEFlyPNTh9bBTLw==}
 
-  react-dom@19.0.0-rc-9d4fba0788-20240530:
-    resolution: {integrity: sha512-Kgw4vSnJXWkELbQFBWKm/WECPMPA/iWZ+1xeboKeh8KqpB2dG4bAP7WF01Jx6lONp5pagHKKD6UPpyTrp0P5Ew==}
+  react-dom@19.0.0-rc-9598c41a20-20240603:
+    resolution: {integrity: sha512-Hfz3JJpu5vfwEVp1oRi3+cCA1QdlEenJZ2Wr5fGxfRh/VkSUOyo9ULFOoHN/4OAb9gIrYd291spZBZcvlLk8ow==}
     peerDependencies:
-      react: 19.0.0-rc-9d4fba0788-20240530
+      react: 19.0.0-rc-9598c41a20-20240603
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -833,8 +833,8 @@ packages:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
 
-  react@19.0.0-rc-9d4fba0788-20240530:
-    resolution: {integrity: sha512-GVIQ8C7A/dMbyyq33VPzsx+08f/5KBvbw1dBjXtI89PoEUfFZqOIM3E8ljJt2FquM14/Ty93NsHfbA9os9aJag==}
+  react@19.0.0-rc-9598c41a20-20240603:
+    resolution: {integrity: sha512-ekYj6+VR7h+nMtQ+yz3gct5QNFPjrnuBMXEUBCtKre9mViMsdthwpT7OTo+aWrK+utj7yJG6Yf7TUfRMVsdLZQ==}
     engines: {node: '>=0.10.0'}
 
   readable-stream@2.3.8:
@@ -872,8 +872,8 @@ packages:
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
 
-  scheduler@0.25.0-rc-9d4fba0788-20240530:
-    resolution: {integrity: sha512-FgnludCfIyBWBUApENx+tMalmqphFZ8MDj74iS7vlj2oaL75R4Ws+XdfSIQ5RFXFTD/zfyXVh5wtKHrs6iBkcQ==}
+  scheduler@0.25.0-rc-9598c41a20-20240603:
+    resolution: {integrity: sha512-IWR5hz1zYLrpcc5FFoEqYJfmHn43GC631z9B43QUJI7sve2qQPGn4JYlK7CiXXKw6rlf5XD07cnDvJ1QFmnAyg==}
 
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
@@ -1152,17 +1152,17 @@ snapshots:
 
   '@emotion/memoize@0.8.1': {}
 
-  '@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
       '@emotion/babel-plugin': 11.11.0
       '@emotion/cache': 11.11.0
       '@emotion/serialize': 1.1.4
-      '@emotion/use-insertion-effect-with-fallbacks': 1.0.1(react@19.0.0-rc-9d4fba0788-20240530)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.0.1(react@19.0.0-rc-9598c41a20-20240603)
       '@emotion/utils': 1.2.1
       '@emotion/weak-memoize': 0.3.1
       hoist-non-react-statics: 3.3.2
-      react: 19.0.0-rc-9d4fba0788-20240530
+      react: 19.0.0-rc-9598c41a20-20240603
     optionalDependencies:
       '@types/react': 18.3.3
 
@@ -1176,24 +1176,24 @@ snapshots:
 
   '@emotion/sheet@1.2.2': {}
 
-  '@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
       '@emotion/babel-plugin': 11.11.0
       '@emotion/is-prop-valid': 1.2.2
-      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@emotion/serialize': 1.1.4
-      '@emotion/use-insertion-effect-with-fallbacks': 1.0.1(react@19.0.0-rc-9d4fba0788-20240530)
+      '@emotion/use-insertion-effect-with-fallbacks': 1.0.1(react@19.0.0-rc-9598c41a20-20240603)
       '@emotion/utils': 1.2.1
-      react: 19.0.0-rc-9d4fba0788-20240530
+      react: 19.0.0-rc-9598c41a20-20240603
     optionalDependencies:
       '@types/react': 18.3.3
 
   '@emotion/unitless@0.8.1': {}
 
-  '@emotion/use-insertion-effect-with-fallbacks@1.0.1(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@emotion/use-insertion-effect-with-fallbacks@1.0.1(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
-      react: 19.0.0-rc-9d4fba0788-20240530
+      react: 19.0.0-rc-9598c41a20-20240603
 
   '@emotion/utils@1.2.1': {}
 
@@ -1208,11 +1208,11 @@ snapshots:
       '@floating-ui/core': 1.6.2
       '@floating-ui/utils': 0.2.2
 
-  '@floating-ui/react-dom@2.1.0(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@floating-ui/react-dom@2.1.0(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@floating-ui/dom': 1.6.5
-      react: 19.0.0-rc-9d4fba0788-20240530
-      react-dom: 19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530)
+      react: 19.0.0-rc-9598c41a20-20240603
+      react-dom: 19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603)
 
   '@floating-ui/utils@0.2.2': {}
 
@@ -1254,114 +1254,114 @@ snapshots:
       '@lezer/common': 1.2.1
       '@lezer/highlight': 1.2.0
 
-  '@mui/base@5.0.0-beta.47(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@mui/base@5.0.0-beta.47(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
-      '@floating-ui/react-dom': 2.1.0(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
+      '@floating-ui/react-dom': 2.1.0(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
       '@mui/types': 7.2.14(@types/react@18.3.3)
-      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@popperjs/core': 2.11.8
       clsx: 2.1.1
       prop-types: 15.8.1
-      react: 19.0.0-rc-9d4fba0788-20240530
-      react-dom: 19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530)
+      react: 19.0.0-rc-9598c41a20-20240603
+      react-dom: 19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603)
     optionalDependencies:
       '@types/react': 18.3.3
 
   '@mui/core-downloads-tracker@6.0.0-dev.240424162023-9968b4889d': {}
 
-  '@mui/icons-material@6.0.0-alpha.9(@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@mui/icons-material@6.0.0-alpha.9(@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
-      '@mui/material': 6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
-      react: 19.0.0-rc-9d4fba0788-20240530
+      '@mui/material': 6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
+      react: 19.0.0-rc-9598c41a20-20240603
     optionalDependencies:
       '@types/react': 18.3.3
 
-  '@mui/lab@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@mui/lab@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
-      '@mui/base': 5.0.0-beta.47(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
-      '@mui/material': 6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
-      '@mui/system': 6.0.0-dev.240424162023-9968b4889d(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@mui/base': 5.0.0-beta.47(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
+      '@mui/material': 6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
+      '@mui/system': 6.0.0-dev.240424162023-9968b4889d(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@mui/types': 7.2.14(@types/react@18.3.3)
-      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       clsx: 2.1.1
       prop-types: 15.8.1
-      react: 19.0.0-rc-9d4fba0788-20240530
-      react-dom: 19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530)
+      react: 19.0.0-rc-9598c41a20-20240603
+      react-dom: 19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603)
     optionalDependencies:
-      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
-      '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
+      '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@types/react': 18.3.3
 
-  '@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@mui/material@6.0.0-alpha.9(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
-      '@mui/base': 5.0.0-beta.47(@types/react@18.3.3)(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
+      '@mui/base': 5.0.0-beta.47(@types/react@18.3.3)(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
       '@mui/core-downloads-tracker': 6.0.0-dev.240424162023-9968b4889d
-      '@mui/system': 6.0.0-dev.240424162023-9968b4889d(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@mui/system': 6.0.0-dev.240424162023-9968b4889d(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@mui/types': 7.2.14(@types/react@18.3.3)
-      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@types/react-transition-group': 4.4.10
       clsx: 2.1.1
       csstype: 3.1.3
       prop-types: 15.8.1
-      react: 19.0.0-rc-9d4fba0788-20240530
-      react-dom: 19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530)
+      react: 19.0.0-rc-9598c41a20-20240603
+      react-dom: 19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603)
       react-is: 18.3.1
-      react-transition-group: 4.4.5(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
+      react-transition-group: 4.4.5(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
     optionalDependencies:
-      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
-      '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
+      '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@types/react': 18.3.3
 
-  '@mui/private-theming@6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@mui/private-theming@6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
-      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       prop-types: 15.8.1
-      react: 19.0.0-rc-9d4fba0788-20240530
+      react: 19.0.0-rc-9598c41a20-20240603
     optionalDependencies:
       '@types/react': 18.3.3
 
-  '@mui/styled-engine@6.0.0-dev.20240529-082515-213b5e33ab(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@mui/styled-engine@6.0.0-dev.20240529-082515-213b5e33ab(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
       '@emotion/cache': 11.11.0
       csstype: 3.1.3
       prop-types: 15.8.1
-      react: 19.0.0-rc-9d4fba0788-20240530
+      react: 19.0.0-rc-9598c41a20-20240603
     optionalDependencies:
-      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
-      '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
+      '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
 
-  '@mui/system@6.0.0-dev.240424162023-9968b4889d(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@mui/system@6.0.0-dev.240424162023-9968b4889d(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
-      '@mui/private-theming': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
-      '@mui/styled-engine': 6.0.0-dev.20240529-082515-213b5e33ab(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)
+      '@mui/private-theming': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
+      '@mui/styled-engine': 6.0.0-dev.20240529-082515-213b5e33ab(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)
       '@mui/types': 7.2.14(@types/react@18.3.3)
-      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@mui/utils': 6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       clsx: 2.1.1
       csstype: 3.1.3
       prop-types: 15.8.1
-      react: 19.0.0-rc-9d4fba0788-20240530
+      react: 19.0.0-rc-9598c41a20-20240603
     optionalDependencies:
-      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
-      '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530))(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)
+      '@emotion/react': 11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
+      '@emotion/styled': 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603))(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)
       '@types/react': 18.3.3
 
   '@mui/types@7.2.14(@types/react@18.3.3)':
     optionalDependencies:
       '@types/react': 18.3.3
 
-  '@mui/utils@6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@mui/utils@6.0.0-dev.20240529-082515-213b5e33ab(@types/react@18.3.3)(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
       '@types/prop-types': 15.7.12
       prop-types: 15.8.1
-      react: 19.0.0-rc-9d4fba0788-20240530
+      react: 19.0.0-rc-9598c41a20-20240603
       react-is: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.3
@@ -1427,7 +1427,7 @@ snapshots:
       '@codemirror/state': 6.4.1
       '@codemirror/view': 6.26.3
 
-  '@uiw/react-codemirror@4.22.1(@babel/runtime@7.24.6)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1))(@codemirror/language@6.10.1)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(codemirror@6.0.1(@lezer/common@1.2.1))(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530)':
+  '@uiw/react-codemirror@4.22.1(@babel/runtime@7.24.6)(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1))(@codemirror/language@6.10.1)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.26.3)(codemirror@6.0.1(@lezer/common@1.2.1))(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603)':
     dependencies:
       '@babel/runtime': 7.24.6
       '@codemirror/commands': 6.5.0
@@ -1436,8 +1436,8 @@ snapshots:
       '@codemirror/view': 6.26.3
       '@uiw/codemirror-extensions-basic-setup': 4.22.1(@codemirror/autocomplete@6.16.2(@codemirror/language@6.10.1)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)(@lezer/common@1.2.1))(@codemirror/commands@6.5.0)(@codemirror/language@6.10.1)(@codemirror/lint@6.8.0)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/view@6.26.3)
       codemirror: 6.0.1(@lezer/common@1.2.1)
-      react: 19.0.0-rc-9d4fba0788-20240530
-      react-dom: 19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530)
+      react: 19.0.0-rc-9598c41a20-20240603
+      react-dom: 19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603)
     transitivePeerDependencies:
       - '@codemirror/autocomplete'
       - '@codemirror/language'
@@ -1979,25 +1979,25 @@ snapshots:
       randombytes: 2.1.0
       safe-buffer: 5.2.1
 
-  react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530):
+  react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603):
     dependencies:
-      react: 19.0.0-rc-9d4fba0788-20240530
-      scheduler: 0.25.0-rc-9d4fba0788-20240530
+      react: 19.0.0-rc-9598c41a20-20240603
+      scheduler: 0.25.0-rc-9598c41a20-20240603
 
   react-is@16.13.1: {}
 
   react-is@18.3.1: {}
 
-  react-transition-group@4.4.5(react-dom@19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530))(react@19.0.0-rc-9d4fba0788-20240530):
+  react-transition-group@4.4.5(react-dom@19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603))(react@19.0.0-rc-9598c41a20-20240603):
     dependencies:
       '@babel/runtime': 7.24.6
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
-      react: 19.0.0-rc-9d4fba0788-20240530
-      react-dom: 19.0.0-rc-9d4fba0788-20240530(react@19.0.0-rc-9d4fba0788-20240530)
+      react: 19.0.0-rc-9598c41a20-20240603
+      react-dom: 19.0.0-rc-9598c41a20-20240603(react@19.0.0-rc-9598c41a20-20240603)
 
-  react@19.0.0-rc-9d4fba0788-20240530: {}
+  react@19.0.0-rc-9598c41a20-20240603: {}
 
   readable-stream@2.3.8:
     dependencies:
@@ -2040,7 +2040,7 @@ snapshots:
 
   safe-buffer@5.2.1: {}
 
-  scheduler@0.25.0-rc-9d4fba0788-20240530: {}
+  scheduler@0.25.0-rc-9598c41a20-20240603: {}
 
   set-function-length@1.2.2:
     dependencies:
