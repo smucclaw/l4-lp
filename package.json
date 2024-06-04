@@ -7,13 +7,13 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "start": "shadow-cljs watch web-editor",
-    "build:web-editor": "shadow-cljs release web-editor",
+    "start": "shadow-cljs watch ide",
+    "build:ide": "shadow-cljs release ide",
     "build:browser-esm-lib": "shadow-cljs release browser-esm-lib",
     "build:py-node-lib": "shadow-cljs release py-node-lib",
     "build:node-lib": "shadow-cljs release node-lib",
     "build:jvm-lib": "bb uber",
-    "build:all": "shadow-cljs release web-editor && shadow-cljs release browser-esm-lib && shadow-cljs release node-lib && shadow-cljs release py-node-lib && bb uber",
+    "build:all": "shadow-cljs release ide && shadow-cljs release browser-esm-lib && shadow-cljs release node-lib && shadow-cljs release py-node-lib && bb uber",
     "install:swipl-deps": "swipl -t \"pack_install(date_time, [interactive(false), test(false)])\" && swipl -t \"pack_install(clpBNR, [interactive(false), test(false)])\"",
     "build:swipl-qlfs": "cd public/resources/swipl && swipl -t 'qcompile(prelude, [include(user)])' && cd ../../../src/l4_lp_py/swipl/prolog && swipl -t 'qcompile(prelude, [include(user)])' && cd ../../../../../../../",
     "build:swipl-public-qlf": "cd public/resources/swipl && swipl -t 'qcompile(prelude, [include(user)])'",
@@ -23,8 +23,16 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.6",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "6.0.0-alpha.9",
+    "@mui/lab": "6.0.0-alpha.9",
+    "@mui/material": "6.0.0-alpha.9",
     "@nextjournal/clojure-mode": "^0.3.2",
     "@uiw/codemirror-theme-solarized": "^4.22.1",
-    "pythonia": "^1.2.1"
+    "@uiw/react-codemirror": "^4.22.1",
+    "pythonia": "^1.2.1",
+    "react": "19.0.0-rc-9598c41a20-20240603",
+    "react-dom": "19.0.0-rc-9598c41a20-20240603"
   }
 }

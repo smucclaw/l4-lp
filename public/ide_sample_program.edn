@@ -1,0 +1,21 @@
+GIVETH x
+QUERY MIN (MINUS 0 x) (SUM [1, 2, 3, -12]) 2
+    < PRODUCT (MAX (DIVIDE 12 3) 4 -1) 19 x
+
+GIVETH x y
+QUERY SUM x y IS 0
+AND MINUS x y IS 0
+
+GIVEN (x IS A Number)
+DECIDE x is between 0 and 10 or is 100
+IF 0 <= x AND x <= 10
+OR x IS MAX 100 -20
+
+DECIDE (2023 - 1 - 10) is a date
+
+GIVEN (xs IS A LIST OF Number)
+GIVETH x
+DECIDE b of x and xs
+WHERE x IS SUM xs
+
+DECIDE b of 0 and _ OTHERWISE

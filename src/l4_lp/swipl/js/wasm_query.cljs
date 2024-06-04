@@ -8,9 +8,6 @@
             [promesa.core :as prom]
             [tupelo.core :refer [it->]]))
 
-(def ^:private prelude-qlf-url
-  "resources/swipl/prelude.qlf")
-
 (defn- swipl-query-once
   [swipl & args]
   (it-> swipl
@@ -28,6 +25,7 @@
     (new #(this-as this
                    (jsi/assoc! this :log_stack_frame
                                (partial jsi/call stack-trace :push))))
+
     query-result
     (swipl-query-once swipl
                       (str "query_and_trace(StackTrace," query ")")
@@ -37,14 +35,14 @@
      :trace (-> stack-trace swipl-js->clj/swipl-stack-trace->clj)}))
 
 (defn query-and-trace!
-  ([prolog-program+queries]
-   (query-and-trace! prolog-program+queries identity))
-
-  ([{program :program queries :queries} query-result-callback]
+  [{program :program queries :queries}
+   & {:keys [on-query-result swipl-prelude-qlf-url]
+      :or {on-query-result identity
+           swipl-prelude-qlf-url "resources/swipl/prelude.qlf"}}]
    (prom/let
     [swipl (new Swipl #js {:arguments #js ["-q"]})
 
-     _ (jsi/call-in swipl [:prolog :consult] prelude-qlf-url)
+     _ (jsi/call-in swipl [:prolog :consult] swipl-prelude-qlf-url)
 
     ;; Note that any rule containing the special _ := _ assignment operator
     ;; CANNOT be pre-compiled and loaded in a qlf or buried under an "assert".
@@ -59,7 +57,7 @@
      (->> queries
           (prom-m/traverse
            (prom-m/>=> #(run-swipl-query! swipl %)
-                       query-result-callback))))))
+                       on-query-result)))))
 
 (defn query-and-trace-js! [prolog-program+queries]
   (->> prolog-program+queries

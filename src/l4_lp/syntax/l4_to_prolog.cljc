@@ -70,16 +70,21 @@
       TRS to rewrite and transform each node.
 
    Note that:
-   - Our semantics assumes a standard big step semantics with first-class
-     continuations.
+   - Our denotational semantics relies on:
+     - A standard big step semantics with first-class continuations.
+       This is used to axiomatise some of our equations / rewrite rules which
+       manipulate nested terms and their contexts (captured as continuations),
+       like the rules which recursively:
+       - traverse the head and body of an L4 rule to identify symbols which
+         appear in the GIVEN and GIVETH clauses, so that they can be labelled as
+         variables.
+       - flatten nested function applications into a conjunction of Prolog terms.
 
-     This is used to axiomatise some of our equations / rewrite rules which
-     manipulate nested terms and their contexts (captured as continuations),
-     like the rules which recursively:
-     - traverse the head and body of an L4 rule to identify symbols which
-       appear in the GIVEN and GIVETH clauses, so that they can be labelled as
-       variables.
-     - flatten nested function applications into a conjunction of Prolog terms.
+     - Standard Datalog semantics.
+       This is used to axiomatise a rewrite rule that transpiles L4 symbols to
+       Prolog ones by looking up in an embedded Datalog database.
+       (Datalog is used here because we want a bidirectional map that can convert
+       Prolog symbols back into L4 when we post-process results from Prolog engines.)
 
    - The resulting S-exp AST is also valid Prolog code because each S-exp
      in the AST is also a Prolog M-exp. For instance, an S-exp of the form

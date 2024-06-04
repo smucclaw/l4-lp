@@ -2,12 +2,27 @@
 {:deps true
  :dev-http {8000 "public"}
  :builds
- {:web-editor
+ {:ide
   {:target :esm
-   :output-dir "public/js"
-   :modules {:l4_web_editor {:init-fn l4-lp.web-editor.core/init!}}
-   :devtools {:before-load l4-lp.web-editor.core/stop!
-              :after-load l4-lp.web-editor.core/start!}
+   :output-dir "public/js/l4_ide"
+   :asset-path "/js/l4_ide"
+   :modules {:shared {:entries []
+                      ;; Need to append the $jscomp export or else we get the
+                      ;; following error
+                      ;; when compiling with :optimizations :advanced
+                      ;; https://clojurians.slack.com/archives/C6N245JGG/p1713199477949549 
+                      ;; Note that we also define $jscomp before that because
+                      ;; it is only defined in release builds, but not in dev
+                      ;; builds, so that exporting $jscomp will yield an error
+                      ;; in dev builds otherwise.
+                      :append "var $jscomp = $jscomp || {};export { $jscomp };"}
+             :main {:init-fn l4-lp.ide.core/init!
+                    :depends-on #{:shared}}
+             :worker {:init-fn l4-lp.ide.browser-backend.worker/init!
+                      :depends-on #{:shared}
+                      :web-worker true}}
+   :devtools {:before-load l4-lp.ide.core/stop!
+              :after-load l4-lp.ide.core/start!}
    :compiler-options {:output-feature-set :es2021
                       :externs ["datascript/externs.js"]}}
 
@@ -43,7 +58,6 @@
   :py-node-lib
   {:target :node-library
    :output-to "src/l4_lp_py/_l4_lp_nodejs_lib/nodejs_lib.js"
-   ;; :js-options {:js-provider :import}
    :compiler-options {:output-feature-set :es2021
                       :externs ["datascript/externs.js"]}
    :exports
