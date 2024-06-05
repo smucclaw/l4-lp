@@ -19,18 +19,18 @@
          query-output-chan :output-chan}
         (use-web-worker! backend/worker-js-url)
 
-        [swipl-prelude-url-sent? set-swipl-prelude-url-sent!]
+        [swipl-worker-initialised? set-swipl-worker-initialised!]
         (uix/use-state false)
 
         [transpiled-prolog set-transpiled-prolog!] (uix/use-state nil)
         [query-results set-query-results!] (uix/use-state [])]
 
     (uix/use-effect
-     #(when (and (not swipl-prelude-url-sent?)
+     #(when (and (not swipl-worker-initialised?)
                  (= query-worker-state :ready))
-        (post-to-query-worker! backend/swipl-prelude-url-data)
-        (set-swipl-prelude-url-sent! true))
-     [query-worker-state swipl-prelude-url-sent? post-to-query-worker!])
+        (post-to-query-worker! backend/init-swipl-data)
+        (set-swipl-worker-initialised! true))
+     [query-worker-state swipl-worker-initialised? post-to-query-worker!])
 
     (uix/use-effect
      #(prom/let [query-output-chan query-output-chan
@@ -49,7 +49,7 @@
            (uix/$ ui/mui-fonts)
 
            (uix/$ ui/top-bar-and-query-button
-                  {:button-loading? (and swipl-prelude-url-sent?
+                  {:button-loading? (and swipl-worker-initialised?
                                          (not= query-worker-state :ready))
                    :on-button-click
                    (fn []
@@ -59,7 +59,7 @@
                      (-> @cm-editor-ref
                          (jsi/get-in [:view :state :doc])
                          str
-                         backend/l4-program->worker-data
+                         backend/l4-program->run-query-data
                          post-to-query-worker!))})
 
            (uix/$ ui/ide-grid

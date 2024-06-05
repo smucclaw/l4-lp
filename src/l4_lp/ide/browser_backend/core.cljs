@@ -1,11 +1,12 @@
 (ns l4-lp.ide.browser-backend.core 
   (:require [applied-science.js-interop :as jsi]
             [lambdaisland.uri :as uri]
-            [meander.epsilon :as m]))
+            [meander.epsilon :as m]
+            [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]))
 
 (def ^:private swipl-prelude-qlf-url
   (let [app-url (jsi/get-in js/window [:location :href])]
-    (str (uri/join app-url "./resources/swipl/prelude.qlf"))))
+    (str (uri/join app-url swipl-wasm-query/swipl-prelude-qlf-relative-url))))
 
 (def ^:private no-op
   (constantly nil))
@@ -13,12 +14,12 @@
 (def worker-js-url
   "./js/l4_ide/worker.js")
 
-(def swipl-prelude-url-data
-  #js {:tag "swipl-prelude-qlf-url"
+(def init-swipl-data
+  #js {:tag "init-swipl-with-prelude-url"
        :payload swipl-prelude-qlf-url})
 
-(defn l4-program->worker-data [l4-program]
-  #js {:tag "l4-program"
+(defn l4-program->run-query-data [l4-program]
+  #js {:tag "run-l4-query"
        :payload l4-program})
 
 (defn on-data-from-worker
