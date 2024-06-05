@@ -8,6 +8,22 @@
             [promesa.core :as prom]
             [tupelo.core :refer [it->]]))
 
+(def swipl-prelude-qlf-relative-url
+  "./resources/swipl/prelude.qlf")
+
+(defn init-swipl! [swipl-prelude-qlf-url]
+  (prom/let
+   [swipl (new Swipl #js {:arguments #js ["-q"]})
+    _ (jsi/call-in swipl [:prolog :consult] swipl-prelude-qlf-url)
+    ;; Note that any rule containing the special _ := _ assignment operator
+    ;; CANNOT be pre-compiled and loaded in a qlf or buried under an "assert".
+    ;; Doing so results in a runtime error.
+    _ (jsi/call-in swipl [:prolog :load_string]
+                   "log_stack_frame(StackFrame) =>
+                     stack_trace(StackTrace),
+                     _ := StackTrace.log_stack_frame(StackFrame).")]
+    swipl))
+
 (defn- swipl-query-once
   [swipl & args]
   (it-> swipl
@@ -25,7 +41,6 @@
     (new #(this-as this
                    (jsi/assoc! this :log_stack_frame
                                (partial jsi/call stack-trace :push))))
-
     query-result
     (swipl-query-once swipl
                       (str "query_and_trace(StackTrace," query ")")
@@ -36,28 +51,21 @@
 
 (defn query-and-trace!
   [{program :program queries :queries}
-   & {:keys [on-query-result swipl-prelude-qlf-url]
-      :or {on-query-result identity
-           swipl-prelude-qlf-url "resources/swipl/prelude.qlf"}}]
-   (prom/let
-    [swipl (new Swipl #js {:arguments #js ["-q"]})
-
-     _ (jsi/call-in swipl [:prolog :consult] swipl-prelude-qlf-url)
-
-    ;; Note that any rule containing the special _ := _ assignment operator
-    ;; CANNOT be pre-compiled and loaded in a qlf or buried under an "assert".
-    ;; Doing so results in a runtime error.
-     program (str "log_stack_frame(StackFrame) =>
-                     stack_trace(StackTrace),
-                     _ := StackTrace.log_stack_frame(StackFrame).\n"
-                  program)
-
-     _ (jsi/call-in swipl [:prolog :load_string] program)]
-
-     (->> queries
-          (prom-m/traverse
-           (prom-m/>=> #(run-swipl-query! swipl %)
-                       on-query-result)))))
+   & {:keys [swipl on-query-result]
+      :or {on-query-result identity}}]
+  (prom/let
+   [swipl (if swipl
+            swipl
+            (init-swipl! swipl-prelude-qlf-relative-url))
+    ;; Using the same file id "id" for all programs that we load ensures that
+    ;; they are reconsulted, so that earlier programs that were loaded into the
+    ;; swipl interpreter get unloaded.
+    ;; https://swi-prolog.discourse.group/t/using-the-wasm-version/6379/2
+    _ (jsi/call-in swipl [:prolog :load_string] program "id")]
+    (->> queries
+         (prom-m/traverse
+          (prom-m/>=> #(run-swipl-query! swipl %)
+                      on-query-result)))))
 
 (defn query-and-trace-js! [prolog-program+queries]
   (->> prolog-program+queries

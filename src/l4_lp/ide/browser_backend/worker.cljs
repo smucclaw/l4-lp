@@ -7,7 +7,7 @@
             [promesa.core :as prom]
             [tupelo.core :refer [it->]]))
 
-(def ^:private swipl-prelude-qlf-url
+(def ^:private swipl
   (atom nil))
 
 (defn post-done! []
@@ -21,19 +21,21 @@
     (it-> transpiled-prolog
           (swipl-wasm-query/query-and-trace!
            it
-           :swipl-prelude-qlf-url @swipl-prelude-qlf-url
+           :swipl @swipl
            :on-query-result
            #(post-data-as-js! :tag "query-result" :payload %))
           (prom/hcat #(post-done!) it))))
 
 (defn ^:private on-message! [event]
   (m/match (jsi/get event :data)
-    #js {:tag "swipl-prelude-qlf-url"
+    #js {:tag "init-swipl-with-prelude-url"
          :payload (m/some ?swipl-prelude-qlf-url)}
-    (do (reset! swipl-prelude-qlf-url ?swipl-prelude-qlf-url)
+    (do (->> ?swipl-prelude-qlf-url
+             swipl-wasm-query/init-swipl!
+             (reset! swipl))
         (post-done!))
 
-    #js {:tag "l4-program"
+    #js {:tag "run-l4-query"
          :payload (m/some ?l4-program)}
     (transpile-and-query! ?l4-program)
 
