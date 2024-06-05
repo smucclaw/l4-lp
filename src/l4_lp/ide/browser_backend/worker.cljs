@@ -46,7 +46,7 @@
 
     _ (post-done!)))
 
-(defn init! []
+(defn init-worker! []
   ;; Ugly hack to get swipl wasm working in a web worker without access
   ;; to js/window.
   ;; The issue is that otherwise, it fails to load prolog and qlf file via
