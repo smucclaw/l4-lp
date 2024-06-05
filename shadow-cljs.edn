@@ -18,7 +18,7 @@
                       :append "var $jscomp = $jscomp || {};export { $jscomp };"}
              :main {:init-fn l4-lp.ide.core/init!
                     :depends-on #{:shared}}
-             :worker {:init-fn l4-lp.ide.browser-backend.worker/init!
+             :worker {:init-fn l4-lp.ide.browser-backend.worker.core/init!
                       :depends-on #{:shared}
                       :web-worker true}}
    :devtools {:before-load l4-lp.ide.core/stop!

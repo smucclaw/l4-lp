@@ -1,6 +1,6 @@
-(ns l4-lp.ide.browser-backend.worker 
+(ns l4-lp.ide.browser-backend.worker.core
   (:require [applied-science.js-interop :as jsi]
-            [l4-lp.ide.browser-backend.utils :refer [post-data-as-js!]]
+            [l4-lp.ide.browser-backend.worker.utils :as worker-utils]
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]
             [l4-lp.syntax.l4-to-prolog :as l4->prolog]
             [meander.epsilon :as m]
@@ -10,21 +10,19 @@
 (def ^:private swipl
   (atom nil))
 
-(defn post-done! []
-  (js/postMessage nil))
-
 (defn- transpile-and-query! [l4-program]
   (let [transpiled-prolog (-> l4-program
                               l4->prolog/l4->prolog-program+queries)]
-    (post-data-as-js! :tag "transpiled-prolog" :payload transpiled-prolog)
+    (worker-utils/post-data-as-js!
+     :tag "transpiled-prolog" :payload transpiled-prolog)
 
     (it-> transpiled-prolog
           (swipl-wasm-query/query-and-trace!
            it
            :swipl @swipl
            :on-query-result
-           #(post-data-as-js! :tag "query-result" :payload %))
-          (prom/hcat #(post-done!) it))))
+           #(worker-utils/post-data-as-js! :tag "query-result" :payload %))
+          (prom/hcat #(worker-utils/post-done!) it))))
 
 (defn ^:private on-message! [event]
   (m/match (jsi/get event :data)
@@ -33,13 +31,13 @@
     (do (->> ?swipl-prelude-qlf-url
              swipl-wasm-query/init-swipl!
              (reset! swipl))
-        (post-done!))
+        (worker-utils/post-done!))
 
     #js {:tag "run-l4-query"
          :payload (m/some ?l4-program)}
     (transpile-and-query! ?l4-program)
 
-    _ (post-done!)))
+    _ (worker-utils/post-done!)))
 
 (defn init! []
   ;; Ugly hack to get swipl wasm working in a web worker without access
@@ -50,11 +48,4 @@
   ;; To solve this, we assign a global window object to an empty object just so
   ;; that it's defined.
   (jsi/assoc! js/globalThis :window #js {})
-
-  ;; For some reason, (set! js/onmessage ...) yields the following error when
-  ;; compiled with :optimizations :advanced
-  ;;   constant onmessage assigned a value more than once.
-  ;;   Original definition at externs.shadow.js:7
-  ;; To workaround this, we add an event handler via addEventListener instead. 
-  (jsi/call js/globalThis :addEventListener
-            "message" on-message!))
+  (worker-utils/init-worker! on-message!))
