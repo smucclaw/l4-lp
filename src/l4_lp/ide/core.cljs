@@ -49,7 +49,8 @@
            (uix/$ ui/mui-fonts)
 
            (uix/$ ui/top-bar-and-query-button
-                  {:button-loading? (not= query-worker-state :ready)
+                  {:button-loading? (and swipl-prelude-url-sent?
+                                         (not= query-worker-state :ready))
                    :on-button-click
                    (fn []
                      (set-query-results! [])
