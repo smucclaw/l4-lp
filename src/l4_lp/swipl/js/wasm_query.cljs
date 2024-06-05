@@ -8,7 +8,7 @@
             [promesa.core :as prom]
             [tupelo.core :refer [it->]]))
 
-(def swipl-prelude-qlf-relative-url
+(def swipl-prelude-qlf-url
   "./resources/swipl/prelude.qlf")
 
 (defn init-swipl! [swipl-prelude-qlf-url]
@@ -56,7 +56,7 @@
   (prom/let
    [swipl (if swipl
             swipl
-            (init-swipl! swipl-prelude-qlf-relative-url))
+            (init-swipl! swipl-prelude-qlf-url))
     ;; Using the same file id "id" for all programs that we load ensures that
     ;; they are reconsulted, so that earlier programs that were loaded into the
     ;; swipl interpreter get unloaded.

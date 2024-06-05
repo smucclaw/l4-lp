@@ -1,6 +1,6 @@
-(ns l4-lp.ide.browser-backend.worker 
+(ns l4-lp.ide.browser-backend.worker
   (:require [applied-science.js-interop :as jsi]
-            [l4-lp.ide.browser-backend.utils :refer [post-data-as-js!]]
+            [cljs-bean.core :as bean]
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]
             [l4-lp.syntax.l4-to-prolog :as l4->prolog]
             [meander.epsilon :as m]
@@ -10,13 +10,18 @@
 (def ^:private swipl
   (atom nil))
 
+(defn post-data-as-js! [& {:keys [tag payload]}]
+  (let [js-data (bean/->js {:tag tag :payload payload})]
+    (js/postMessage js-data)))
+
 (defn post-done! []
   (js/postMessage nil))
 
 (defn- transpile-and-query! [l4-program]
   (let [transpiled-prolog (-> l4-program
                               l4->prolog/l4->prolog-program+queries)]
-    (post-data-as-js! :tag "transpiled-prolog" :payload transpiled-prolog)
+    (post-data-as-js!
+     :tag "transpiled-prolog" :payload transpiled-prolog)
 
     (it-> transpiled-prolog
           (swipl-wasm-query/query-and-trace!
@@ -41,7 +46,7 @@
 
     _ (post-done!)))
 
-(defn init! []
+(defn init-worker! []
   ;; Ugly hack to get swipl wasm working in a web worker without access
   ;; to js/window.
   ;; The issue is that otherwise, it fails to load prolog and qlf file via
@@ -50,11 +55,9 @@
   ;; To solve this, we assign a global window object to an empty object just so
   ;; that it's defined.
   (jsi/assoc! js/globalThis :window #js {})
-
   ;; For some reason, (set! js/onmessage ...) yields the following error when
   ;; compiled with :optimizations :advanced
   ;;   constant onmessage assigned a value more than once.
   ;;   Original definition at externs.shadow.js:7
   ;; To workaround this, we add an event handler via addEventListener instead. 
-  (jsi/call js/globalThis :addEventListener
-            "message" on-message!))
+  (jsi/call js/globalThis :addEventListener "message" on-message!))
