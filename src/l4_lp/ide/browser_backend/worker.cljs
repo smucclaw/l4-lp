@@ -33,14 +33,14 @@
 
 (defn ^:private on-message! [event]
   (m/match (jsi/get event :data)
-    #js {:tag "init-swipl-with-prelude-url"
+    #js {:tag (m/some "init-swipl-with-prelude-url")
          :payload (m/some ?swipl-prelude-qlf-url)}
     (prom/let
      [swipl' (swipl-wasm-query/init-swipl! ?swipl-prelude-qlf-url)]
       (reset! swipl swipl')
       (post-ready!))
 
-    #js {:tag "run-l4-query"
+    #js {:tag (m/some "run-l4-query")
          :payload (m/some ?l4-program)}
     (transpile-and-query! ?l4-program)
 
