@@ -10,11 +10,11 @@
 (def ^:private swipl
   (atom nil))
 
-(defn post-data-as-js! [& {:keys [tag payload]}]
+(defn- post-data-as-js! [& {:keys [tag payload]}]
   (let [js-data (bean/->js {:tag tag :payload payload})]
     (js/postMessage js-data)))
 
-(defn post-done! []
+(defn- post-ready! []
   (js/postMessage nil))
 
 (defn- transpile-and-query! [l4-program]
@@ -29,22 +29,22 @@
            :swipl @swipl
            :on-query-result
            #(post-data-as-js! :tag "query-result" :payload %))
-          (prom/hcat #(post-done!) it))))
+          (prom/hcat #(post-ready!) it))))
 
 (defn ^:private on-message! [event]
   (m/match (jsi/get event :data)
     #js {:tag "init-swipl-with-prelude-url"
          :payload (m/some ?swipl-prelude-qlf-url)}
-    (do (->> ?swipl-prelude-qlf-url
-             swipl-wasm-query/init-swipl!
-             (reset! swipl))
-        (post-done!))
+    (prom/let
+     [swipl' (swipl-wasm-query/init-swipl! ?swipl-prelude-qlf-url)]
+      (reset! swipl swipl')
+      (post-ready!))
 
     #js {:tag "run-l4-query"
          :payload (m/some ?l4-program)}
     (transpile-and-query! ?l4-program)
 
-    _ (post-done!)))
+    _ (post-ready!)))
 
 (defn init-worker! []
   ;; Ugly hack to get swipl wasm working in a web worker without access
