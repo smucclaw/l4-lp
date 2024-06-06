@@ -22,7 +22,7 @@
     "server": "shadow-cljs server"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.6",
+    "@babel/runtime": "^7.24.7",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "6.0.0-alpha.10",
