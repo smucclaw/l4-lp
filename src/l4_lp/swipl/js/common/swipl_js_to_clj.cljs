@@ -1,6 +1,5 @@
 (ns l4-lp.swipl.js.common.swipl-js-to-clj 
   (:require [applied-science.js-interop :as jsi]
-            [clojure.data.avl :as avl]
             [cljs-bean.core :as bean]
             [l4-lp.syntax.symbol-db :as symbol-db]
             [meander.epsilon :as m]
@@ -40,25 +39,26 @@
 
     ?term ?term)))
 
-(def swipl-query-result->bindings
+(defn swipl-query-result->bindings
   "Given a SWIPL wasm query result, extract the bindings map and transform it
    back into Clojure data."
-  (r/pipe
-  ;; Extract bindings map from a swipl query result.
-   (r/match
-    (m/app bean/bean
-           {:$tag "bindings" :success true & ?bindings})
-     ?bindings
-   _ {})
+  [swipl-query-result]
+  (let [query-result->bindings
+        (r/match
+         (m/app bean/bean {:$tag "bindings" :success true & ?bindings})
+          ?bindings
+          _ {})
 
-   ;; Transform all keys (ie variables) and values (ie bindings) in
-   ;; the bindings map back to Clojure data.
-   (r/repeat
-    (r/rewrite
-     {(m/keyword ?var-id) (m/some ?swipl-data) & ?bindings}
-     {~(symbol "var" (str/lower-case ?var-id))
-      ~(swipl-data->clj ?swipl-data)
-      & ?bindings}))))
+        js-bindings->clj
+        (r/match
+         [(m/keyword ?var-id) ?swipl-data]
+          [(symbol "var" (str/lower-case ?var-id))
+           (swipl-data->clj ?swipl-data)])]
+
+    (->> swipl-query-result
+         query-result->bindings
+         (eduction (map js-bindings->clj))
+         (into {}))))
 
 (defn swipl-stack-frame->clj
   "Given a stack frame logged by the SWIPL interpreter in wasm, transform it
@@ -78,7 +78,7 @@
   (->> swipl-stack-trace
        (eduction (map swipl-stack-frame->clj))
        (eduction (xforms/by-key :recursion-depth (xforms/into [])))
-       (into (avl/sorted-map))))
+       (into {})))
 
 (defn swipl-stack-trace->js [swipl-stack-trace]
   (-> swipl-stack-trace
