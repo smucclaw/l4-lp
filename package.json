@@ -29,10 +29,10 @@
     "@mui/lab": "6.0.0-alpha.10",
     "@mui/material": "6.0.0-alpha.10",
     "@nextjournal/clojure-mode": "^0.3.2",
-    "@uiw/codemirror-theme-solarized": "^4.22.1",
-    "@uiw/react-codemirror": "^4.22.1",
+    "@uiw/codemirror-theme-solarized": "^4.22.2",
+    "@uiw/react-codemirror": "^4.22.2",
     "pythonia": "^1.2.1",
-    "react": "19.0.0-rc-bf3a29d097-20240603",
-    "react-dom": "19.0.0-rc-bf3a29d097-20240603"
+    "react": "19.0.0-rc-827cbea417-20240606",
+    "react-dom": "19.0.0-rc-827cbea417-20240606"
   }
 }
