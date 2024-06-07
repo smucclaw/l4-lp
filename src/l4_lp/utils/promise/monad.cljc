@@ -36,7 +36,7 @@
   (prom/loop [next (next-fn coll)
               return-coll (transient return-coll)]
     (m/match next
-      {:done? (m/some true)} (persistent! return-coll)
+      {:done? true} (persistent! return-coll)
 
       {:item (m/some ?item) :rest (m/some ?rest)}
       (prom/let [result (f ?item)]

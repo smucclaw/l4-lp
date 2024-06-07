@@ -16,17 +16,18 @@
 
 (defn init-swipl-engine! [l4-lp-py-dir]
   (when-not @py-query-mod
-    (let [^js py-query-mod' (python l4-lp-py-dir)]
-      (->> py-query-mod'
-           (prom/map #(jsi/call ^js % .-init_swipl_engine))
-           (prom/map (fn [_] (reset! py-query-mod py-query-mod')))))))
+    (prom/chain
+     l4-lp-py-dir
+     python
+     #(doto ^js % (jsi/call .-init_swipl_engine))
+     #(reset! py-query-mod %))))
 
 (defn query-and-trace!
   ([prolog-program+queries]
    (query-and-trace! prolog-program+queries identity))
 
   ([prolog-program+queries query-result-callback]
-   (prom/let [^js py-query-mod @py-query-mod]
+   (let [^js py-query-mod @py-query-mod]
      (when py-query-mod
        (prom/let
         [program+queries (bean/->js prolog-program+queries)
