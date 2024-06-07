@@ -30,11 +30,11 @@
            on-query-result no-op
            on-done no-op}}]
   (m/match data
-    #js {:tag (m/some "transpiled-prolog")
+    #js {:tag "transpiled-prolog"
          :payload (m/some ?transpiled-prolog)}
     (on-transpiled-prolog ?transpiled-prolog)
 
-    #js {:tag (m/some "query-result")
+    #js {:tag "query-result"
          :payload (m/some ?query-result)}
     (on-query-result ?query-result)
 

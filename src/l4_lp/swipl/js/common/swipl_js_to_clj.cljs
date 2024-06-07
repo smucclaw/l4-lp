@@ -18,17 +18,17 @@
    https://swi-prolog.discourse.group/t/swi-prolog-in-the-browser-using-wasm/5650#calling-between-javascript-and-prolog-5"
   (r/top-down
    (r/rewrite
-    #js {:$t (m/some "s") :v (m/some ?str)} ?str
-    #js {:$t (m/some "v") :v (m/some ?var-id)} ~(symbol "var" ?var-id)
+    #js {:$t "s" :v (m/some ?str)} ?str
+    #js {:$t "v" :v (m/some ?var-id)} ~(symbol "var" ?var-id)
 
     #js [!xs ...] [!xs ...]
 
-    #js {:$t (m/some "t")
-         :functor (m/some ":")
-         ":" (m/some #js [_ (m/cata ?term)])}
+    #js {:$t "t"
+         :functor ":"
+         ":" #js [_ (m/cata ?term)]}
     ?term
 
-    (m/and #js {:$t (m/some "t") :functor (m/some ?functor)}
+    (m/and #js {:$t "t" :functor (m/some ?functor)}
            (m/app #(jsi/get % ?functor) #js [!args ...]))
     (~(symbol ?functor) & [!args ...])
 
@@ -47,9 +47,7 @@
   ;; Extract bindings map from a swipl query result.
    (r/match
     (m/app bean/bean
-           {:$tag (m/some "bindings")
-            :success (m/some true)
-            & ?bindings})
+           {:$tag "bindings" :success true & ?bindings})
      ?bindings
    _ {})
 
