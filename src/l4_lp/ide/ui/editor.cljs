@@ -50,4 +50,4 @@
             :basic-setup true
             :max-height max-height
             :ref editor-callback-ref
-            :value "Loading sample program..."})))
+            :value ";; Loading sample program..."})))
