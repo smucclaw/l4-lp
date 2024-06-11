@@ -29,7 +29,7 @@
          :on-query-result
          #(post-data-as-js! :tag "query-result" :payload %)))))
 
-(defn ^:private on-message! [event]
+(defn- on-message! [event]
   (m/match (jsi/get event :data)
     #js {:tag "init-swipl-with-prelude-url"
          :payload (m/some ?swipl-prelude-qlf-url)}
