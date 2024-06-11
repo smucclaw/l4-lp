@@ -23,13 +23,11 @@
     (post-data-as-js!
      :tag "transpiled-prolog" :payload transpiled-prolog)
 
-    (it-> transpiled-prolog
-          (swipl-wasm-query/query-and-trace!
-           it
-           :swipl @swipl
-           :on-query-result
-           #(post-data-as-js! :tag "query-result" :payload %))
-          (prom/hcat #(post-ready!) it))))
+    (-> transpiled-prolog
+        (swipl-wasm-query/query-and-trace!
+         :swipl @swipl
+         :on-query-result
+         #(post-data-as-js! :tag "query-result" :payload %)))))
 
 (defn ^:private on-message! [event]
   (m/match (jsi/get event :data)
@@ -42,7 +40,9 @@
 
     #js {:tag "run-l4-query"
          :payload (m/some ?l4-program)}
-    (transpile-and-query! ?l4-program)
+    (->> ?l4-program
+         transpile-and-query!
+         (prom/hcat #(post-ready!)))
 
     _ (post-ready!)))
 
