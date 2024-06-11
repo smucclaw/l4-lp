@@ -4,8 +4,7 @@
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]
             [l4-lp.syntax.l4-to-prolog :as l4->prolog]
             [meander.epsilon :as m]
-            [promesa.core :as prom]
-            [tupelo.core :refer [it->]]))
+            [promesa.core :as prom]))
 
 (def ^:private swipl
   (atom nil))
