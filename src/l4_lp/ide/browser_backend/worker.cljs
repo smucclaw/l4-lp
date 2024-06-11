@@ -19,9 +19,8 @@
 (defn- transpile-and-query! [l4-program]
   (let [transpiled-prolog (-> l4-program
                               l4->prolog/l4->prolog-program+queries)]
-    (post-data-as-js!
-     :tag "transpiled-prolog" :payload transpiled-prolog)
-
+    (post-data-as-js! :tag "transpiled-prolog"
+                      :payload transpiled-prolog)
     (-> transpiled-prolog
         (swipl-wasm-query/query-and-trace!
          :swipl @swipl
