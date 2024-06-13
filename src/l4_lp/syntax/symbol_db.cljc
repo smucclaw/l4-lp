@@ -5,7 +5,7 @@
             [net.cgrand.xforms :as xforms]
             [tupelo.string :as str]))
 
-(def l4-prolog-symbol-pairs
+(def ^:private l4-prolog-symbol-pairs
   "Ordered pairs defining a binary relation between L4 and Prolog symbols,
    used as a bidirectional map for translating symbols from L4 to Prolog and
    vice versa.
