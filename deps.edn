@@ -33,7 +33,7 @@
                    :version "0.0.1"}}
 
   :nrepl ;; added by neil
-  {:extra-deps {nrepl/nrepl {:mvn/version "1.1.0"}}
+  {:extra-deps {nrepl/nrepl {:mvn/version "1.2.0"}}
    :main-opts ["-m" "nrepl.cmdline" "--interactive" "--color"]}
 
   :test ;; added by neil
@@ -44,6 +44,6 @@
    :exec-fn cognitect.test-runner.api/test}
 
   :build ;; added by neil
-  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.3" :git/sha "15ead66"}
-          slipset/deps-deploy {:mvn/version "0.2.0"}}
+  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.4" :git/sha "31388ff"}
+          slipset/deps-deploy {:mvn/version "0.2.2"}}
    :ns-default build}}}

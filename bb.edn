@@ -1,5 +1,5 @@
 {:tasks
- {:requires ([babashka.fs :as fs])
+ {:requires [[babashka.fs :as fs]]
 
   test {:doc "Run tests"
         :task (apply clojure "-A:swipl-jpl -M:test" *command-line-args*)}
