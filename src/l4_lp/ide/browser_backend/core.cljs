@@ -8,9 +8,8 @@
   "./js/l4_ide/worker.js")
 
 (def ^:private swipl-prelude-qlf-url
-  (let [absolute-app-url (jsi/get-in js/window [:location :href])]
-    (str (uri/join absolute-app-url
-                   swipl-wasm-query/swipl-prelude-qlf-url))))
+  (let [app-url (jsi/get-in js/window [:location :href])]
+    (str (uri/join app-url swipl-wasm-query/swipl-prelude-qlf-url))))
 
 (def init-swipl-data
   #js {:tag "init-swipl-with-prelude-url"
@@ -38,4 +37,4 @@
          :payload (m/some ?query-result)}
     (on-query-result ?query-result)
 
-    nil (on-done)))
+    _ (on-done)))
