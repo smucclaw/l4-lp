@@ -44,6 +44,6 @@
    :exec-fn cognitect.test-runner.api/test}
 
   :build ;; added by neil
-  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.3" :git/sha "15ead66"}
+  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.4" :git/sha "31388ff"}
           slipset/deps-deploy {:mvn/version "0.2.0"}}
    :ns-default build}}}
