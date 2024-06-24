@@ -1,7 +1,7 @@
 (ns l4-lp.ide.core 
   (:require ["@mui/material/Box$default" :as Box]
             [applied-science.js-interop :as jsi]
-            [l4-lp.ide.browser-backend.core :as backend]
+            [l4-lp.ide.browser-backend.query.core :as backend]
             [l4-lp.ide.ui.core :as ui]
             [l4-lp.ide.ui.utils :refer [render-app! use-web-worker!]]
             [promesa.core :as prom]

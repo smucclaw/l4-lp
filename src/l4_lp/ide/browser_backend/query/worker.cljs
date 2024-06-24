@@ -1,4 +1,4 @@
-(ns l4-lp.ide.browser-backend.worker
+(ns l4-lp.ide.browser-backend.query.worker
   (:require [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]

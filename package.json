@@ -31,6 +31,7 @@
     "@nextjournal/clojure-mode": "^0.3.3",
     "@uiw/codemirror-theme-solarized": "^4.22.2",
     "@uiw/react-codemirror": "^4.22.2",
+    "@wllama/wllama": "^1.11.0",
     "pythonia": "^1.2.1",
     "react": "19.0.0-rc-3563387fe3-20240621",
     "react-dom": "19.0.0-rc-3563387fe3-20240621"
