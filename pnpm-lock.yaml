@@ -36,8 +36,8 @@ importers:
         specifier: ^4.22.2
         version: 4.22.2(@babel/runtime@7.24.7)(@codemirror/autocomplete@6.16.3(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.28.2)(@lezer/common@1.2.1))(@codemirror/language@6.10.2)(@codemirror/lint@6.8.1)(@codemirror/search@6.5.6)(@codemirror/state@6.4.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.28.2)(codemirror@6.0.1(@lezer/common@1.2.1))(react-dom@19.0.0-rc-3563387fe3-20240621(react@19.0.0-rc-3563387fe3-20240621))(react@19.0.0-rc-3563387fe3-20240621)
       '@wllama/wllama':
-        specifier: ^1.11.0
-        version: 1.11.0
+        specifier: ^1.12.0
+        version: 1.12.0
       pythonia:
         specifier: ^1.2.1
         version: 1.2.1(ws@7.5.10)
@@ -438,8 +438,8 @@ packages:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
 
-  '@wllama/wllama@1.11.0':
-    resolution: {integrity: sha512-t9WwOjdJrXHmfGBFoAiUV/Xi4HPNVamZBDxjBQP6uqLMa9w/7K6MEITcrAlu1YIN2qagQ3nOhp/8eJ7eVROVyQ==}
+  '@wllama/wllama@1.12.0':
+    resolution: {integrity: sha512-PQKEdzkPzK/b+bGzQAdiT6DwZpwvTCdVT8x+bswUUN6Yi+aI6XVEslM87QhtKSRK9vdhtAM246GFP9BU0S5pvA==}
 
   ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
@@ -1599,7 +1599,7 @@ snapshots:
       - '@codemirror/lint'
       - '@codemirror/search'
 
-  '@wllama/wllama@1.11.0': {}
+  '@wllama/wllama@1.12.0': {}
 
   ansi-styles@3.2.1:
     dependencies:
