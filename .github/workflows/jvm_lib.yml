@@ -62,11 +62,8 @@ jobs:
           swi-prolog-branch: devel
           swi-prolog-version: '9.3.7-4-gbab49808a-nobleppa2'
 
-      - name: Install SWI-Prolog dependencies
-        run: pnpm install:swipl-deps
-
-      - name: Precompile SWI-Prolog files to qlf
-        run: pnpm build:swipl-public-qlf
-
-      - name: Build JVM lib uberjar
-        run: bb uber-github-workflow-ubuntu
+      - name: Install SWI-Prolog dependencies and build JVM lib uberjar
+        run : |
+          pnpm install:swipl-deps
+          pnpm build:swipl-public-qlf 
+          bb uber-github-workflow-ubuntu
