@@ -14,7 +14,7 @@
     "build:node-lib": "shadow-cljs release node-lib",
     "build:jvm-lib": "bb uber",
     "build:all": "shadow-cljs release ide && shadow-cljs release browser-esm-lib && shadow-cljs release node-lib && shadow-cljs release py-node-lib && bb uber",
-    "install:swipl-deps": "swipl -t \"pack_install(date_time, [interactive(false), test(false)])\" && swipl -t \"pack_install(clpBNR, [interactive(false), test(false)])\"",
+    "install:swipl-deps": "swipl install_deps.pl",
     "build:swipl-qlfs": "cd public/resources/swipl && swipl -t 'qcompile(prelude, [include(user)])' && cd ../../../src/l4_lp_py/swipl/prolog && swipl -t 'qcompile(prelude, [include(user)])' && cd ../../../../../../../",
     "build:swipl-public-qlf": "cd public/resources/swipl && swipl -t 'qcompile(prelude, [include(user)])'",
     "run:node-eg": "poetry run node public/node_example_usage.js",
@@ -29,10 +29,10 @@
     "@mui/lab": "6.0.0-alpha.13",
     "@mui/material": "6.0.0-alpha.13",
     "@nextjournal/clojure-mode": "^0.3.3",
-    "@uiw/codemirror-theme-solarized": "^4.22.2",
-    "@uiw/react-codemirror": "^4.22.2",
+    "@uiw/codemirror-theme-solarized": "^4.23.0",
+    "@uiw/react-codemirror": "^4.23.0",
     "pythonia": "^1.2.1",
-    "react": "19.0.0-rc-58af67a8f8-20240628",
-    "react-dom": "19.0.0-rc-58af67a8f8-20240628"
+    "react": "19.0.0-rc-3da26163a3-20240704",
+    "react-dom": "19.0.0-rc-3da26163a3-20240704"
   }
 }
