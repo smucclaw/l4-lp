@@ -7,8 +7,8 @@
 :- use_module(library(macros)).
 :- use_module(library(dicts)).
 
-:- [library(clpBNR)].
-:- [library(date_time)].
+:- use_module(library(clpBNR)).
+:- use_module(library(date_time)).
 
 % :- set_prolog_flag(gc, off).
 
