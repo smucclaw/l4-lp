@@ -33,7 +33,7 @@
     "@uiw/codemirror-theme-solarized": "^4.23.0",
     "@uiw/react-codemirror": "^4.23.0",
     "pythonia": "^1.2.1",
-    "react": "19.0.0-rc-3da26163a3-20240704",
-    "react-dom": "19.0.0-rc-3da26163a3-20240704"
+    "react": "19.0.0-rc-df783f9ea1-20240708",
+    "react-dom": "19.0.0-rc-df783f9ea1-20240708"
   }
 }
