@@ -70,6 +70,7 @@ query_and_trace(StackTrace, Query) =>
   ).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
+:- op(1000, xfy, unless).
 :- op(700, xfx, eq).
 :- op(700, xfx, eq_).
 :- op(700, xfx, neq).
@@ -78,6 +79,8 @@ query_and_trace(StackTrace, Query) =>
 :- op(700, xfx, leq).
 :- op(700, xfx, gt).
 :- op(700, xfx, geq).
+
+unless(X, Y) :- X, not(Y).
 
 is_in(X, [Y | _]) :- X eq Y.
 is_in(X, [_ | Xs]) :- is_in(X, Xs).
@@ -123,16 +126,16 @@ max_by(P, X, Y, Result) :-
   call(P, X, X0),
   call(P, Y, Y0),
   (
-    X0 geq Y0 -> (Result eq X, !) ; Result eq Y
+    X0 geq Y0 -> Result eq X, ! ; Result eq Y
   ).
 
-min_list_([], Result) => (Result = inf, !) ; Result eq inf.
+min_list_([], Result) => Result = inf, ! ; Result eq inf.
 min_list_([X | Xs], Result) =>
   min_list_(Xs, Result0),
   min_(X, Result0, Result).
   % Result eq min(X, Result0).
 
-max_list_([], Result) => (Result = -inf, !) ; Result eq -inf.
+max_list_([], Result) => Result = -inf, ! ; Result eq -inf.
 max_list_([X | Xs], Result) =>
   max_list_(Xs, Result0),
   max_(X, Result0, Result).
@@ -165,7 +168,7 @@ X eq Y :- notrace(X eq_ Y).
 X eq_ Y :-
   % This works around clpBNR behavior that {X == [0]} succeeds with
   % X = 0.
-  \+ is_list(X), \+ is_list(Y),
+  not(is_list(X)), not(is_list(Y)),
   catch(({X == Y, Y == X}, solve([X, Y])), _, fail), !.
 
 % Optimisation for when X and Y are both lists. In that case, just use maplist
