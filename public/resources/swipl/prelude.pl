@@ -126,7 +126,7 @@ max_by(P, X, Y, Result) :-
   call(P, X, X0),
   call(P, Y, Y0),
   (
-    X0 geq Y0 -> (Result eq X, !) ; Result eq Y
+    X0 geq Y0 -> Result eq X, ! ; Result eq Y
   ).
 
 min_list_([], Result) => (Result = inf, !) ; Result eq inf.
