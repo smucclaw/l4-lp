@@ -174,6 +174,8 @@ X eq_ Y :-
     ),
   _, fail).
 
+X eq_ X.
+
 % X 'IS' Y :-
   % catch(X is Y, _, fail), !
 
