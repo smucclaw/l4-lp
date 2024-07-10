@@ -36,6 +36,14 @@ load_from_string(File, Data, Module) =>
 
 :- dynamic log_stack_frame/1.
 
+% Fail when encountering undefined predicates.
+% TODO:
+% In the future, this could be leveraged for interactive Q&A when given an
+% unknown predicate or input.
+% To integrate this with the browser-based IDE and rule engine, we can we can
+% pass in another predicate in place of 'fail' that wraps a JS callback function.
+:- set_prolog_flag(unknown, fail).
+
 prolog_trace_interception(Port, Frame, _Choice, continue) :-
   prolog_frame_attribute(Frame, goal, CurrentGoal),
   prolog_frame_attribute(Frame, level, RecursionLevel),
