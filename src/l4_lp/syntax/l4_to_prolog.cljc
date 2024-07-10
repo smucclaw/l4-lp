@@ -140,7 +140,7 @@
     (QUERY . !query ..1) (QUERY ((!query ...)))
 
     ;; TODO: Formalise BoolStruct parser + transpiler.
-    (m/with [%bool-op (m/pred '#{AND OR} !bool-op)
+    (m/with [%bool-op (m/pred '#{AND OR UNLESS} !bool-op)
              %conjunct-disjunct (!xs ..1 %bool-op)
              %xs (m/or (& %conjunct-disjunct & %xs) %conjunct-disjunct)]
             (& %xs . !x ..1))

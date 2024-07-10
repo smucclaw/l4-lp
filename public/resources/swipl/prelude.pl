@@ -70,6 +70,7 @@ query_and_trace(StackTrace, Query) =>
   ).
 
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
+:- op(1000, xfy, unless).
 :- op(700, xfx, eq).
 :- op(700, xfx, eq_).
 :- op(700, xfx, neq).
@@ -78,6 +79,8 @@ query_and_trace(StackTrace, Query) =>
 :- op(700, xfx, leq).
 :- op(700, xfx, gt).
 :- op(700, xfx, geq).
+
+unless(X, Y) :- X, not(Y).
 
 is_in(X, [Y | _]) :- X eq Y.
 is_in(X, [_ | Xs]) :- is_in(X, Xs).
