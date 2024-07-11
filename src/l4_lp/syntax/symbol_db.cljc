@@ -23,6 +23,8 @@
     ['OR ";"]
     ['NOT ['not "\\+"]]
     ['UNLESS 'unless]
+    ['TRUE 'true]
+    ['FALSE ['false, 'fail]]
     ['< 'lt]
     [['<= '=<] ['leq '=<]]
     ['> 'gt]
