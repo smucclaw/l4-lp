@@ -22,7 +22,7 @@
     ['AND ","]
     ['OR ";"]
     ['NOT ['not "\\+"]]
-    ['UNLESS "unless"]
+    ['UNLESS 'unless]
     ['< 'lt]
     [['<= '=<] ['leq '=<]]
     ['> 'gt]
