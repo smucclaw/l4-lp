@@ -42,7 +42,7 @@ load_from_string(File, Data, Module) =>
 % unknown predicate or input.
 % To integrate this with the browser-based IDE and rule engine, we can we can
 % pass in another predicate in place of 'fail' that wraps a JS callback function.
-:- set_prolog_flag(unknown, fail).
+% :- set_prolog_flag(unknown, fail).
 
 prolog_trace_interception(Port, Frame, _Choice, continue) :-
   prolog_frame_attribute(Frame, goal, CurrentGoal),
