@@ -69,8 +69,18 @@ query_and_trace(StackTrace, Query) =>
     retract(stack_trace(StackTrace))
   ).
 
+% Allow eq and not_ (ie IS and NOT) to be extended dynamically by user's
+% programs.
+% This allows users to model things like variable assignment.
+:- multifile eq/2.
+:- discontiguous eq/2.
+
+:- multifile not_/1.
+:- discontiguous not_/1.
+
 % https://www.swi-prolog.org/pldoc/man?predicate=op/3
 :- op(1000, xfy, unless).
+:- op(900, fy, not_).
 :- op(700, xfx, eq).
 :- op(700, xfx, eq_).
 :- op(700, xfx, neq).
@@ -80,7 +90,9 @@ query_and_trace(StackTrace, Query) =>
 :- op(700, xfx, gt).
 :- op(700, xfx, geq).
 
-unless(X, Y) :- X, not(Y).
+not_(X) :- not(X).
+
+unless(X, Y) :- X, not_ Y.
 
 is_in(X, [Y | _]) :- X eq Y.
 is_in(X, [_ | Xs]) :- is_in(X, Xs).
@@ -230,33 +242,33 @@ X neq_ Y :- dif(X, Y).
 % Default negation as failure is used as the fallback for non-arithmetic
 % predicates like atomic propositions.
 
-not_((X , _)), not_(X) => true.
-not_((_ , Y)) => not_(Y).
+% not_((X , _)), not_(X) => true.
+% not_((_ , Y)) => not_(Y).
 
-not_((X ; Y)) => not_(X) , not_(Y).
+% not_((X ; Y)) => not_(X) , not_(Y).
 
-not_(not_(P)) => P.
+% not_(not_(P)) => P.
 
-not_(X lt Y) => X geq Y.
-not_(X leq Y) => X gt Y.
+% not_(X lt Y) => X geq Y.
+% not_(X leq Y) => X gt Y.
 
-not_(X gt Y) => X leq Y.
-not_(X geq Y) => X lt Y.
+% not_(X gt Y) => X leq Y.
+% not_(X geq Y) => X lt Y.
 
-not_(X eq Y) => X neq Y.
+% not_(X eq Y) => X neq Y.
 
-not_(P), notrace(
-  % Unify a compound term P with a matching clause, modulo the theory of reals,
-  % so that for instance p(1 - 1) gets unified with p(0).
-  (
-    P =.. [Functor | Args],
-    Args0 eq_ Args,
-    P0 =.. [Functor | Args0],
-    clause(P0, P_body)
-  )
-) => P_body = true -> \+ P0 ; not_(P_body).
+% not_(P), notrace(
+%   % Unify a compound term P with a matching clause, modulo the theory of reals,
+%   % so that for instance p(1 - 1) gets unified with p(0).
+%   (
+%     P =.. [Functor | Args],
+%     Args0 eq_ Args,
+%     P0 =.. [Functor | Args0],
+%     clause(P0, P_body)
+%   )
+% ) => P_body = true -> \+ P0 ; not_(P_body).
 
-not_(_) => true.
+% not_(_) => true.
 
 % test(0).
 
