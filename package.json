@@ -22,17 +22,17 @@
     "server": "shadow-cljs server"
   },
   "dependencies": {
-    "@babel/runtime": "^7.24.7",
+    "@babel/runtime": "^7.24.8",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@mui/icons-material": "6.0.0-alpha.13",
-    "@mui/lab": "6.0.0-alpha.13",
-    "@mui/material": "6.0.0-alpha.13",
+    "@mui/icons-material": "6.0.0-beta.0",
+    "@mui/lab": "6.0.0-beta.0",
+    "@mui/material": "6.0.0-beta.0",
     "@nextjournal/clojure-mode": "^0.3.3",
     "@uiw/codemirror-theme-solarized": "^4.23.0",
     "@uiw/react-codemirror": "^4.23.0",
     "pythonia": "^1.2.1",
-    "react": "19.0.0-rc-df783f9ea1-20240708",
-    "react-dom": "19.0.0-rc-df783f9ea1-20240708"
+    "react": "19.0.0-rc-85acf2d195-20240711",
+    "react-dom": "19.0.0-rc-85acf2d195-20240711"
   }
 }
