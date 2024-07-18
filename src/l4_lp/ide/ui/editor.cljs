@@ -30,7 +30,7 @@
 
 (uix/defui editor
   [{:keys [ref max-height font-size]}]
-  (let [[sample-program-text sample-program-fetched?]
+  (let [{sample-program-text :text sample-program-fetched? :fetched?}
         (use-fetch-as-text! sample-program-url)
          exts (uix/use-memo #(exts font-size) [font-size])
 

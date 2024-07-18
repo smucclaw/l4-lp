@@ -30,7 +30,7 @@
         (set-fetched! true))
      [url])
 
-    [text fetched?]))
+    {:text text :fetched? fetched?}))
 
 (defn- add-to-chan! [set-chan! data]
   (set-chan! (fn [chan]
