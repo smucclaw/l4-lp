@@ -17,6 +17,9 @@ importers:
       '@emotion/styled':
         specifier: ^11.11.5
         version: 11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-85acf2d195-20240711))(@types/react@18.3.3)(react@19.0.0-rc-85acf2d195-20240711)
+      '@mlc-ai/web-llm':
+        specifier: ^0.2.46
+        version: 0.2.48
       '@mui/icons-material':
         specifier: 6.0.0-beta.0
         version: 6.0.0-beta.0(@mui/material@6.0.0-beta.0(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-85acf2d195-20240711))(@emotion/styled@11.11.5(@emotion/react@11.11.4(@types/react@18.3.3)(react@19.0.0-rc-85acf2d195-20240711))(@types/react@18.3.3)(react@19.0.0-rc-85acf2d195-20240711))(@types/react@18.3.3)(react-dom@19.0.0-rc-85acf2d195-20240711(react@19.0.0-rc-85acf2d195-20240711))(react@19.0.0-rc-85acf2d195-20240711))(@types/react@18.3.3)(react@19.0.0-rc-85acf2d195-20240711)
@@ -264,6 +267,9 @@ packages:
 
   '@lezer/markdown@1.3.0':
     resolution: {integrity: sha512-ErbEQ15eowmJUyT095e9NJc3BI9yZ894fjSDtHftD0InkfUBGgnKSU6dvan9jqsZuNHg2+ag/1oyDRxNsENupQ==}
+
+  '@mlc-ai/web-llm@0.2.48':
+    resolution: {integrity: sha512-KzHL13EEoyXeDqpMx6p/1Im6T4C6t31yrI9VN9VPcWD40BAiAqVZhR8E85PQ6aNZEAqISlfJTryuP7L+0IJ2+g==}
 
   '@mui/base@5.0.0-beta.53':
     resolution: {integrity: sha512-WeLTX9zMQPxZ7w9oitDjxOZeQYDVx8JC/I81NUTdboyI7zp+K0ktpJ79gciruKf5Z9qD01+DfwzEisY05mk3QQ==}
@@ -778,6 +784,10 @@ packages:
 
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
+
+  loglevel@1.9.1:
+    resolution: {integrity: sha512-hP3I3kCrDIMuRwAwHltphhDM1r8i55H33GgqjXbrisuJhF4kRhW1dNuxsRklp4bXl8DSdLaNLuiL4A/LWRfxvg==}
+    engines: {node: '>= 0.6.0'}
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
@@ -1409,6 +1419,10 @@ snapshots:
       '@lezer/common': 1.2.1
       '@lezer/highlight': 1.2.0
 
+  '@mlc-ai/web-llm@0.2.48':
+    dependencies:
+      loglevel: 1.9.1
+
   '@mui/base@5.0.0-beta.53(@types/react@18.3.3)(react-dom@19.0.0-rc-85acf2d195-20240711(react@19.0.0-rc-85acf2d195-20240711))(react@19.0.0-rc-85acf2d195-20240711)':
     dependencies:
       '@babel/runtime': 7.24.8
@@ -1997,6 +2011,8 @@ snapshots:
   json-parse-even-better-errors@2.3.1: {}
 
   lines-and-columns@1.2.4: {}
+
+  loglevel@1.9.1: {}
 
   loose-envify@1.4.0:
     dependencies:

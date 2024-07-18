@@ -1,11 +1,11 @@
-(ns l4-lp.ide.browser-backend.core 
+(ns l4-lp.ide.browser-backend.query.core 
   (:require [applied-science.js-interop :as jsi]
             [lambdaisland.uri :as uri]
             [meander.epsilon :as m]
             [l4-lp.swipl.js.wasm-query :as swipl-wasm-query]))
 
 (def worker-js-url
-  "./js/l4_ide/worker.js")
+  "./js/l4_ide/query_worker.js")
 
 (def ^:private swipl-prelude-qlf-url
   (let [app-url (jsi/get-in js/window [:location :href])]
