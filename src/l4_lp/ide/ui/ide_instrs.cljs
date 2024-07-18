@@ -12,7 +12,7 @@
 
 (uix/defui ide-instrs
   [{:keys [max-text-width sx]}]
-  (let [[ide-instrs-text _fetched?] (use-fetch-as-text! ide-instrs-url)]
+  (let [{ide-instrs-text :text} (use-fetch-as-text! ide-instrs-url)]
     (uix/$ Accordion {:sx sx}
            (uix/$ AccordionSummary
                   {:expand-icon (uix/$ ExpandMoreIcon)
