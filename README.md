@@ -1,6 +1,6 @@
 # l4-lp (L4 Logic Program) overview
 
-This project formalises a semantics for L4, a legal DSL for the law, and
+This project formalises a semantics for L4, a DSL for business rules, and
 implements a rule engine execution pipeline, along with various language
 binding libraries for interacting with L4 and the pipeline.
 Among these is a browser JS ESM library which is used to implement an

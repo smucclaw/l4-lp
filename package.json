@@ -1,6 +1,12 @@
 {
   "name": "l4-lp",
   "version": "0.0.1",
+  "description": "IDE, rule engine and language bindings for L4 (a DSL for business rules)",
+  "author": {
+    "name": "Joe Watt",
+    "email": "joewatt95@u.nus.edu",
+    "url": "https://github.com/joewatt95"
+  },
   "private": true,
   "devDependencies": {
     "shadow-cljs": "2.28.11"
