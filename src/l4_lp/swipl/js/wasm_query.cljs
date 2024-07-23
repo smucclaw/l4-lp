@@ -1,5 +1,5 @@
 (ns l4-lp.swipl.js.wasm-query 
-  (:require ["https://SWI-Prolog.github.io/npm-swipl-wasm/3/8/1/dynamic-import.js"
+  (:require ["https://SWI-Prolog.github.io/npm-swipl-wasm/3/8/2/dynamic-import.js"
              :rename {SWIPL Swipl}]
             [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
@@ -20,8 +20,8 @@
     ;; Doing so results in a runtime error.
     _ (jsi/call-in swipl [:prolog :load_string]
                    "log_stack_frame(StackFrame) =>
-                     stack_trace(StackTrace),
-                     _ := StackTrace.log_stack_frame(StackFrame).")]
+                      stack_trace(StackTrace),
+                      _ := StackTrace.log_stack_frame(StackFrame).")]
     swipl))
 
 (defn- swipl-query-once
