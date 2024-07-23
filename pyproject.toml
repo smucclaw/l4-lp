@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "l4-lp"
 version = "0.1.0"
-description = ""
-authors = ["CCLAW"]
+description = "Rule engine and language bindings for L4 (a DSL for business rules)"
+authors = ["Joe Watt"]
 readme = "README.md"
 packages = [
   {include = "l4_lp_py", from = "src"}
