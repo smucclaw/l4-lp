@@ -20,8 +20,8 @@
     ;; Doing so results in a runtime error.
     _ (jsi/call-in swipl [:prolog :load_string]
                    "log_stack_frame(StackFrame) =>
-                     stack_trace(StackTrace),
-                     _ := StackTrace.log_stack_frame(StackFrame).")]
+                      stack_trace(StackTrace),
+                      _ := StackTrace.log_stack_frame(StackFrame).")]
     swipl))
 
 (defn- swipl-query-once
