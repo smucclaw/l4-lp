@@ -40,11 +40,17 @@
 
 (defn use-web-worker!
   [js-script-url
-   & {:keys [worker-opts]}]
+   & {:keys [worker-opts initial-in-chan-size initial-out-chan-size]
+      :or {initial-in-chan-size 1
+           initial-out-chan-size 1}}]
   (let [worker-ref (uix/use-ref)
         [worker-state set-worker-state!] (uix/use-state nil)
-        [input-chan set-input-chan!] (uix/use-state (csp/chan :buf 10))
-        [output-chan set-output-chan!] (uix/use-state (csp/chan :buf 10))]
+
+        [input-chan set-input-chan!]
+        (uix/use-state (csp/chan :buf initial-in-chan-size))
+        
+        [output-chan set-output-chan!]
+        (uix/use-state (csp/chan :buf initial-out-chan-size))]
 
     (uix/use-effect
      #(fn []
