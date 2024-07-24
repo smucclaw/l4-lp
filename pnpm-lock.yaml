@@ -18,8 +18,8 @@ importers:
         specifier: ^11.13.0
         version: 11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@19.0.0-rc-512b09b2-20240718))(@types/react@18.3.3)(react@19.0.0-rc-512b09b2-20240718)
       '@mlc-ai/web-llm':
-        specifier: ^0.2.50
-        version: 0.2.50
+        specifier: ^0.2.51
+        version: 0.2.51
       '@mui/icons-material':
         specifier: 6.0.0-beta.2
         version: 6.0.0-beta.2(@mui/material@6.0.0-beta.2(@emotion/react@11.13.0(@types/react@18.3.3)(react@19.0.0-rc-512b09b2-20240718))(@emotion/styled@11.13.0(@emotion/react@11.13.0(@types/react@18.3.3)(react@19.0.0-rc-512b09b2-20240718))(@types/react@18.3.3)(react@19.0.0-rc-512b09b2-20240718))(@types/react@18.3.3)(react-dom@19.0.0-rc-512b09b2-20240718(react@19.0.0-rc-512b09b2-20240718))(react@19.0.0-rc-512b09b2-20240718))(@types/react@18.3.3)(react@19.0.0-rc-512b09b2-20240718)
@@ -268,8 +268,8 @@ packages:
   '@lezer/markdown@1.3.0':
     resolution: {integrity: sha512-ErbEQ15eowmJUyT095e9NJc3BI9yZ894fjSDtHftD0InkfUBGgnKSU6dvan9jqsZuNHg2+ag/1oyDRxNsENupQ==}
 
-  '@mlc-ai/web-llm@0.2.50':
-    resolution: {integrity: sha512-XWNcC6DtrYndA4OE/pVbxKY57WCdsvId9qE8K5iDfvVn5ZISRCxrcvRZOPVeMMmigr0hRwFWyTdHdGMSZiBz0w==}
+  '@mlc-ai/web-llm@0.2.51':
+    resolution: {integrity: sha512-62aiDyiSzUah1vqnTcZvH3lFRjz4VM2CeIBp7QpcFgX2HPA3vVYhDbV0cOVGAfK1MfH1CipZiyjOjkQUGjjRTw==}
 
   '@mui/base@5.0.0-beta.54':
     resolution: {integrity: sha512-Yy5Ej0jvZgSxqlyMOw9sO2TBBYAH/fXv7zFC3VNcPlzkceZ4xhQCvVQYpkdrjSuACD/UvRN468zSY679+x9Fpw==}
@@ -1419,7 +1419,7 @@ snapshots:
       '@lezer/common': 1.2.1
       '@lezer/highlight': 1.2.0
 
-  '@mlc-ai/web-llm@0.2.50':
+  '@mlc-ai/web-llm@0.2.51':
     dependencies:
       loglevel: 1.9.1
 
