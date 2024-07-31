@@ -1,6 +1,6 @@
 (ns l4-lp.ide.ui.core 
   (:require ["@mui/icons-material/Send$default" :as SendIcon]
-            ["@mui/material/Unstable_Grid2$default" :as Grid]
+            ["@mui/material/Grid2$default" :as Grid]
             ["react-dom" :as react-dom]
             [l4-lp.ide.ui.editor :refer [editor]]
             [l4-lp.ide.ui.ide-instrs :refer [ide-instrs]]
