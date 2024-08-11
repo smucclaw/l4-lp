@@ -44,17 +44,10 @@ jobs:
           # key: cljdeps-${{ hashFiles('build.boot') }}
           restore-keys: cljdeps-
 
-      # Setup Nodejs and pnpm
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup proto and bun 
+        uses: moonrepo/setup-toolchain@v0
         with:
-          node-version: 20
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false
+          auto-install: true
 
       - name: Setup SWI-Prolog
         uses: smucclaw/setup-swi-prolog@master
@@ -63,10 +56,10 @@ jobs:
           swi-prolog-version: '9.3.8-4-g6986f7a49-nobleppa2'
 
       - name: Install SWI-Prolog dependencies
-        run: pnpm install:swipl-deps
+        run: bun install:swipl-deps
 
       - name: Precompile SWI-Prolog files to qlf
-        run: pnpm build:swipl-public-qlf
+        run: bun build:swipl-public-qlf
 
       - name: Build JVM lib uberjar
         run: bb uber-github-workflow-ubuntu

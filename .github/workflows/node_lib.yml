@@ -43,33 +43,13 @@ jobs:
           # key: cljdeps-${{ hashFiles('build.boot') }}
           restore-keys: cljdeps-
 
-      # Setup Nodejs and pnpm
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup proto and bun 
+        uses: moonrepo/setup-toolchain@v0
         with:
-          node-version: 20
+          auto-install: true
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install pnpm dependencies
-        run: pnpm install
+      - name: Install npm dependencies
+        run: bun install
 
       - name: Setup SWI-Prolog
         uses: smucclaw/setup-swi-prolog@master
@@ -78,10 +58,10 @@ jobs:
           swi-prolog-version: '9.3.8-4-g6986f7a49-nobleppa2'
 
       - name: Install SWI-Prolog dependencies
-        run: pnpm install:swipl-deps
+        run: bun install:swipl-deps
 
       - name: Precompile SWI-Prolog files to qlf
-        run: pnpm build:swipl-public-qlf
+        run: bun build:swipl-public-qlf
 
       - name: Build NodeJS lib
-        run: pnpm build:node-lib
+        run: bun build:node-lib
