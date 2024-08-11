@@ -70,25 +70,28 @@ semantics and pipeline implemented in this project.
 - Java
 - [Clojure](https://clojure.org/guides/install_clojure)
 - [Babashka](https://github.com/babashka/babashka)
-- [pnpm](https://pnpm.io/installation)
+- [proto](https://moonrepo.dev/proto)
 - [SWI-Prolog](https://www.swi-prolog.org/)
 
 This project is developed with:
 - JDK LTS 21
-- Nodejs LTS 20
+- Bun 1.1.22
 - SWI-Prolog 9.3.8
 
 # Usage
 ## Setup
 ```shell
+  # Install pinned version of bun in .prototools via proto
+  proto install
+
   # Install npm dependencies.
-  pnpm install
+  proto run bun -- install
 
   # Install SWI-Prolog runtime dependencies.
-  pnpm install:swipl-deps
+  proto run bun -- install:swipl-deps
 
   # Pre-compile our SWI-Prolog runtime library to qlf files.
-  pnpm build:swipl-qlfs
+  proto run bun -- build:swipl-qlfs
 ```
 
 ## Running the web IDE demo
@@ -96,7 +99,7 @@ This project is developed with:
 - Run the following command to start a local dev server in the `public` directory:
 
   ```shell
-    pnpm start
+    proto run bun -- start
   ```
 
 - Navigate to <http://localhost:8000> in your browser.
@@ -108,7 +111,7 @@ This project is developed with:
 Run the following command:
 
 ```shell
-  pnpm build:all
+  proto run bun -- build:all
 ```
 
 # Details and discussion
