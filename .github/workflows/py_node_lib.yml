@@ -48,8 +48,6 @@ jobs:
         with:
           auto-install: true
 
-      - run: moon ci
-
       - name: Install npm dependencies
         run: bun install
 

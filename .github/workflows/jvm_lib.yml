@@ -49,8 +49,6 @@ jobs:
         with:
           auto-install: true
 
-      - run: moon ci
-
       - name: Setup SWI-Prolog
         uses: smucclaw/setup-swi-prolog@master
         with:
