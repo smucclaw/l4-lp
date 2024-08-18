@@ -76,7 +76,7 @@ semantics and pipeline implemented in this project.
 This project is developed with:
 - JDK LTS 21
 - Bun 1.1.22
-- SWI-Prolog 9.3.8
+- SWI-Prolog 9.3.9
 
 # Usage
 ## Setup
