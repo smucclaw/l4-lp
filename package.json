@@ -28,17 +28,17 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.25.0",
-    "@emotion/react": "^11.13.0",
+    "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mlc-ai/web-llm": "^0.2.60",
-    "@mui/icons-material": "6.0.0-beta.5",
-    "@mui/lab": "6.0.0-beta.5",
-    "@mui/material": "6.0.0-beta.5",
+    "@mlc-ai/web-llm": "^0.2.61",
+    "@mui/icons-material": "6.0.0-beta.6",
+    "@mui/lab": "6.0.0-beta.6",
+    "@mui/material": "6.0.0-beta.6",
     "@nextjournal/clojure-mode": "^0.3.3",
     "@uiw/codemirror-theme-solarized": "^4.23.0",
     "@uiw/react-codemirror": "^4.23.0",
     "pythonia": "^1.2.1",
-    "react": "19.0.0-rc-49496d49-20240814",
-    "react-dom": "19.0.0-rc-49496d49-20240814"
+    "react": "19.0.0-rc-a960b92c-20240819",
+    "react-dom": "19.0.0-rc-a960b92c-20240819"
   }
 }
