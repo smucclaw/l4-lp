@@ -27,13 +27,13 @@
     "server": "shadow-cljs server"
   },
   "dependencies": {
-    "@babel/runtime": "^7.25.0",
+    "@babel/runtime": "^7.25.4",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mlc-ai/web-llm": "^0.2.61",
-    "@mui/icons-material": "6.0.0-beta.6",
-    "@mui/lab": "6.0.0-beta.6",
-    "@mui/material": "6.0.0-beta.6",
+    "@mlc-ai/web-llm": "^0.2.62",
+    "@mui/icons-material": "6.0.0-rc.0",
+    "@mui/lab": "6.0.0-beta.7",
+    "@mui/material": "6.0.0-rc.0",
     "@nextjournal/clojure-mode": "^0.3.3",
     "@uiw/codemirror-theme-solarized": "^4.23.0",
     "@uiw/react-codemirror": "^4.23.0",
