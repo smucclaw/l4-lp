@@ -30,15 +30,15 @@
     "@babel/runtime": "^7.25.6",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mlc-ai/web-llm": "^0.2.62",
-    "@mui/icons-material": "6.1.0",
-    "@mui/lab": "6.0.0-beta.9",
-    "@mui/material": "6.1.0",
+    "@mlc-ai/web-llm": "^0.2.64",
+    "@mui/icons-material": "6.1.1",
+    "@mui/lab": "6.0.0-beta.10",
+    "@mui/material": "6.1.1",
     "@nextjournal/clojure-mode": "^0.3.3",
     "@uiw/codemirror-theme-solarized": "^4.23.2",
     "@uiw/react-codemirror": "^4.23.2",
     "pythonia": "^1.2.1",
-    "react": "19.0.0-rc-5dcb0097-20240918",
-    "react-dom": "19.0.0-rc-5dcb0097-20240918"
+    "react": "19.0.0-rc-e4953922-20240919",
+    "react-dom": "19.0.0-rc-e4953922-20240919"
   }
 }
