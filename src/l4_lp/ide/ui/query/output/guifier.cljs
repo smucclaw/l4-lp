@@ -1,5 +1,5 @@
 (ns l4-lp.ide.ui.query.output.guifier 
-  (:require ["https://cdn.jsdelivr.net/npm/guifier@1.0.31/dist/Guifier.js$default"
+  (:require ["https://cdn.jsdelivr.net/npm/guifier@1.0.32/dist/Guifier.js$default"
              :as Guifier]
             ["@mui/material/Box$default" :as Box]
             [applied-science.js-interop :as jsi]
