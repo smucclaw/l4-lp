@@ -253,7 +253,7 @@ develop = false
 type = "git"
 url = "https://github.com/SWI-Prolog/packages-swipy.git"
 reference = "V9.3.12"
-resolved_reference = "a3767b5319274d3ffa217fe89741fd2a858790ff"
+resolved_reference = "517dfc6a08fed637e241cd915cd8e87005be92c4"
 
 [[package]]
 name = "javascript"
