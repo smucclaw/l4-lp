@@ -14,7 +14,7 @@ console.log("Transpiled queries: ", queries);
 const query_results = await query_and_trace(prolog_program_and_queries); 
 
 const { default: Guifier } = await import(
-  "https://cdn.jsdelivr.net/npm/guifier@1.0.26/dist/Guifier.js"
+  "https://cdn.jsdelivr.net/npm/guifier@1.0.32/dist/Guifier.js"
 );
 
 // console.log("Stack trace: ", stack_trace);
