@@ -7,6 +7,7 @@
            button-props children]}]
   (uix/$ LoadingButton
          (merge button-props
-                {:loading loading?
+                {:color :secondary
+                 :loading loading?
                  :on-click on-click})
          children))
