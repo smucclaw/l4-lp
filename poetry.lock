@@ -252,8 +252,8 @@ develop = false
 [package.source]
 type = "git"
 url = "https://github.com/SWI-Prolog/packages-swipy.git"
-reference = "V9.3.13"
-resolved_reference = "a5275d07489bbff57edc691a443f97dab976db47"
+reference = "V9.3.14"
+resolved_reference = "ffa4b571537bc5b61c66e78efb851354bce12383"
 
 [[package]]
 name = "javascript"
@@ -505,4 +505,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "75f3919244e110f29ae1febd41a786f2307ccdde2d1952ca1a63f34d9a787cdb"
+content-hash = "791d8d78e7f52b5a7f677aa455fe9c2c0f57e81c0f04f99ec00545c381e676c2"
