@@ -9,7 +9,7 @@
   },
   "private": true,
   "devDependencies": {
-    "shadow-cljs": "2.28.18"
+    "shadow-cljs": "2.28.19"
   },
   "scripts": {
     "start": "shadow-cljs watch ide",
@@ -30,7 +30,7 @@
     "@babel/runtime": "^7.26.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mlc-ai/web-llm": "^0.2.73",
+    "@mlc-ai/web-llm": "^0.2.74",
     "@mui/icons-material": "^6.1.6",
     "@mui/lab": "6.0.0-beta.14",
     "@mui/material": "^6.1.6",
@@ -38,7 +38,7 @@
     "@uiw/codemirror-theme-solarized": "^4.23.6",
     "@uiw/react-codemirror": "^4.23.6",
     "pythonia": "^1.2.1",
-    "react": "19.0.0-rc-603e6108-20241029",
-    "react-dom": "19.0.0-rc-603e6108-20241029"
+    "react": "19.0.0-rc-33c7bd9a-20241104",
+    "react-dom": "19.0.0-rc-33c7bd9a-20241104"
   }
 }
