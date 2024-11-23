@@ -30,7 +30,7 @@
     "@babel/runtime": "^7.26.0",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
-    "@mlc-ai/web-llm": "^0.2.75",
+    "@mlc-ai/web-llm": "^0.2.76",
     "@mui/icons-material": "^6.1.8",
     "@mui/lab": "6.0.0-beta.16",
     "@mui/material": "^6.1.8",
