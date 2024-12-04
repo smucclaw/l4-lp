@@ -1,5 +1,5 @@
 (ns l4-lp.swipl.js.wasm-query 
-  (:require ["https://SWI-Prolog.github.io/npm-swipl-wasm/4/0/16/dynamic-import.js"
+  (:require ["https://SWI-Prolog.github.io/npm-swipl-wasm/4/0/17/dynamic-import.js"
              :rename {SWIPL Swipl}]
             [applied-science.js-interop :as jsi]
             [cljs-bean.core :as bean]
