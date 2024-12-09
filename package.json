@@ -28,8 +28,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.0",
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mlc-ai/web-llm": "^0.2.77",
     "@mui/icons-material": "^6.1.10",
     "@mui/lab": "6.0.0-beta.18",
@@ -38,7 +38,7 @@
     "@uiw/codemirror-theme-solarized": "^4.23.6",
     "@uiw/react-codemirror": "^4.23.6",
     "pythonia": "^1.2.1",
-    "react": "19.0.0-rc-7670501b-20241124",
-    "react-dom": "19.0.0-rc-7670501b-20241124"
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   }
 }

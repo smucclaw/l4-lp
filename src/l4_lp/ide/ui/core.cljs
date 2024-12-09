@@ -1,21 +1,20 @@
 (ns l4-lp.ide.ui.core 
   (:require ["@mui/icons-material/Send$default" :as SendIcon]
             ["@mui/material/Grid2$default" :as Grid]
-            ["react-dom" :as react-dom]
             [l4-lp.ide.ui.editor :refer [editor]]
             [l4-lp.ide.ui.ide-instrs :refer [ide-instrs]]
             [l4-lp.ide.ui.query.button :refer [query-button]]
             [l4-lp.ide.ui.query.output.core :refer [query-output]]
             [l4-lp.ide.ui.top-bar :refer [top-bar]]
-            [uix.core :as uix]))
+            [uix.core :as uix]
+            [uix.dom :as uix-dom]))
 
 (uix/defui mui-fonts
   "Component to load fonts for Material UI."
   []
   (uix/$ :div
-         (react-dom/preconnect "https://fonts.googleapis.com")
-         (react-dom/preconnect "https://fonts.gstatic.com"
-                               #js {:crossOrigin "anonymous"})
+         (uix-dom/preconnect "https://fonts.googleapis.com")
+         (uix-dom/preconnect "https://fonts.gstatic.com")
          (uix/$ :link {:rel :stylesheet
                        :href "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"})))
 
