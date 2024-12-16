@@ -35,8 +35,8 @@
     "@mui/lab": "6.0.0-beta.19",
     "@mui/material": "^6.2.0",
     "@nextjournal/clojure-mode": "^0.3.3",
-    "@uiw/codemirror-theme-solarized": "^4.23.6",
-    "@uiw/react-codemirror": "^4.23.6",
+    "@uiw/codemirror-theme-solarized": "^4.23.7",
+    "@uiw/react-codemirror": "^4.23.7",
     "pythonia": "^1.2.1",
     "react": "19.0.0",
     "react-dom": "19.0.0"
