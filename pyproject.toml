@@ -16,7 +16,7 @@ edn-format = "^0.7.5"
 # pyrsistent = "^0.20.0"
 cytoolz = "^0.12.3"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 ipdb = "*"
 pout = "^2.3.1"
 
