@@ -13,7 +13,7 @@
 
 (defn init-swipl! [swipl-prelude-qlf-url]
   (prom/let
-   [swipl (new Swipl #js {:arguments #js ["-q"]})
+   [swipl (Swipl #js {:arguments #js ["-q"]})
     _ (jsi/call-in swipl [:prolog :consult] swipl-prelude-qlf-url)
     ;; Note that any rule containing the special _ := _ assignment operator
     ;; CANNOT be pre-compiled and loaded in a qlf or buried under an "assert".
