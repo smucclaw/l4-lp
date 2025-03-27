@@ -1,6 +1,6 @@
 (ns l4-lp.ide.ui.core 
   (:require ["@mui/icons-material/Send$default" :as SendIcon]
-            ["@mui/material/Grid2$default" :as Grid]
+            ["@mui/material/Grid$default" :as Grid]
             [l4-lp.ide.ui.editor :refer [editor]]
             [l4-lp.ide.ui.ide-instrs :refer [ide-instrs]]
             [l4-lp.ide.ui.query.button :refer [query-button]]
