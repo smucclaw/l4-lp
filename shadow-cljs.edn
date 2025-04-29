@@ -54,7 +54,7 @@
 
     :query_and_trace
     l4-lp.swipl.js.janus-py-nodejs-query/query-and-trace-js!}}
-  
+
   :py-node-lib
   {:target :node-library
    :output-to "src/l4_lp_py/_l4_lp_nodejs_lib/nodejs_lib.js"
