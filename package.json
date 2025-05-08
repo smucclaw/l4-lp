@@ -9,7 +9,7 @@
   },
   "private": true,
   "devDependencies": {
-    "shadow-cljs": "3.0.4"
+    "shadow-cljs": "3.0.5"
   },
   "scripts": {
     "start": "shadow-cljs watch ide",
@@ -30,9 +30,9 @@
     "@babel/runtime": "^7.27.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mlc-ai/web-llm": "^0.2.78",
-    "@mui/icons-material": "^7.0.2",
-    "@mui/material": "^7.0.2",
+    "@mlc-ai/web-llm": "^0.2.79",
+    "@mui/icons-material": "^7.1.0",
+    "@mui/material": "^7.1.0",
     "@nextjournal/clojure-mode": "^0.3.3",
     "@uiw/codemirror-theme-solarized": "^4.23.12",
     "@uiw/react-codemirror": "^4.23.12",
