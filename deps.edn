@@ -1,12 +1,12 @@
 {:paths ["src"]
- :deps {thheller/shadow-cljs {:mvn/version "3.1.1"}
+ :deps {thheller/shadow-cljs {:mvn/version "3.1.4"}
         binaryage/devtools {:mvn/version "1.0.7"}
         com.pitch/uix.core {:mvn/version "1.4.3"}
         com.pitch/uix.dom {:mvn/version "1.4.3"}
         com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.24"}
         instaparse/instaparse {:mvn/version "1.5.0"}
         net.cgrand/xforms {:mvn/version "0.19.6"}
-        io.github.tonsky/datascript {:mvn/version "1.7.4"}
+        io.github.tonsky/datascript {:mvn/version "1.7.5"}
         io.github.noprompt/meander {:git/sha "74de6b1f651441092cc12d1c9012ef7086033040"}
         funcool/promesa {:mvn/version "11.0.678"}
         applied-science/js-interop {:mvn/version "0.4.2"}
