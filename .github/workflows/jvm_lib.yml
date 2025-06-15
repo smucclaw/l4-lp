@@ -27,7 +27,7 @@ jobs:
       - name: Setup Clojure build tools
         uses: DeLaGuardo/setup-clojure@13.4
         with:
-          cli: 1.12.0.1550
+          cli: 1.12.1.1550
           bb: 1.12.201
 
       - name: Setup cache for Clojure dependencies
