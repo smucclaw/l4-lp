@@ -28,7 +28,7 @@ jobs:
         uses: DeLaGuardo/setup-clojure@13.4
         with:
           cli: 1.12.1.1550
-          bb: 1.12.202
+          bb: 1.12.204
 
       - name: Setup cache for Clojure dependencies
         uses: actions/cache@v4
@@ -53,7 +53,7 @@ jobs:
         uses: smucclaw/setup-swi-prolog@master
         with:
           swi-prolog-branch: devel
-          swi-prolog-version: '9.3.24-1-gd0fb3a125-nobleppa2'
+          swi-prolog-version: '9.3.25-1-gaf32dae2b-nobleppa2'
 
       - name: Install SWI-Prolog dependencies
         run: bun install:swipl-deps
