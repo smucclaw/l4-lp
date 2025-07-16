@@ -73,11 +73,6 @@ semantics and pipeline implemented in this project.
 - [proto](https://moonrepo.dev/proto)
 - [SWI-Prolog](https://www.swi-prolog.org/)
 
-This project is developed with:
-- JDK LTS 21
-- Bun 1.1.22
-- SWI-Prolog 9.3.9
-
 # Usage
 ## Setup
 ```shell
