@@ -49,13 +49,13 @@ jobs:
           auto-install: true
 
       - name: Install npm dependencies
-        run: bun install
+        run: bun install --linker=isolated
 
       - name: Setup SWI-Prolog
         uses: smucclaw/setup-swi-prolog@master
         with:
           swi-prolog-branch: devel
-          swi-prolog-version: '9.3.25-1-gaf32dae2b-nobleppa2'
+          swi-prolog-version: '9.3.26-1-ga9b7d57fb-nobleppa2'
 
       - name: Install SWI-Prolog dependencies
         run: bun install:swipl-deps
