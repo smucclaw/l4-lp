@@ -7,6 +7,7 @@
    :output-dir "public/js/l4_ide"
    :asset-path "/js/l4_ide"
    :modules {:shared {:entries []
+                      ;; This is no longer needed since shadow-cljs 3.2.0
                       ;; Need to append the $jscomp export or else we get the
                       ;; following error
                       ;; when compiling with :optimizations :advanced
@@ -15,7 +16,8 @@
                       ;; it is only defined in release builds, but not in dev
                       ;; builds, so that exporting $jscomp will yield an error
                       ;; in dev builds otherwise.
-                      :append "var $jscomp = $jscomp || {}; export { $jscomp }"}
+                      ;; :append "var $jscomp = $jscomp || {}; export { $jscomp }"
+                      }
              :main {:init-fn l4-lp.ide.core/init!
                     :depends-on #{:shared}}
              :query_worker {:init-fn l4-lp.ide.browser-backend.query.worker/init-worker!
