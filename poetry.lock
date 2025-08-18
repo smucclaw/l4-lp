@@ -274,14 +274,14 @@ resolved_reference = "a751822dc7eae86af873ddba41b255ae820698fe"
 
 [[package]]
 name = "javascript"
-version = "1!1.2.2"
+version = "1!1.2.3"
 description = "Call and interop Node.js APIs with Python"
 optional = false
 python-versions = "<4,>=3.7"
 groups = ["main"]
 files = [
-    {file = "javascript-1!1.2.2-py3-none-any.whl", hash = "sha256:6efbe8f481bdfd1d4aa7d3e5c412cad75db0f436b90f0587bbe20a2adb553957"},
-    {file = "javascript-1!1.2.2.tar.gz", hash = "sha256:a21f403c59683fa486bf166944c9bd7a545a5f4fcbc88ca6ed96ed9d61fb10b8"},
+    {file = "javascript-1!1.2.3-py3-none-any.whl", hash = "sha256:3038511e915fd9b2852a0f9bbb7fef78540322f41c46b4fb60edb203b1aefa05"},
+    {file = "javascript-1!1.2.3.tar.gz", hash = "sha256:208d9c0f54ca9b9056313343ef58b86fc4601369d9527b7a0b825e37663dbd60"},
 ]
 
 [package.extras]
