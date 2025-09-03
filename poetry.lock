@@ -180,14 +180,14 @@ pytz = ">=2016.10"
 
 [[package]]
 name = "executing"
-version = "2.2.0"
+version = "2.2.1"
 description = "Get the currently executing AST node of a frame, and other information"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
 files = [
-    {file = "executing-2.2.0-py2.py3-none-any.whl", hash = "sha256:11387150cad388d62750327a53d3339fad4888b39a6fe233c3afbb54ecffd3aa"},
-    {file = "executing-2.2.0.tar.gz", hash = "sha256:5d108c028108fe2551d1a7b2e8b713341e2cb4fc0aa7dcf966fa4327a5226755"},
+    {file = "executing-2.2.1-py2.py3-none-any.whl", hash = "sha256:760643d3452b4d777d295bb167ccc74c64a81df23fb5e08eff250c425a4b2017"},
+    {file = "executing-2.2.1.tar.gz", hash = "sha256:3632cc370565f6648cc328b32435bd120a1e4ebb20c77e3fdde9a13cd1e533c4"},
 ]
 
 [package.extras]
@@ -274,14 +274,14 @@ resolved_reference = "a751822dc7eae86af873ddba41b255ae820698fe"
 
 [[package]]
 name = "javascript"
-version = "1!1.2.4"
+version = "1!1.2.5"
 description = "Call and interop Node.js APIs with Python"
 optional = false
 python-versions = "<4,>=3.7"
 groups = ["main"]
 files = [
-    {file = "javascript-1!1.2.4-py3-none-any.whl", hash = "sha256:430649423415a12b489a57103dd1c38f88cf22ac9650eaa501427293e4c6f075"},
-    {file = "javascript-1!1.2.4.tar.gz", hash = "sha256:d9114703fbb5cba56af6dab7b4dc30345b771ac155cdf33feaf758be93deb98a"},
+    {file = "javascript-1!1.2.5-py3-none-any.whl", hash = "sha256:3cfc53f0b23166e297cb85b6d66d148b604c946dd9249b529914f833f163f184"},
+    {file = "javascript-1!1.2.5.tar.gz", hash = "sha256:94bd35084843f7d7bc7cdd6d1afa16f13ca28265b5007d796357982f4492aea6"},
 ]
 
 [package.extras]
@@ -527,4 +527,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "35a357118e1eec95158cfcbcca6923626c610c649e301fa8e572610c8daaac2b"
+content-hash = "05f69d059501deeb622d161c98983e4cc7cf6412804eac415bd6db431d94c879"
