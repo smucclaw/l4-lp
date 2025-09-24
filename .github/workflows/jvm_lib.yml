@@ -19,10 +19,10 @@ jobs:
 
       # Setup JVM and Clojure tooling
       - name: 'Setup OpenJDK'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
-          distribution: 'microsoft'
-          java-version: 21
+          distribution: 'temurin'
+          java-version: 25
 
       - name: Setup Clojure build tools
         uses: DeLaGuardo/setup-clojure@13.4
@@ -53,7 +53,7 @@ jobs:
         uses: smucclaw/setup-swi-prolog@master
         with:
           swi-prolog-branch: devel
-          swi-prolog-version: '9.3.30-1-gf09cce606-nobleppa2'
+          swi-prolog-version: '9.3.31-1-g17f51b5b3-nobleppa2'
 
       - name: Install SWI-Prolog dependencies
         run: bun install:swipl-deps

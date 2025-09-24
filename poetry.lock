@@ -269,7 +269,7 @@ develop = false
 [package.source]
 type = "git"
 url = "https://github.com/SWI-Prolog/packages-swipy.git"
-reference = "V9.3.30"
+reference = "V9.3.31"
 resolved_reference = "a751822dc7eae86af873ddba41b255ae820698fe"
 
 [[package]]
@@ -514,17 +514,17 @@ test = ["argcomplete (>=3.0.3)", "mypy (>=1.7.0)", "pre-commit", "pytest (>=7.0,
 
 [[package]]
 name = "wcwidth"
-version = "0.2.13"
+version = "0.2.14"
 description = "Measures the displayed width of unicode strings in a terminal"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 groups = ["dev"]
 files = [
-    {file = "wcwidth-0.2.13-py2.py3-none-any.whl", hash = "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859"},
-    {file = "wcwidth-0.2.13.tar.gz", hash = "sha256:72ea0c06399eb286d978fdedb6923a9eb47e1c486ce63e9b4e64fc18303972b5"},
+    {file = "wcwidth-0.2.14-py2.py3-none-any.whl", hash = "sha256:a7bb560c8aee30f9957e5f9895805edd20602f2d7f720186dfd906e82b4982e1"},
+    {file = "wcwidth-0.2.14.tar.gz", hash = "sha256:4d478375d31bc5395a3c55c40ccdf3354688364cd61c4f6adacaa9215d0b3605"},
 ]
 
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "4cbbac736db6b46ce81242a34b022ca84b26f243a7d330fc72a8e3eb975df9e3"
+content-hash = "e15509344fa49ef1f95ecd159a955acea34626c95f86c43c442b096a43e3eec0"
