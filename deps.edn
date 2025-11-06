@@ -3,10 +3,10 @@
         binaryage/devtools {:mvn/version "1.0.7"}
         com.pitch/uix.core {:mvn/version "1.4.5"}
         com.pitch/uix.dom {:mvn/version "1.4.5"}
-        com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.33"}
+        com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.34"}
         instaparse/instaparse {:mvn/version "1.5.0"}
         net.cgrand/xforms {:mvn/version "0.19.6"}
-        io.github.tonsky/datascript {:mvn/version "1.7.6"}
+        io.github.tonsky/datascript {:mvn/version "1.7.8"}
         io.github.noprompt/meander {:git/sha "74de6b1f651441092cc12d1c9012ef7086033040"}
         funcool/promesa {:mvn/version "11.0.678"}
         applied-science/js-interop {:mvn/version "0.4.2"}
@@ -39,6 +39,6 @@
    :exec-fn cognitect.test-runner.api/test}
 
   :build ;; added by neil
-  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.10" :git/sha "deedd62"}
+  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.11" :git/sha "c6c670a"}
           slipset/deps-deploy {:mvn/version "0.2.2"}}
    :ns-default build}}}
