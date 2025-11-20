@@ -55,7 +55,7 @@ jobs:
         uses: smucclaw/setup-swi-prolog@master
         with:
           swi-prolog-branch: devel
-          swi-prolog-version: '9.3.34-1-gfbdcb07c2-nobleppa2'
+          swi-prolog-version: '9.3.35-1-g7b0c697ca-nobleppa2'
 
       - name: Install SWI-Prolog dependencies
         run: bun install:swipl-deps

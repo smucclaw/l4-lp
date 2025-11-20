@@ -1,8 +1,8 @@
 {:paths ["src"]
  :deps {thheller/shadow-cljs {:mvn/version "3.2.1"}
         binaryage/devtools {:mvn/version "1.0.7"}
-        com.pitch/uix.core {:mvn/version "1.4.5"}
-        com.pitch/uix.dom {:mvn/version "1.4.5"}
+        com.pitch/uix.core {:mvn/version "1.4.8"}
+        com.pitch/uix.dom {:mvn/version "1.4.8"}
         com.github.SWI-Prolog/packages-jpl {:mvn/version "V9.3.34"}
         instaparse/instaparse {:mvn/version "1.5.0"}
         net.cgrand/xforms {:mvn/version "0.19.6"}
