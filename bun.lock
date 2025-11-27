@@ -7,7 +7,7 @@
         "@babel/runtime": "^7.28.4",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.1",
-        "@mlc-ai/web-llm": "^0.2.79",
+        "@mlc-ai/web-llm": "^0.2.80",
         "@mui/icons-material": "^7.3.5",
         "@mui/material": "^7.3.5",
         "@nextjournal/clojure-mode": "^0.3.3",
@@ -19,7 +19,7 @@
         "react-dom": "^19.2.0",
       },
       "devDependencies": {
-        "shadow-cljs": "3.2.1",
+        "shadow-cljs": "3.3.1",
       },
     },
   },
@@ -122,7 +122,7 @@
 
     "@lezer/markdown": ["@lezer/markdown@1.3.0", "", { "dependencies": { "@lezer/common": "^1.0.0", "@lezer/highlight": "^1.0.0" } }, "sha512-ErbEQ15eowmJUyT095e9NJc3BI9yZ894fjSDtHftD0InkfUBGgnKSU6dvan9jqsZuNHg2+ag/1oyDRxNsENupQ=="],
 
-    "@mlc-ai/web-llm": ["@mlc-ai/web-llm@0.2.79", "", { "dependencies": { "loglevel": "^1.9.1" } }, "sha512-Hy1ZHQ0o2bZGZoVnGK48+fts/ZSKwLe96xjvqL/6C59Mem9HoHTcFE07NC2E23mRmhd01tL655N6CPeYmwWgwQ=="],
+    "@mlc-ai/web-llm": ["@mlc-ai/web-llm@0.2.80", "", { "dependencies": { "loglevel": "^1.9.1" } }, "sha512-Hwy1OCsK5cOU4nKr2wIJ2qA1g595PENtO5f2d9Wd/GgFsj5X04uxfaaJfqED8eFAJOpQpn/DirogdEY/yp5jQg=="],
 
     "@mui/core-downloads-tracker": ["@mui/core-downloads-tracker@7.3.5", "", {}, "sha512-kOLwlcDPnVz2QMhiBv0OQ8le8hTCqKM9cRXlfVPL91l3RGeOsxrIhNRsUt3Xb8wb+pTVUolW+JXKym93vRKxCw=="],
 
@@ -490,7 +490,7 @@
 
     "sha.js": ["sha.js@2.4.11", "", { "dependencies": { "inherits": "^2.0.1", "safe-buffer": "^5.0.1" }, "bin": { "sha.js": "./bin.js" } }, "sha512-QMEp5B7cftE7APOjk5Y6xgrbWu+WkLVQwk8JNjZ8nKRciZaByEW6MubieAiToS7+dwvrjGhH8jRXz3MVd0AYqQ=="],
 
-    "shadow-cljs": ["shadow-cljs@3.2.1", "", { "dependencies": { "buffer": "^6.0.3", "process": "^0.11.10", "readline-sync": "^1.4.10", "shadow-cljs-jar": "1.3.4", "source-map-support": "^0.5.21", "which": "^5.0.0", "ws": "^8.18.1" }, "bin": { "shadow-cljs": "cli/runner.js" } }, "sha512-xsTSHGUBGZqotbjdKTbKUuPaYoj41ozMPbylr0aQNHvpG+TEner7YTALPdthNGUsIseE+U7kNHV9HNTfRXc/Zw=="],
+    "shadow-cljs": ["shadow-cljs@3.3.1", "", { "dependencies": { "buffer": "^6.0.3", "process": "^0.11.10", "readline-sync": "^1.4.10", "shadow-cljs-jar": "1.3.4", "source-map-support": "^0.5.21", "which": "^5.0.0", "ws": "^8.18.1" }, "bin": { "shadow-cljs": "cli/runner.js" } }, "sha512-gu51YSitLrUpk45Xho2vpAkzu63Nur+TVcT80oWbPRYEswMkEILdycxA6ApMdca9BzjNxASOFDPI8Rg1Qhvs3A=="],
 
     "shadow-cljs-jar": ["shadow-cljs-jar@1.3.4", "", {}, "sha512-cZB2pzVXBnhpJ6PQdsjO+j/MksR28mv4QD/hP/2y1fsIa9Z9RutYgh3N34FZ8Ktl4puAXaIGlct+gMCJ5BmwmA=="],
 
