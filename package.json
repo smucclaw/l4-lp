@@ -19,7 +19,7 @@
     "build:node-lib": "shadow-cljs release node-lib",
     "build:jvm-lib": "bb uber",
     "build:all": "shadow-cljs release ide && shadow-cljs release browser-esm-lib && shadow-cljs release node-lib && shadow-cljs release py-node-lib && bb uber",
-    "install:swipl-deps": "swipl -t \"pack_install(date_time, [version('0.1.4'), interactive(false), test(false)])\" && swipl -t \"pack_install(clpBNR, [version('0.12.2'), interactive(false), test(false)])\"",
+    "install:swipl-deps": "swipl -t \"pack_install(date_time, [version('0.1.4'), interactive(false), test(false)])\" && swipl -t \"pack_install(clpBNR, [version('0.12.3'), interactive(false), test(false)])\"",
     "build:swipl-qlfs": "cd public/resources/swipl && swipl -t 'qcompile(prelude, [include(user)])' && cd ../../../src/l4_lp_py/swipl/prolog && swipl -t 'qcompile(prelude, [include(user)])' && cd ../../../../../../../",
     "build:swipl-public-qlf": "cd public/resources/swipl && swipl -t 'qcompile(prelude, [include(user)])'",
     "run:node-eg": "poetry run node public/node_example_usage.js",
