@@ -269,7 +269,7 @@ develop = false
 [package.source]
 type = "git"
 url = "https://github.com/SWI-Prolog/packages-swipy.git"
-reference = "V10.1.2"
+reference = "V10.1.3"
 resolved_reference = "a751822dc7eae86af873ddba41b255ae820698fe"
 
 [[package]]

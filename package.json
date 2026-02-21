@@ -30,7 +30,7 @@
     "@babel/runtime": "^7.28.6",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@mlc-ai/web-llm": "^0.2.80",
+    "@mlc-ai/web-llm": "^0.2.81",
     "@mui/icons-material": "^7.3.8",
     "@mui/material": "^7.3.8",
     "@nextjournal/clojure-mode": "^0.3.3",
