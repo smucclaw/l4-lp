@@ -19,7 +19,7 @@
         "react-dom": "^19.2.6",
       },
       "devDependencies": {
-        "shadow-cljs": "3.4.9",
+        "shadow-cljs": "3.4.11",
       },
     },
   },
@@ -490,7 +490,7 @@
 
     "sha.js": ["sha.js@2.4.11", "", { "dependencies": { "inherits": "^2.0.1", "safe-buffer": "^5.0.1" }, "bin": { "sha.js": "./bin.js" } }, "sha512-QMEp5B7cftE7APOjk5Y6xgrbWu+WkLVQwk8JNjZ8nKRciZaByEW6MubieAiToS7+dwvrjGhH8jRXz3MVd0AYqQ=="],
 
-    "shadow-cljs": ["shadow-cljs@3.4.9", "", { "dependencies": { "buffer": "^6.0.3", "process": "^0.11.10", "readline-sync": "^1.4.10", "shadow-cljs-jar": "1.3.4", "source-map-support": "^0.5.21", "which": "^5.0.0", "ws": "^8.18.1" }, "bin": { "shadow-cljs": "cli/runner.js" } }, "sha512-ekvlTmMsjiv+lzuUIszxI3hstoHT2e5yVw5FbRE3Ky+NGCrbY99MyC/9XXZtvPDGr6Rj5TBWbZib67OenRPctw=="],
+    "shadow-cljs": ["shadow-cljs@3.4.11", "", { "dependencies": { "buffer": "^6.0.3", "process": "^0.11.10", "readline-sync": "^1.4.10", "shadow-cljs-jar": "1.3.4", "source-map-support": "^0.5.21", "which": "^5.0.0", "ws": "^8.18.1" }, "bin": { "shadow-cljs": "cli/runner.js" } }, "sha512-996uqtadZItXdD80Vtoh9IoE8oUOKoXOXd48gOxkZWUAHcxgcBlcRqMmPYiy4A1QqvSUQkdNGpv9AIWOgLx9Vg=="],
 
     "shadow-cljs-jar": ["shadow-cljs-jar@1.3.4", "", {}, "sha512-cZB2pzVXBnhpJ6PQdsjO+j/MksR28mv4QD/hP/2y1fsIa9Z9RutYgh3N34FZ8Ktl4puAXaIGlct+gMCJ5BmwmA=="],
 

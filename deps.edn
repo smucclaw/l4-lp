@@ -1,5 +1,5 @@
 {:paths ["src"]
- :deps {thheller/shadow-cljs {:mvn/version "3.4.9"}
+ :deps {thheller/shadow-cljs {:mvn/version "3.4.11"}
         binaryage/devtools {:mvn/version "1.0.7"}
         com.pitch/uix.core {:mvn/version "1.4.9"}
         com.pitch/uix.dom {:mvn/version "1.4.9"}
@@ -39,6 +39,6 @@
    :exec-fn cognitect.test-runner.api/test}
 
   :build ;; added by neil
-  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.12" :git/sha "97c5562"}
+  {:deps {io.github.clojure/tools.build {:git/tag "v0.10.13" :git/sha "ae52edf"}
           slipset/deps-deploy {:mvn/version "0.2.2"}}
    :ns-default build}}}
