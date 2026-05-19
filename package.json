@@ -9,7 +9,7 @@
   },
   "private": true,
   "devDependencies": {
-    "shadow-cljs": "3.4.9"
+    "shadow-cljs": "3.4.11"
   },
   "scripts": {
     "start": "shadow-cljs watch ide",
