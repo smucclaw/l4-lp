@@ -6,9 +6,9 @@
         com.github.SWI-Prolog/packages-jpl {:mvn/version "V10.1.13"}
         instaparse/instaparse {:mvn/version "1.5.0"}
         net.cgrand/xforms {:mvn/version "0.19.6"}
-        io.github.tonsky/datascript {:mvn/version "1.7.8"}
+        io.github.tonsky/datascript {:mvn/version "1.8.1"}
         io.github.noprompt/meander {:git/sha "74de6b1f651441092cc12d1c9012ef7086033040"}
-        funcool/promesa {:mvn/version "12.0.0-RC2"}
+        funcool/promesa {:mvn/version "12.0.1"}
         applied-science/js-interop {:mvn/version "0.4.2"}
         tupelo/tupelo {:mvn/version "25.07.04"}
         cljs-bean/cljs-bean {:mvn/version "1.9.0"}
