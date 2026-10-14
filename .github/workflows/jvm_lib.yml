@@ -28,7 +28,7 @@ jobs:
         uses: DeLaGuardo/setup-clojure@13.7.0
         with:
           cli: 1.12.5.1664
-          bb: 1.13.225
+          bb: 1.13.226
 
       - name: Setup cache for Clojure dependencies
         uses: actions/cache@v6
