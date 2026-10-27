@@ -9,7 +9,7 @@
   },
   "private": true,
   "devDependencies": {
-    "shadow-cljs": "3.5.7"
+    "shadow-cljs": "3.5.8"
   },
   "scripts": {
     "start": "shadow-cljs watch ide",
@@ -27,7 +27,7 @@
     "server": "shadow-cljs server"
   },
   "dependencies": {
-    "@babel/runtime": "^8.0.7",
+    "@babel/runtime": "^8.0.8",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mlc-ai/web-llm": "^0.2.86",
